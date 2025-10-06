@@ -1,0 +1,68 @@
+# Sensitive data
+*.log
+*.secret
+*.token
+auth.json
+**/github_token*
+**/api_key*
+*.pem
+*.key
+
+# Cache and temporary files
+**/.cache/
+**/cache/
+**/__pycache__/
+*.pyc
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Zsh cache files
+**/.zcompdump*
+**/.zsh_history
+**/.histfile
+
+# Fish cache
+**/.config/fish/fish_variables
+**/.config/fish/fishd.*
+
+# Tmux plugins (will be installed by tpm)
+**/.config/tmux/plugins/
+
+# Neovim/Vim cache and plugins
+**/.config/nvim/plugin/
+**/.config/nvim/.netrwhist
+**/.config/nvim/undodir/
+
+# Doom Emacs generated files
+.doom.d/.local/
+
+# Node modules (if any config uses npm)
+**/node_modules/
+
+# Compiled binaries
+*.o
+*.so
+*.out
+dwm
+st
+slstatus
+**/dwm/dwm
+**/dwm/*.o
+
+# Obsidian vault data (too large)
+**/.config/obsidian/
+
+# Game launchers and large apps
+**/.config/heroic/
+**/.config/legcord/
+
+# IDE specific
+**/.idea/
+**/.vscode/
+
+# Backup files
+*.bak
+*.backup
+*~
