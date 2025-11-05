@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Action
+Profiles=profile_id
+Name=Send to Phone
+Icon=kdeconnect
+
+[X-Action-Profile profile_id]
+MimeTypes=all/all;
+Exec=/home/il1v3y/.local/share/file-manager/actions/sendtophone.sh %F
+SelectionCount=>0
