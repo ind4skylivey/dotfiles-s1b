@@ -1,85 +1,96 @@
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+;; (setq user-full-name "Livey"
+;;       user-mail-address "your-email@example.com")
 
-;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
+(setq doom-font (font-spec :family "JetBrains Mono" :size 15))
 
+(custom-theme-set-faces!
+ 'doom-one
+ '(org-level-8 :inherit outline-3 :height 1.0)
+ '(org-level-7 :inherit outline-3 :height 1.0)
+ '(org-level-6 :inherit outline-3 :height 1.1)
+ '(org-level-5 :inherit outline-3 :height 1.2)
+ '(org-level-4 :inherit outline-3 :height 1.3)
+ '(org-level-3 :inherit outline-3 :height 1.4)
+ '(org-level-2 :inherit outline-2 :height 1.5)
+ '(org-level-1 :inherit outline-1 :height 1.6)
+ '(org-document-title :height 1.8 :bold t :underline nil))
 
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets. It is optional.
-;; (setq user-full-name "John Doe"
-;;       user-mail-address "john@doe.com")
-
-;; Doom exposes five (optional) variables for controlling fonts in Doom:
-;;
-;; - `doom-font' -- the primary font to use
-;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
-;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;; - `doom-symbol-font' -- for symbols
-;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
-;;
-;; See 'C-h v doom-font' for documentation and more examples of what they
-;; accept. For example:
-;;
-;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
-;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
-;;
-;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
-;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
-;; refresh your font settings. If Emacs still can't find your font, it likely
-;; wasn't installed correctly. Font issues are rarely Doom issues!
-
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-dracula)
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
+(map! :leader
+      :desc "comment line" "-" #'comment-line)
+
+;; Add more custom keybindings here
+;; Example:
+;; (map! :leader
+;;       :desc "description" "key" #'function)
+
 (setq org-directory "~/org/")
 
+(setq org-modern-table-vertical 1)
+(setq org-modern-table t)
 
-;; Whenever you reconfigure a package, make sure to wrap your config in an
-;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
-;;
-;;   (after! PACKAGE
-;;     (setq x y))
-;;
-;; The exceptions to this rule:
-;;
-;;   - Setting file/directory variables (like `org-directory')
-;;   - Setting variables which explicitly tell you to set them before their
-;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
-;;   - Setting doom variables (which start with 'doom-' or '+').
-;;
-;; Here are some additional functions/macros that will help you configure Doom.
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
-;; etc).
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
+(add-hook 'org-mode-hook #'hl-todo-mode)
+
+(after! org
+  (setq org-auto-tangle t))
+
+;; Org Agenda configuration
+;; (setq org-agenda-files '("~/org/"))
+
+;; Org Capture templates
+;; (setq org-capture-templates
+;;       '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
+;;          "* TODO %?\n  %i\n  %a")))
+
+;; Org Babel languages
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((emacs-lisp . t)
+;;    (python . t)
+;;    (rust . t)
+;;    (shell . t)))
 
 (setq-default vterm-shell "/bin/fish")
 (setq-default explicit-shell-file-name "/bin/fish")
 
+;; Configure eshell to use lsd for ls
+(after! eshell
+  (defun eshell/ls (&rest args)
+    "Use lsd instead of ls in eshell"
+    (eshell-external-command "lsd" args)
+    nil))
 
-;; Enable some additional configuration if needed
+;; Disable exit confirmation
+(setq confirm-kill-emacs nil)
+
+;; Start with eshell
+(setq initial-buffer-choice 'eshell)
+
+;; Suppress native compilation warnings
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Prevent workspace auto-restore (stops old "client" buffer from appearing)
+(after! persp-mode
+  (setq persp-auto-resume-time -1))
+
+;; Don't split windows on emacsclient startup
+;; Note: Disabled because delete-other-windows causes issues with side windows
+;; (add-hook 'server-after-make-frame-hook
+;;           (lambda ()
+;;             ;; Kill any buffer that looks like a "client" file
+;;             (dolist (buf (buffer-list))
+;;               (when (string-match-p "client" (buffer-name buf))
+;;                 (kill-buffer buf)))
+;;             ;; Keep only one window
+;;             (delete-other-windows)))
+
+;; Additional general settings
+;; (setq auto-save-default t)
+;; (setq make-backup-files t)
+;; (global-auto-revert-mode t)
 
 (after! flycheck
   (setq flycheck-checkers (append flycheck-checkers '(python-flake8))))
@@ -87,23 +98,56 @@
 (after! ivy-posframe
   (ivy-posframe-mode 1))
 
-(after! org
-  (setq org-auto-tangle t))
-
-;; For dired settings (customize as you prefer)
 (after! dired
-  (setq dired-listing-switches "-alh"))
+  (setq dired-listing-switches "-alh")
+  (setq insert-directory-program "lsd")
+  (setq dired-use-ls-dired nil))
 
-;; For exwm setup
 (after! exwm
   (setq exwm-workspace-number 4))
 
-;; Other minor adjustments
 (after! beacon
   (beacon-mode 1))
 
 (after! rainbow-mode
-  (add-hook 'prog-mode-hook 'rainbow-mode))
+  (add-hook 'css-mode-hook #'rainbow-mode)
+  (add-hook 'web-mode-hook #'rainbow-mode))
 
 (after! olivetti
   (add-hook 'text-mode-hook 'olivetti-mode))
+
+;; LSP Mode configuration
+;; (after! lsp-mode
+;;   (setq lsp-rust-server 'rust-analyzer)
+;;   (setq lsp-php-server-command '("intelephense" "--stdio")))
+
+;; Projectile for project management
+;; (after! projectile
+;;   (setq projectile-project-search-path '("~/projects/")))
+
+;; Magit configuration
+;; (after! magit
+;;   (setq magit-repository-directories '(("~/projects" . 2))))
+
+;; Company autocomplete
+;; (after! company
+;;   (setq company-idle-delay 0.2)
+;;   (setq company-minimum-prefix-length 2))
+
+;; Treemacs file explorer
+;; (after! treemacs
+;;   (setq treemacs-width 35))
+
+;; eee.el configuration for Yazi integration
+(use-package! eee
+  :config
+  ;; Set terminal emulator (kitty is already installed)
+  (setq ee-terminal-command "kitty")
+  ;; Keybindings for ee- commands
+  (map! :leader
+        (:prefix ("e" . "external tools")
+         :desc "Open Yazi file manager" "y" #'ee-yazi
+         :desc "Open Yazi in project" "Y" #'ee-yazi-project
+         :desc "Search with ripgrep+fzf" "r" #'ee-rg
+         :desc "Find files with fzf" "f" #'ee-find
+         :desc "LazyGit" "g" #'ee-lazygit)))

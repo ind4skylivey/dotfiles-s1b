@@ -84,3 +84,8 @@
 (package! clippy)
 (package! minimap)
 (package! olivetti)
+
+;; eee.el for async TUI integration (Yazi, etc.)
+(package! eee
+  :recipe (:host github :repo "eval-exec/eee.el"
+           :files (:defaults "*.el" "*.sh")))

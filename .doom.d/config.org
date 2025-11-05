@@ -1,0 +1,354 @@
+#+TITLE: Livey's Doom Emacs Config
+#+AUTHOR: Livey
+#+PROPERTY: header-args :tangle config.el
+
+* TABLE OF CONTENTS :toc:
+- [[#about-this-config][ABOUT THIS CONFIG]]
+- [[#user-information][USER INFORMATION]]
+- [[#fonts][FONTS]]
+  - [[#org-mode-font-scaling][Org Mode Font Scaling]]
+- [[#theme][THEME]]
+- [[#line-numbers][LINE NUMBERS]]
+- [[#keybindings][KEYBINDINGS]]
+  - [[#future-keybindings][Future Keybindings]]
+- [[#org-mode][ORG MODE]]
+  - [[#org-modern][Org Modern]]
+  - [[#hl-todo][HL-TODO]]
+  - [[#org-auto-tangle][Org Auto-Tangle]]
+  - [[#future-org-configuration][Future Org Configuration]]
+- [[#shell-configuration][SHELL CONFIGURATION]]
+- [[#general-settings][GENERAL SETTINGS]]
+  - [[#future-general-settings][Future General Settings]]
+- [[#package-configurations][PACKAGE CONFIGURATIONS]]
+  - [[#flycheck][Flycheck]]
+  - [[#ivy-posframe][Ivy Posframe]]
+  - [[#dired][Dired]]
+  - [[#exwm][EXWM]]
+  - [[#beacon][Beacon]]
+  - [[#rainbow-mode][Rainbow Mode]]
+  - [[#olivetti][Olivetti]]
+  - [[#future-package-configurations][Future Package Configurations]]
+
+* ABOUT THIS CONFIG
+This is my personal Doom Emacs configuration. I'm a full-stack programmer focused on cybersecurity, vulnerability management, red teaming, reverse engineering and malware analysis. I work primarily with PHP/Laravel and Python, while also learning Rust.
+
+I use Arch Linux with DWM as my window manager, so this config is optimized for a minimal, keyboard-driven workflow.
+
+* USER INFORMATION
+Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
+
+#+begin_src emacs-lisp
+;; (setq user-full-name "il1v3y"
+;;       user-mail-address "your-email@example.com")
+#+end_src
+
+* FONTS
+Doom exposes five (optional) variables for controlling fonts in Doom:
++ 'doom-font' -- standard monospace font that is used for most things in Emacs.
++ 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
++ 'doom-big-font' -- used in doom-big-font-mode; useful for presentations.
++ 'font-lock-comment-face' -- for comments.
++ 'font-lock-keyword-face' -- for keywords with special significance, like 'for' and 'if' in C.
+
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "JetBrains Mono" :size 15))
+#+end_src
+
+** Org Mode Font Scaling
+This gives a nice visual hierarchy to org-mode documents with progressively larger headers.
+
+#+begin_src emacs-lisp
+(custom-theme-set-faces!
+ 'doom-one
+ '(org-level-8 :inherit outline-3 :height 1.0)
+ '(org-level-7 :inherit outline-3 :height 1.0)
+ '(org-level-6 :inherit outline-3 :height 1.1)
+ '(org-level-5 :inherit outline-3 :height 1.2)
+ '(org-level-4 :inherit outline-3 :height 1.3)
+ '(org-level-3 :inherit outline-3 :height 1.4)
+ '(org-level-2 :inherit outline-2 :height 1.5)
+ '(org-level-1 :inherit outline-1 :height 1.6)
+ '(org-document-title :height 1.8 :bold t :underline nil))
+#+end_src
+
+* THEME
+There are two ways to load a theme. Both assume the theme is installed and available. You can either set 'doom-theme' or manually load a theme with the 'load-theme' function.
+
+#+begin_src emacs-lisp
+(setq doom-theme 'doom-dracula)
+#+end_src
+
+* LINE NUMBERS
+This determines the style of line numbers in effect. If set to 'nil', line numbers are disabled. For relative line numbers, set this to 'relative'.
+
+#+begin_src emacs-lisp
+(setq display-line-numbers-type t)
+#+end_src
+
+* KEYBINDINGS
+Custom keybindings to improve workflow.
+
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "comment line" "-" #'comment-line)
+#+end_src
+
+** Useful Keybindings
+Additional keybindings to improve workflow.
+
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Toggle line wrap" "t w" #'visual-line-mode
+      :desc "Copy file path" "f y" #'doom/copy-this-file
+      :desc "Delete file" "f D" #'doom/delete-this-file
+      :desc "Find file in project" "p f" #'projectile-find-file)
+#+end_src
+
+* ORG MODE
+If you use 'org' and don't want your org files in the default location below, change 'org-directory'. It must be set before org loads!
+
+#+begin_src emacs-lisp
+(setq org-directory "~/org/")
+#+end_src
+
+** Org Modern
+Enable modern styling for org tables with nice vertical lines.
+
+#+begin_src emacs-lisp
+(setq org-modern-table-vertical 1)
+(setq org-modern-table t)
+#+end_src
+
+** HL-TODO
+Highlight TODO/FIXME/NOTE keywords in org files.
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'hl-todo-mode)
+#+end_src
+
+** Org Auto-Tangle
+Automatically tangle org files when saving. This is essential for literate configuration!
+
+#+begin_src emacs-lisp
+(after! org
+  (setq org-auto-tangle t))
+#+end_src
+
+** Future Org Configuration
+Placeholder for additional org-mode settings like agenda, capture templates, etc.
+
+#+begin_src emacs-lisp
+;; Org Agenda configuration
+;; (setq org-agenda-files '("~/org/"))
+
+;; Org Capture templates
+;; (setq org-capture-templates
+;;       '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
+;;          "* TODO %?\n  %i\n  %a")))
+
+;; Org Babel languages
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((emacs-lisp . t)
+;;    (python . t)
+;;    (rust . t)
+;;    (shell . t)))
+#+end_src
+
+* SHELL CONFIGURATION
+Configure the shell for vterm and eshell. I use Fish shell for better autocompletion.
+
+#+begin_src emacs-lisp
+(setq-default vterm-shell "/bin/fish")
+(setq-default explicit-shell-file-name "/bin/fish")
+#+end_src
+
+* GENERAL SETTINGS
+General Emacs behavior modifications.
+
+#+begin_src emacs-lisp
+;; Disable exit confirmation
+(setq confirm-kill-emacs nil)
+
+;; Start with eshell
+(setq initial-buffer-choice 'eshell)
+
+;; Suppress native compilation warnings
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Prevent workspace auto-restore (stops old "client" buffer from appearing)
+(after! persp-mode
+  (setq persp-auto-resume-time -1))
+
+;; Don't split windows on emacsclient startup
+(add-hook 'server-after-make-frame-hook
+          (lambda ()
+            ;; Kill any buffer that looks like a "client" file
+            (dolist (buf (buffer-list))
+              (when (string-match-p "client" (buffer-name buf))
+                (kill-buffer buf)))
+            ;; Keep only one window
+            (delete-other-windows)))
+#+end_src
+
+** Performance & Responsiveness
+Settings to improve Emacs performance and responsiveness.
+
+#+begin_src emacs-lisp
+;; Faster which-key popup
+(setq which-key-idle-delay 0.3)
+
+;; Better scrolling performance
+(setq scroll-margin 3
+      scroll-conservatively 101)
+
+;; Faster LSP performance
+(setq lsp-idle-delay 0.5
+      lsp-log-io nil)
+#+end_src
+
+** Evil Mode Improvements
+Enhance Vim keybindings and behavior.
+
+#+begin_src emacs-lisp
+;; Better undo with evil
+(setq evil-want-fine-undo t)
+
+;; Keep cursor at center when jumping
+(setq evil-scroll-count 0)
+
+;; Vim-like clipboard
+(setq select-enable-clipboard t)
+#+end_src
+
+** Development Workflow
+Settings to improve coding workflow.
+
+#+begin_src emacs-lisp
+;; Auto-save and backups (helpful for security research)
+(setq auto-save-default t
+      auto-save-timeout 20
+      make-backup-files t
+      backup-directory-alist '((".*" . "~/.emacs.d/backups")))
+
+;; Show file path in title bar
+(setq frame-title-format '("%b – Doom Emacs"))
+
+;; Highlight current line in all buffers
+(global-hl-line-mode 1)
+
+;; Better search highlighting
+(setq lazy-highlight-initial-delay 0)
+#+end_src
+
+** Security & Development Specific
+Settings useful for security research and development.
+
+#+begin_src emacs-lisp
+;; Better git commit messages (for red team documentation)
+(setq git-commit-summary-max-length 72)
+
+;; Highlight hex colors in programming modes
+(add-hook 'prog-mode-hook #'rainbow-mode)
+
+;; Auto-close parens/brackets
+(electric-pair-mode t)
+#+end_src
+
+** Future General Settings
+Placeholder for additional general settings.
+
+#+begin_src emacs-lisp
+;; Additional general settings
+;; (setq auto-save-default t)
+;; (setq make-backup-files t)
+;; (global-auto-revert-mode t)
+#+end_src
+
+* PACKAGE CONFIGURATIONS
+Configuration for specific packages.
+
+** Flycheck
+On-the-fly syntax checking for multiple languages.
+
+#+begin_src emacs-lisp
+(after! flycheck
+  (setq flycheck-checkers (append flycheck-checkers '(python-flake8))))
+#+end_src
+
+** Ivy Posframe
+Display Ivy completions in a centered floating frame.
+
+#+begin_src emacs-lisp
+(after! ivy-posframe
+  (ivy-posframe-mode 1))
+#+end_src
+
+** Dired
+Dired is Emacs' built-in file manager.
+
+#+begin_src emacs-lisp
+(after! dired
+  (setq dired-listing-switches "-alh --group-directories-first"
+        dired-kill-when-opening-new-dired-buffer t))  ; Don't create multiple dired buffers
+#+end_src
+
+** EXWM
+Emacs X Window Manager configuration.
+
+#+begin_src emacs-lisp
+(after! exwm
+  (setq exwm-workspace-number 4))
+#+end_src
+
+** Beacon
+Highlights cursor position when scrolling.
+
+#+begin_src emacs-lisp
+(after! beacon
+  (beacon-mode 1))
+#+end_src
+
+** Rainbow Mode
+Display color codes with their actual colors.
+
+#+begin_src emacs-lisp
+(after! rainbow-mode
+  (add-hook 'css-mode-hook #'rainbow-mode)
+  (add-hook 'web-mode-hook #'rainbow-mode))
+#+end_src
+
+** Olivetti
+Distraction-free writing mode with centered text.
+
+#+begin_src emacs-lisp
+(after! olivetti
+  (add-hook 'text-mode-hook 'olivetti-mode))
+#+end_src
+
+** Future Package Configurations
+Placeholder for additional package configurations as you expand your setup.
+
+#+begin_src emacs-lisp
+;; LSP Mode configuration
+;; (after! lsp-mode
+;;   (setq lsp-rust-server 'rust-analyzer)
+;;   (setq lsp-php-server-command '("intelephense" "--stdio")))
+
+;; Projectile for project management
+;; (after! projectile
+;;   (setq projectile-project-search-path '("~/projects/")))
+
+;; Magit configuration
+;; (after! magit
+;;   (setq magit-repository-directories '(("~/projects" . 2))))
+
+;; Company autocomplete
+;; (after! company
+;;   (setq company-idle-delay 0.2)
+;;   (setq company-minimum-prefix-length 2))
+
+;; Treemacs file explorer
+;; (after! treemacs
+;;   (setq treemacs-width 35))
+#+end_src
