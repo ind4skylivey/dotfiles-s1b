@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Lock screen with dim effect (faster than blur)
-#betterlockscreen --lock dim
+# Lock screen script using betterlockscreen
+# 
+# Setup (run once or when wallpapers change):
+#   betterlockscreen -u ~/Pictures/screenlock/ --fx blur
+#
+# This script assumes the cache is already set up
 
-# Update betterlockscreen cache (only needed if wallpapers change)
-betterlockscreen -u ~/Pictures/screenlock/ --fx blur
-
-# Lock the screen with a lighter blur (faster processing)
-betterlockscreen --lock blur --blur 0.5
+# Lock the screen with blur effect
+betterlockscreen --lock blur

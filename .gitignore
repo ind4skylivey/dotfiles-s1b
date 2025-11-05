@@ -29,6 +29,7 @@ auth.json
 
 # Tmux plugins (will be installed by tpm)
 **/.config/tmux/plugins/
+**/tmux/plugins/
 
 # Neovim/Vim cache and plugins
 **/.config/nvim/plugin/
@@ -45,11 +46,16 @@ auth.json
 *.o
 *.so
 *.out
-dwm
-st
-slstatus
 **/dwm/dwm
 **/dwm/*.o
+**/dwm/drw.o
+**/dwm/util.o
+**/dwm/slstatus/slstatus
+**/dwm/slstatus/*.o
+**/dwm/slstatus/components/*.o
+**/dwm/release/dwm
+**/dwm/*.backup-*
+st
 
 # Obsidian vault data (too large)
 **/.config/obsidian/
@@ -66,3 +72,11 @@ slstatus
 *.bak
 *.backup
 *~
+
+# Zsh plugins (managed by Zinit)
+**/zsh/plugins/
+**/.config/zsh/plugins/
+
+# Zellij plugins (wasm binaries)
+**/zellij/plugins/*.wasm
+**/.config/zellij/plugins/*.wasm
