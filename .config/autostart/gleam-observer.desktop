@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/il1v3y/.local/bin/gleam --tray
+Hidden=true
+NoDisplay=false
+X-GNOME-Autostart-enabled=false
+X-GNOME-Autostart-Delay=5
+X-KDE-autostart-after=panel
+
+Name=GleamObserver
+Comment=🌌 Cyberpunk Hardware Monitor - Always-on Daemon
+Icon=gleamobserver
+Categories=System;Monitor;Utility;
+StartupWMClass=gleamobserver
+Terminal=false

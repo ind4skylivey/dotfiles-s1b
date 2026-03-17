@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/il1v3y/.config/waybar/launch-multi.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Waybar
+Comment=Barra Cyberpunk para Wayland
+Icon=utilities-terminal
+Categories=System;

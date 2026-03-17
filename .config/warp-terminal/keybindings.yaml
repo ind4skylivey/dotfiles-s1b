@@ -1,0 +1,33 @@
+---
+# Warp Keybindings - Red Team Dev & Full Stack Optimized
+# =====================================================
+
+# Core Input
+"input:open_completion_suggestions": ctrl-space
+"editor_view:insert_autosuggestion": tab
+"input:submit": enter
+"input:indent": tab
+"input:unindent": shift-tab
+
+# Pane Management (for split workflow)
+"pane:split_pane_right": ctrl-shift-d
+"pane:split_pane_down": ctrl-shift-e
+"pane:navigate_left": ctrl-shift-left
+"pane:navigate_right": ctrl-shift-right
+"pane:navigate_up": ctrl-shift-up
+"pane:navigate_down": ctrl-shift-down
+
+# Tab Management
+"tab:new_tab": ctrl-shift-t
+"tab:close_tab": ctrl-shift-w
+"tab:next": ctrl-tab
+"tab:previous": ctrl-shift-tab
+
+# Command & Search
+"command_palette:open": ctrl-p
+"search:search_history": ctrl-r
+"search:search_full_output": ctrl-shift-f
+
+# Block Management (Warp specific)
+"block:select": shift-up
+"block:select_down": shift-down

@@ -1,0 +1,24 @@
+# DWM compiled files
+*.o
+dwm
+drw.o
+util.o
+
+# Backup files
+*.backup-*
+config.h.orig
+
+# Backgrounds (exclude all except default)
+backgrounds/*
+!backgrounds/default-wallpaper.jpg
+!backgrounds/.gitkeep
+
+# Editor files
+*.swp
+*.swo
+*~
+.*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db

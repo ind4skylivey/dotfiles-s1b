@@ -1,0 +1,25 @@
+name: Red Team Operator
+accent: '#ff1744'      # Aggressive red accent
+cursor: '#ffab40'      # Warning gold cursor
+background: '#0d0d0d'  # Pure black
+foreground: '#ff4081'  # Sharp pastel red-pink
+details: darker
+terminal_colors:
+  bright:
+    black: '#1a1a1a'
+    blue: '#ff6d00'
+    cyan: '#ff4081'
+    green: '#ffb300'
+    magenta: '#ff1744'
+    red: '#d32f2f'
+    white: '#ff5252'
+    yellow: '#ffab40'
+  normal:
+    black: '#0a0a0a'
+    blue: '#e85d04'
+    cyan: '#ff006e'
+    green: '#ffa500'
+    magenta: '#c41c3b'
+    red: '#a71930'
+    white: '#ff3838'
+    yellow: '#ff8c00'

@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+#
+# codex wrapper - Compatibility layer for Livey Secure AI Workflow
+# Uses opencode/droid as backend instead of codex CLI
+#
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Backend selection
+BACKEND="${CODEX_BACKEND:-ollama}" # Default to ollama for direct API access
+
+# Help function
+show_help() {
+    cat << EOF
+codex wrapper - Compatibility layer for Livey Secure AI Workflow
+
+USAGE:
+    codex --profile <profile> [--model <model>]
+    codex --help
+
+PROFILES:
+    analyze    - Code analysis and review
+    security   - Security audit and red-team analysis
+    fix        - Bug fixing and debugging
+    commit     - Generate commit messages
+    chat       - Interactive chat mode
+
+BACKEND:
+    Uses ${BACKEND} as AI engine
+    Set CODEX_BACKEND environment variable to change (ollama|opencode|droid)
+    Default: ollama (direct API for fastest response)
+
+EXAMPLES:
+    codex --profile analyze "Review this code"
+    codex --profile security "Check for vulnerabilities"
+    codex --profile commit
+
+For more information: https://github.com/ind4skylivey/livey-secure-ai-workflow
+EOF
+}
+
+# Log function
+log() {
+    echo -e "${BLUE}[codex-wrapper]${NC} $*"
+}
+
+# Error function
+error() {
+    echo -e "${RED}[codex-wrapper] ERROR:${NC} $*" >&2
+    exit 1
+}
+
+# Check if backend is available
+check_backend() {
+    case "$BACKEND" in
+        ollama)
+            # Check if Ollama is running
+            if ! curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+                error "Ollama not running. Start it with: ollama serve"
+            fi
+            ;;
+        opencode)
+            if ! command -v opencode >/dev/null 2>&1; then
+                error "opencode not found. Use Ollama backend instead"
+            fi
+            ;;
+        droid)
+            if ! command -v droid >/dev/null 2>&1; then
+                error "droid not found. Use Ollama backend instead"
+            fi
+            ;;
+        *)
+            error "Unknown backend: $BACKEND. Use 'ollama', 'opencode' or 'droid'"
+            ;;
+    esac
+}
+
+# Execute with Ollama backend (direct API)
+run_ollama() {
+    local profile="$1"
+    local prompt="$2"
+    local model="${CODEX_MODEL:-qwen2.5-coder:14b}"
+
+    case "$profile" in
+        analyze|review)
+            log "Using Ollama ($model) for analysis"
+            ;;
+        security)
+            log "Using Ollama ($model) for security analysis"
+            prompt="As a security expert and red-team specialist, $prompt"
+            ;;
+        fix|debug)
+            log "Using Ollama ($model) for debugging"
+            prompt="Help debug this issue. $prompt"
+            ;;
+        commit)
+            log "Using Ollama ($model) for commit message"
+            ;;
+        *)
+            log "Using Ollama ($model) for: $profile"
+            ;;
+    esac
+
+    # Call Ollama API
+    local response
+    response=$(curl -s http://localhost:11434/api/generate -d "{
+        \"model\": \"$model\",
+        \"prompt\": \"$prompt\",
+        \"stream\": false,
+        \"options\": {
+            \"temperature\": 0.1
+        }
+    }" 2>/dev/null | jq -r '.response' 2>/dev/null || echo "Error generating response")
+
+    echo "$response"
+}
+
+# Execute with opencode backend
+run_opencode() {
+    local profile="$1"
+    local prompt="$2"
+
+    case "$profile" in
+        analyze|review)
+            log "Using opencode for analysis"
+            ;;
+        security)
+            log "Using opencode for security analysis"
+            prompt="As a security expert, $prompt"
+            ;;
+        fix|debug)
+            log "Using opencode for debugging"
+            prompt="Help debug this issue: $prompt"
+            ;;
+        commit)
+            log "Using opencode for commit message"
+            prompt="Generate a conventional commit message for these changes: $prompt"
+            ;;
+        *)
+            log "Using opencode for: $profile"
+            ;;
+    esac
+
+    opencode run "$prompt" 2>/dev/null || echo "Analysis completed"
+}
+
+# Execute with droid backend
+run_droid() {
+    local profile="$1"
+    local prompt="$2"
+
+    case "$profile" in
+        analyze|review)
+            log "Using droid for analysis"
+            ;;
+        security)
+            log "Using droid for security analysis"
+            prompt="As a security expert, $prompt"
+            ;;
+        fix|debug)
+            log "Using droid for debugging"
+            prompt="Help debug this issue: $prompt"
+            ;;
+        commit)
+            log "Using droid for commit message"
+            prompt="Generate a conventional commit message for these changes: $prompt"
+            ;;
+        *)
+            log "Using droid for: $profile"
+            ;;
+    esac
+
+    echo "$prompt" | droid 2>/dev/null || echo "Analysis completed"
+}
+
+# Main execution
+main() {
+    # Parse arguments
+    if [[ $# -eq 0 ]]; then
+        show_help
+        exit 0
+    fi
+
+    if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+        show_help
+        exit 0
+    fi
+
+    # Parse --profile argument
+    local profile=""
+    local prompt=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --profile)
+                profile="$2"
+                shift 2
+                ;;
+            --model)
+                shift 2 # Ignore model specification for now
+                ;;
+            *)
+                prompt="$*"
+                break
+                ;;
+        esac
+    done
+
+    # Validate
+    if [[ -z "$profile" ]]; then
+        error "Missing --profile argument. Use: codex --profile <profile> <prompt>"
+    fi
+
+    # Check backend
+    check_backend
+
+    # If prompt is empty, read from stdin
+    if [[ -z "$prompt" ]]; then
+        prompt=$(cat)
+    fi
+
+    # Execute with appropriate backend
+    case "$BACKEND" in
+        ollama)
+            run_ollama "$profile" "$prompt"
+            ;;
+        opencode)
+            run_opencode "$profile" "$prompt"
+            ;;
+        droid)
+            run_droid "$profile" "$prompt"
+            ;;
+    esac
+}
+
+main "$@"

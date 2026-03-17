@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+
+################################################################################
+# ws-local: Bootstrap a local zellij workspace for development
+#
+# Usage:
+#   ws-local [LAYOUT] [--session SESSION_NAME]
+#
+# Layouts:
+#   dev         Main editor (nvim) + file browser + shell (default)
+#   write       Larger editor area, minimal distractions
+#   monitor     Top process monitor + logs + metrics
+#   fullscreen  Full editor, no splits
+#
+# This script:
+#   1. Checks for zellij installation
+#   2. Spawns zellij with optimized development layout
+#   3. Opens Neovim in the main pane
+#   4. Respects existing zellij.kdl config
+#
+# Philosophy:
+#   - Ephemeral sessions (close when done)
+#   - Instant visual organization
+#   - Fast iteration feedback
+#   - Safe to run multiple times
+################################################################################
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Defaults
+LAYOUT="dev"
+SESSION_NAME=""
+DOTFILES_DIR="${HOME}/dotfiles"
+WORKFLOW_LAYOUTS_DIR="${DOTFILES_DIR}/workflow/zellij/layouts"
+ZELLIJ_CONFIG_DIR="${HOME}/.config/zellij"
+
+# Parse arguments
+usage() {
+    cat << EOF
+Usage: ws-local [LAYOUT] [OPTIONS]
+
+Bootstrap a local zellij workspace for development.
+
+Layouts:
+  dev         Editor + file browser + shell (default)
+  write       Larger editor, minimal distractions
+  monitor     Process monitor + logs + metrics
+  fullscreen  Full editor only
+
+Options:
+  --session NAME    Custom session name
+  --help           Show this help
+
+Examples:
+  ws-local
+  ws-local write
+  ws-local dev --session project-x
+  ws-local fullscreen
+
+EOF
+    exit 1
+}
+
+# Parse arguments
+if [[ $# -gt 0 ]]; then
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --help|-h)
+                usage
+                ;;
+            --session)
+                SESSION_NAME="$2"
+                shift 2
+                ;;
+            dev|write|monitor|fullscreen)
+                LAYOUT="$1"
+                shift
+                ;;
+            *)
+                echo -e "${RED}Error: Unknown argument: $1${NC}" >&2
+                usage
+                ;;
+        esac
+    done
+fi
+
+# Check dependencies
+if ! command -v zellij &> /dev/null; then
+    echo -e "${RED}Error: zellij not found.${NC}" >&2
+    echo "Install with: pacman -S zellij (or yay -S zellij-git)"
+    exit 1
+fi
+
+if ! command -v nvim &> /dev/null; then
+    echo -e "${RED}Error: neovim not found.${NC}" >&2
+    echo "Install with: pacman -S neovim"
+    exit 1
+fi
+
+# Determine session name
+if [[ -z "$SESSION_NAME" ]]; then
+    # Auto-generate from current directory with semantic naming
+    PROJECT_NAME=$(basename "$PWD" | tr ' ' '_' | tr '.' '_' | head -c 20)
+    SESSION_NAME="local-${PROJECT_NAME}-$$"
+fi
+
+# Determine context (project name from working directory)
+CONTEXT=$(basename "$PWD")
+
+# Export workflow state
+export LIVEY_WORKFLOW="local"
+export LIVEY_CONTEXT="$CONTEXT"
+export LIVEY_WORKFLOW_LAYOUT="$LAYOUT"
+export LIVEY_WORKFLOW_SESSION="$SESSION_NAME"
+
+# Log session start
+LOG_DIR="${HOME}/.local/share/livey/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="${LOG_DIR}/sessions.log"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] START local | context=$CONTEXT | layout=$LAYOUT | session=$SESSION_NAME" >> "$LOG_FILE"
+
+echo -e "${BLUE}Starting zellij workspace: ${GREEN}${LAYOUT}${BLUE} layout${NC}"
+echo -e "${BLUE}Profile: ${GREEN}local${BLUE} | Context: ${GREEN}$CONTEXT${BLUE} | Session: ${GREEN}${SESSION_NAME}${NC}"
+echo -e "${BLUE}Export: LIVEY_WORKFLOW=$LIVEY_WORKFLOW LIVEY_CONTEXT=$LIVEY_CONTEXT${NC}"
+
+# Map layout names to files
+LAYOUT_FILE=""
+case "$LAYOUT" in
+    dev)
+        LAYOUT_FILE="${WORKFLOW_LAYOUTS_DIR}/dev.kdl"
+        ;;
+    write)
+        LAYOUT_FILE="${WORKFLOW_LAYOUTS_DIR}/write.kdl"
+        ;;
+    monitor)
+        LAYOUT_FILE="${WORKFLOW_LAYOUTS_DIR}/monitor.kdl"
+        ;;
+    fullscreen)
+        LAYOUT_FILE="${WORKFLOW_LAYOUTS_DIR}/fullscreen.kdl"
+        ;;
+    *)
+        echo -e "${RED}Error: Unknown layout: $LAYOUT${NC}" >&2
+        exit 1
+        ;;
+esac
+
+# Check if custom layout exists
+if [[ ! -f "$LAYOUT_FILE" ]]; then
+    echo -e "${YELLOW}Warning: Custom layout not found at $LAYOUT_FILE${NC}" >&2
+    echo -e "${YELLOW}Using zellij defaults. Create layouts in:${NC}"
+    echo -e "${BLUE}  mkdir -p ${WORKFLOW_LAYOUTS_DIR}${NC}"
+    echo -e "${BLUE}  See workflow/zellij/layouts/ for examples${NC}"
+    LAYOUT_FILE=""
+fi
+
+# Ensure zellij config directory exists
+mkdir -p "$ZELLIJ_CONFIG_DIR"
+
+# Start zellij session
+# Use -n (new-session-with-layout) for proper session creation
+# Use exec for correct TTY handling
+if [[ -n "${LAYOUT_FILE:-}" && -f "$LAYOUT_FILE" ]]; then
+    echo -e "${BLUE}Starting zellij with layout:${NC} ${GREEN}$LAYOUT_FILE${NC}"
+    exec zellij -s "$SESSION_NAME" -n "$LAYOUT_FILE"
+else
+    echo -e "${YELLOW}Starting zellij without custom layout.${NC}"
+    exec zellij -s "$SESSION_NAME"
+fi

@@ -1,0 +1,25 @@
+name: Neon Dreams
+accent: '#ff4757'      # Bold red accent
+cursor: '#ff6b9d'      # Bright red-pink cursor
+background: '#1a0f15'  # Deep red-black cyberpunk background
+foreground: '#ffcccb'  # Soft red-tinted foreground
+details: darker
+terminal_colors:
+  bright:
+    black: '#4a1a2a'
+    blue: '#ff8a95'
+    cyan: '#ffa8b8'
+    green: '#ff9da3'
+    magenta: '#ff6b9d'
+    red: '#ff4757'
+    white: '#ffe0e0'
+    yellow: '#ffb3b3'
+  normal:
+    black: '#2a1015'
+    blue: '#e67e9a'
+    cyan: '#ff8fab'
+    green: '#d8869b'
+    magenta: '#c74375'
+    red: '#e63946'
+    white: '#f0c0c0'
+    yellow: '#f08080'

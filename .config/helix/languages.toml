@@ -1,0 +1,54 @@
+[[language]]
+name = "python"
+scope = "source.python"
+injection-regex = "python"
+file-patterns = ["*.py", "*.pyi", "*.pyw"]
+shebangs = ["python"]
+auto-format = true
+formatter = { command = "black", args = ["--quiet", "-"] }
+
+[[language]]
+name = "rust"
+scope = "source.rust"
+injection-regex = "rust"
+file-patterns = ["*.rs"]
+auto-format = true
+formatter = { command = "rustfmt", args = ["--edition", "2021"] }
+
+[[language]]
+name = "nix"
+scope = "source.nix"
+injection-regex = "nix"
+file-patterns = ["*.nix"]
+auto-format = false
+
+[[language]]
+name = "toml"
+scope = "source.toml"
+injection-regex = "toml"
+file-patterns = ["*.toml"]
+auto-format = false
+
+[[language]]
+name = "markdown"
+scope = "source.md"
+injection-regex = "md|markdown"
+file-patterns = ["*.md"]
+auto-format = false
+soft-wrap = { enable = true }
+
+[[language]]
+name = "bash"
+scope = "source.shell"
+injection-regex = "(bash|sh|shell|zsh)"
+file-patterns = ["*.sh", ".bashrc", ".zshrc", ".bash_profile"]
+shebangs = ["bash", "sh"]
+auto-format = false
+
+[[language]]
+name = "json"
+scope = "source.json"
+injection-regex = "json"
+file-patterns = ["*.json"]
+auto-format = true
+formatter = { command = "jq", args = ["."] }

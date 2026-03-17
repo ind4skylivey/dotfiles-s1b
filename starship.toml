@@ -1,0 +1,409 @@
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                    il1v3y's Red Team Starship Config                     ║
+# ║                     Cyberpunk Aesthetic · Catppuccin Mocha                ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](surface0)\
+$username\
+[](bg:red fg:surface0)\
+$hostname\
+[](bg:peach fg:red)\
+$directory\
+[](fg:peach bg:green)\
+$git_branch\
+$git_status\
+$git_commit\
+$git_state\
+[](fg:green bg:teal)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$python\
+[](fg:teal bg:blue)\
+$docker_context\
+$kubernetes\
+[](fg:blue bg:purple)\
+$cmd_duration\
+[](fg:purple bg:overlay0)\
+$time\
+[ ](fg:overlay0)\
+$line_break\
+$sudo\
+$shell\
+$character
+"""
+
+command_timeout = 5000
+add_newline = true
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                            Color Palette                                  ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+palette = 'catppuccin_mocha'
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+orange = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                          System Information                               ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[os]
+disabled = false
+style = "bg:surface0 fg:text"
+format = '[$symbol]($style)'
+
+[os.symbols]
+Arch = " "
+Debian = " "
+Fedora = " "
+Kali = " "
+Ubuntu = " "
+Windows = " "
+Linux = " "
+
+[username]
+show_always = true
+style_user = "bg:surface0 fg:text bold"
+style_root = "bg:surface0 fg:red bold"
+format = '[󰱯 $user]($style)'
+
+[hostname]
+ssh_only = false
+ssh_symbol = "󰢹 "
+style = "bg:red fg:base bold"
+format = '[ $ssh_symbol$hostname ]($style)'
+disabled = false
+
+[sudo]
+disabled = false
+style = "bg:red fg:base bold"
+symbol = "⚡"
+format = '[$symbol]($style)'
+
+[shell]
+disabled = false
+bash_indicator = "bsh"
+zsh_indicator = "zsh"
+fish_indicator = "fsh"
+style = "bg:red fg:text"
+format = '[ $indicator]($style)'
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                          Directory & Navigation                           ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[directory]
+style = "fg:base bg:peach bold"
+format = "[ $path ]($style)"
+truncation_length = 4
+truncation_symbol = "…/"
+read_only = " 󰌾"
+home_symbol = " "
+truncate_to_repo = true
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Videos" = " "
+"Developer" = "󰲋 "
+"dev" = "󰲋 "
+"security" = " "
+"exploits" = " "
+"tools" = " "
+"loot" = " "
+"reconnaissance" = " "
+"payloads" = "󱐋 "
+"scripts" = " "
+".config" = " "
+".ssh" = "󰢬 "
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                             Git Integration                               ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[git_branch]
+symbol = " "
+style = "bg:green fg:base bold"
+format = '[[ $symbol$branch ](bg:green fg:base)]($style)'
+truncation_length = 20
+truncation_symbol = "…"
+
+[git_status]
+style = "bg:green fg:base"
+format = '[[($all_status$ahead_behind )](bg:green fg:base)]($style)'
+conflicted = " "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+up_to_date = ""
+untracked = "?${count} "
+stashed = "󰏗 ${count} "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+[git_commit]
+style = "bg:green fg:base"
+format = '[[\($hash$tag\) ](bg:green fg:base)]($style)'
+commit_hash_length = 7
+tag_symbol = " 󰓹 "
+tag_disabled = false
+only_detached = true
+
+[git_state]
+style = "bg:green fg:base bold"
+format = '[\[$state($progress_current/$progress_total)\] ](bg:green fg:base)'
+rebase = "REBASING"
+merge = "MERGING"
+revert = "REVERTING"
+cherry_pick = "CHERRY-PICKING"
+bisect = "BISECTING"
+am = "AM"
+am_or_rebase = "AM/REBASE"
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                        Programming Languages                              ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[c]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+detect_extensions = ['c', 'h']
+
+[rust]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[golang]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[nodejs]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[php]
+symbol = "󰌟 "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[python]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version)(\($virtualenv\)) ](bg:teal fg:base)]($style)'
+pyenv_version_name = false
+
+[java]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[kotlin]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[lua]
+symbol = "󰢱 "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+[ruby]
+symbol = " "
+style = "bg:teal fg:base"
+format = '[[ $symbol($version) ](bg:teal fg:base)]($style)'
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                        Container & Cloud Tools                            ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[docker_context]
+symbol = " "
+style = "bg:blue fg:base"
+format = '[[ $symbol$context ](bg:blue fg:base)]($style)'
+only_with_files = true
+
+[kubernetes]
+symbol = "󱃾 "
+style = "bg:blue fg:base"
+format = '[[ $symbol$context( \($namespace\)) ](bg:blue fg:base)]($style)'
+disabled = false
+
+[aws]
+symbol = " "
+style = "bg:blue fg:base"
+format = '[[ $symbol($profile)(\($region\)) ](bg:blue fg:base)]($style)'
+disabled = true
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                          Performance Metrics                              ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[cmd_duration]
+min_time = 500
+style = "bg:purple fg:base bold"
+format = '[[ 󰔛 $duration ](bg:purple fg:base)]($style)'
+show_milliseconds = false
+
+[memory_usage]
+disabled = true
+threshold = 75
+symbol = "󰍛 "
+style = "bg:purple fg:base"
+format = '[[ $symbol${ram_pct} ](bg:purple fg:base)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:overlay0 fg:text bold"
+format = '[[  $time ](bg:overlay0 fg:text)]($style)'
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                          Package Managers                                 ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[package]
+symbol = "󰏗 "
+style = "bg:teal fg:base"
+format = '[[ $symbol$version ](bg:teal fg:base)]($style)'
+disabled = false
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                            Environment                                    ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[env_var.EXPLOIT_MODE]
+symbol = "󱐋 "
+style = "bg:red fg:base bold"
+format = '[[ $symbol$env_value ](bg:red fg:base)]($style)'
+disabled = true
+
+[env_var.VPN_STATUS]
+symbol = "󰖂 "
+style = "bg:green fg:base bold"
+format = '[[ $symbol ](bg:green fg:base)]($style)'
+disabled = true
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                          Prompt Characters                                ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[character]
+disabled = false
+success_symbol = '[💀](bold fg:green)'
+error_symbol = '[💀](bold fg:red)'
+vimcmd_symbol = '[](bold fg:green)'
+vimcmd_replace_one_symbol = '[](bold fg:purple)'
+vimcmd_replace_symbol = '[](bold fg:purple)'
+vimcmd_visual_symbol = '[](bold fg:lavender)'
+
+[line_break]
+disabled = false
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                          Additional Tools                                 ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[battery]
+disabled = true
+full_symbol = "󰂄 "
+charging_symbol = "󰂄 "
+discharging_symbol = "󰂃 "
+unknown_symbol = "󰂑 "
+empty_symbol = "󰂎 "
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
+discharging_symbol = "󰂎 "
+
+[[battery.display]]
+threshold = 50
+style = "bold yellow"
+
+[[battery.display]]
+threshold = 100
+style = "bold green"
+
+[status]
+disabled = false
+symbol = "✘"
+success_symbol = ""
+not_executable_symbol = ""
+not_found_symbol = ""
+sigint_symbol = ""
+signal_symbol = ""
+format = '[\[$symbol$common_meaning$signal_name$maybe_int\]]($style) '
+map_symbol = true
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                       Security Tools Indicators                           ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+[custom.metasploit]
+command = "test -n \"$MSFCONSOLE\" && echo '󱐋'"
+when = 'test -n "$MSFCONSOLE"'
+style = "bg:red fg:base bold"
+format = '[[ $output ](bg:red fg:base)]($style)'
+disabled = true
+
+[custom.burp]
+command = "pgrep -x burp > /dev/null && echo ''"
+when = 'pgrep -x burp > /dev/null'
+style = "bg:orange fg:base bold"
+format = '[[ $output ](bg:orange fg:base)]($style)'
+shell = ["sh", "-c"]
+disabled = true
+
+[custom.vpn]
+command = "ip link show | grep -q 'tun0\\|tap0' && echo '󰖂'"
+when = 'ip link show | grep -q "tun0\|tap0"'
+style = "bg:green fg:base bold"
+format = '[[ $output ](bg:green fg:base)]($style)'
+shell = ["sh", "-c"]
+disabled = false

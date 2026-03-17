@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/il1v3y/.config/autostart/restore-wallpaper.sh
+Hidden=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+Name=Restore Wallpaper
+Comment=Restore wallpaper on session start
+Categories=System;

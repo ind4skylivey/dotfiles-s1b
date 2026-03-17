@@ -1,0 +1,69 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 24,
+    "margin-top": 3,
+    "margin-left": 5,
+    "margin-right": 5,
+    "spacing": 0,
+
+    "modules-left": [
+        "custom/launcher",
+        "custom/workspaces"
+    ],
+    "modules-center": [],
+    "modules-right": [
+        "custom/temperature",
+        "cpu",
+        "memory",
+        "clock",
+        "custom/power"
+    ],
+
+    "custom/launcher": {
+        "format": " 󰈸 ",
+        "on-click": "wofi --show drun --style ~/.config/wofi/style.css --width 400 --height 500",
+        "tooltip": "Applications"
+    },
+
+    "custom/workspaces": {
+        "exec": "~/.config/waybar/scripts/workspaces.py",
+        "return-type": "json",
+        "interval": 1,
+        "format": " 󰚀 {} ",
+        "on-scroll-up": "qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.previous",
+        "on-scroll-down": "qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.next",
+        "on-click": "qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.next"
+    },
+
+    "custom/temperature": {
+        "exec": "~/.config/waybar/scripts/temperature.py",
+        "return-type": "json",
+        "interval": 3,
+        "format": " {} ",
+        "tooltip": "Temperature"
+    },
+
+    "clock": {
+        "format": " 🕐 {:%H:%M} ",
+        "interval": 60
+    },
+
+    "cpu": {
+        "format": " 󰻠 {usage}% ",
+        "interval": 2,
+        "tooltip": false
+    },
+
+    "memory": {
+        "format": " 󰍛 {used}GB ",
+        "interval": 5,
+        "tooltip": false
+    },
+
+    "custom/power": {
+        "format": " 󰐥 ",
+        "on-click": "loginctl terminate-user $USER",
+        "tooltip": "Power"
+    }
+}
