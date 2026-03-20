@@ -152,6 +152,7 @@ struct Monitor {
 	float mfact;
 	int nmaster;
 	int num;
+	unsigned int gappih, gappiv, gappoh, gappov;
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
@@ -225,6 +226,10 @@ static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
 static void grabbuttons(Client *c, int focused);
 static void grabkeys(void);
 static void incnmaster(const Arg *arg);
+static void defaultgaps(const Arg *arg);
+static void incrgaps(const Arg *arg);
+static void togglegaps(const Arg *arg);
+static void togglesmartgaps(const Arg *arg);
 static int isdescprocess(pid_t p, pid_t c);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
@@ -313,6 +318,9 @@ static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
 static void autostart_exec(void);
 
+static void getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc);
+static void setgaps(int oh, int ov, int ih, int iv);
+
 /* variables */
 static const char autostartblocksh[] = "autostart_blocking.sh";
 static const char autostartsh[] = "autostart.sh";
@@ -359,6 +367,8 @@ static xcb_connection_t *xcon;
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
+
+static int enablegaps = 1;
 
 #if SHOWWINICON
 static void freeicon(Client *c);
@@ -896,6 +906,10 @@ createmon(void)
 	m->tagset[0] = m->tagset[1] = 1;
 	m->mfact = mfact;
 	m->nmaster = nmaster;
+	m->gappih = gappih;
+	m->gappiv = gappiv;
+	m->gappoh = gappoh;
+	m->gappov = gappov;
 	m->showbar = showbar;
 	m->topbar = topbar;
 	m->lt[0] = &layouts[0];
@@ -916,6 +930,73 @@ createmon(void)
 	}
 
 	return m;
+}
+
+static void
+setgaps(int oh, int ov, int ih, int iv)
+{
+	if (oh < 0) oh = 0;
+	if (ov < 0) ov = 0;
+	if (ih < 0) ih = 0;
+	if (iv < 0) iv = 0;
+
+	selmon->gappoh = oh;
+	selmon->gappov = ov;
+	selmon->gappih = ih;
+	selmon->gappiv = iv;
+	arrange(selmon);
+}
+
+static void
+getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc)
+{
+	unsigned int n, oe, ie;
+	Client *c;
+
+	oe = ie = enablegaps;
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (smartgaps && n == 1)
+		oe = 0;
+
+	*oh = (int)m->gappoh * (int)oe;
+	*ov = (int)m->gappov * (int)oe;
+	*ih = (int)m->gappih * (int)ie;
+	*iv = (int)m->gappiv * (int)ie;
+	*nc = n;
+}
+
+static void
+togglegaps(const Arg *arg)
+{
+	(void)arg;
+	enablegaps = !enablegaps;
+	arrange(NULL);
+}
+
+static void
+togglesmartgaps(const Arg *arg)
+{
+	(void)arg;
+	smartgaps = !smartgaps;
+	arrange(NULL);
+}
+
+static void
+defaultgaps(const Arg *arg)
+{
+	(void)arg;
+	setgaps((int)gappoh, (int)gappov, (int)gappih, (int)gappiv);
+}
+
+static void
+incrgaps(const Arg *arg)
+{
+	setgaps(
+		(int)selmon->gappoh + arg->i,
+		(int)selmon->gappov + arg->i,
+		(int)selmon->gappih + arg->i,
+		(int)selmon->gappiv + arg->i
+	);
 }
 
 void
@@ -2860,21 +2941,22 @@ tile(Monitor *m)
 	float mfacts, sfacts;
 	int mrest, srest;
 	Client *c;
+	int oh, ov, ih, iv;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-
+	getgaps(m, &oh, &ov, &ih, &iv, &n);
 	if (n == 0)
 		return;
 
-	sx = mx = m->wx;
-	sy = my = m->wy;
-	sh = mh = m->wh;
-	sw = mw = m->ww;
+	sx = mx = m->wx + ov;
+	sy = my = m->wy + oh;
+	mh = m->wh - 2 * oh - ih * (MIN(n, m->nmaster) - 1);
+	sh = m->wh - 2 * oh - ih * (n > m->nmaster ? (n - m->nmaster - 1) : 0);
+	sw = mw = m->ww - 2 * ov;
 
 	if (m->nmaster && n > m->nmaster) {
-		sw = mw * (1 - m->mfact);
-		mw = mw * m->mfact;
-		sx = mx + mw;
+		sw = (mw - iv) * (1 - m->mfact);
+		mw = (mw - iv) * m->mfact;
+		sx = mx + mw + iv;
 	}
 
 	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
@@ -2882,10 +2964,10 @@ tile(Monitor *m)
 	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
 			resize(c, mx, my, mw - (2*c->bw), (mh / mfacts) * c->cfact + (i < mrest ? 1 : 0) - (2*c->bw), 0);
-			my += HEIGHT(c);
+			my += HEIGHT(c) + ih;
 		} else {
 			resize(c, sx, sy, sw - (2*c->bw), (sh / sfacts) * c->cfact + ((i - m->nmaster) < srest ? 1 : 0) - (2*c->bw), 0);
-			sy += HEIGHT(c);
+			sy += HEIGHT(c) + ih;
 		}
 }
 
@@ -3379,7 +3461,7 @@ void
 updatestatus(void)
 {
 	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext))) {
-		strcpy(stext, "dwm-titus:"VERSION);
+		strcpy(stext, "S1B-dwm"VERSION);
 		statusw = TEXTW(stext) - lrpad + 2;
 	} else {
 		/* status2d: calculate width skipping ^c/^b/^d color escape codes */

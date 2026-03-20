@@ -5,6 +5,11 @@ static const unsigned int refresh_rate        = 180;  /* matches dwm's mouse eve
 static const unsigned int enable_noborder     = 1;   /* toggles noborder feature (0=disabled, 1=enabled) */
 static const unsigned int borderpx            = 2;   /* border pixel of windows */
 static const unsigned int snap                = 8;   /* snap pixel */
+static unsigned int gappih                    = 10;  /* inner horizontal gap between windows */
+static unsigned int gappiv                    = 10;  /* inner vertical gap between windows */
+static unsigned int gappoh                    = 10;  /* outer horizontal gap between windows and screen edge */
+static unsigned int gappov                    = 10;  /* outer vertical gap between windows and screen edge */
+static int smartgaps                          = 0;   /* 1 means no outer gap when there is only one window */
 static const int swallowfloating              = 1;   /* 1 means swallow floating windows by default */
 static const unsigned int systraypinning      = 1;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft       = 0;   /* 0: systray in the right corner, >0: s:systray on left of status text */
@@ -61,10 +66,8 @@ static const char *const autostart[] = {
     "picom", "-b", NULL,
     "sh", "-c", "feh --randomize --bg-fill ~/Pictures/backgrounds/*", NULL,
     "synergy", NULL,
-    "slstatus", NULL,
-    "xrandr", "--output", "DisplayPort-0", "--primary", "--mode", "1920x1080", "--rate", "180",
-    "--output", "DisplayPort-1", "--mode", "1920x1080", "--rate", "60", "--left-of", "DisplayPort-0", "--rotate", "left", "--pos", "0x0",
-    "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "60", "--above", "DisplayPort-0", "--pos", "0x1080",
+    "/home/il1v3y/.config/dwm/slstatus/slstatus", NULL,
+    "sh", "-c", "/home/il1v3y/.config/dwm/scripts/apply-xrandr-layout.sh", NULL,
     NULL,
     NULL /* terminate */
 };
@@ -175,6 +178,10 @@ static Key keys[] = {
     { 0,                            XF86XK_AudioMute,          spawn,          SHCMD ("amixer sset Master $(amixer get Master | grep -q '\\[on\\]' && echo 'mute' || echo 'unmute') && vol=$(amixer get Master | awk -F'[][]' '/Left:/{print $2; exit}') && dunstify -r 9991 -u low \"Volume $vol\"")},
     { 0,                            XF86XK_AudioRaiseVolume,   spawn,          SHCMD ("amixer sset Master 5%+ unmute && vol=$(amixer get Master | awk -F'[][]' '/Left:/{print $2; exit}') && dunstify -r 9991 -u low \"Volume $vol\"")},
     { MODKEY|ShiftMask,             XK_b,                      togglebar,      {0} },
+    { MODKEY|ControlMask,           XK_plus,                   incrgaps,       {.i = +1 } },
+    { MODKEY|ControlMask,           XK_minus,                  incrgaps,       {.i = -1 } },
+    { MODKEY|ControlMask,           XK_equal,                  defaultgaps,    {0} },
+    { MODKEY|ControlMask|ShiftMask, XK_g,                      togglegaps,     {0} },
     { MODKEY,                       XK_j,                      focusstack,     {.i = +1 } },
     { MODKEY,                       XK_k,                      focusstack,     {.i = -1 } },
     { MODKEY|ShiftMask,             XK_j,                      movestack,      {.i = +1 } },
