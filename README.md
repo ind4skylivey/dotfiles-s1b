@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- Hero Banner -->
-<img width="1536" height="1024" alt="dotfiles" src="https://github.com/user-attachments/assets/e1e71e2d-e965-4495-bfc0-6dd7e091c27f" />
+<img width="1536" height="1024" alt="dotfiles" src="https://github.com/user-attachments/assets/7f503081-9246-4ee6-a860-967c98576f4b" />
 
 
 <!-- Live System Showcase - Updated DWM Configuration -->
