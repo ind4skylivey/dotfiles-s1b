@@ -204,13 +204,42 @@ if command_exists tmux && [ ! -d "$HOME/.config/tmux/plugins/tpm" ]; then
 fi
 
 if [ -d "$HOME/.config/dwm" ]; then
+    info "Customizing DWM configuration for current user..."
+    
+    # Replace hardcoded user paths with current user's home directory
+    for file in "$HOME/.config/dwm/config.h" "$HOME/.config/dwm/slstatus/config.h" "$HOME/.config/dwm/scripts/apply-xrandr-layout.sh"; do
+        if [ -f "$file" ]; then
+            sed -i "s|/home/il1v3y|$HOME|g" "$file"
+            info "Updated paths in $(basename $file)"
+        fi
+    done
+    
     read -p "Compile and install DWM? (requires sudo) (y/N) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        info "Compiling DWM..."
+        info "Installing build dependencies..."
+        sudo pacman -S --needed --noconfirm libx11 libxinerama libxft freetype2 imlib2
+        
+        info "Compiling DWM with custom configuration..."
         cd "$HOME/.config/dwm"
+        
+        # Compile slstatus first if it exists
+        if [ -d "slstatus" ]; then
+            info "Compiling slstatus..."
+            cd slstatus
+            make clean && sudo make install
+            cd ..
+        fi
+        
+        # Then compile dwm
+        info "Compiling dwm..."
         sudo make clean install
-        success "DWM installed"
+        
+        # Also install to user path for local testing
+        cp dwm "$HOME/.config/dwm/dwm"
+        
+        success "DWM and slstatus installed successfully"
+        success "Autostart will run custom slstatus and xrandr layout script on next session"
         cd "$DOTFILES_DIR"
     fi
 fi
