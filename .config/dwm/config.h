@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <stddef.h>
 
 /* appearance */
 static const unsigned int refresh_rate        = 180;  /* matches dwm's mouse event processing to your monitor's refresh rate for smoother window interactions */
@@ -22,32 +23,32 @@ static const int topbar                       = 1;   /* 0 means bottom bar */
 #define ICONSPACING                           6      /* space between icon and title */
 #define SHOWWINICON                           1      /* 0 means no winicon */
 static const char *fonts[]                    = { "MesloLGS Nerd Font Mono:size=11", "NotoColorEmoji:pixelsize=11:antialias=true:autohint=true" };
-static const char normbordercolor[]       = "#5c0099";  // Vibrant purple border (inactive)
-static const char normbgcolor[]           = "#110022";  // Dark deep violet background
-static const char normfgcolor[]           = "#b388ff";  // Neon Violet text
-static const char selbordercolor[]        = "#ff2200";  // Neon Red-Orange accent (active)
-static const char selbgcolor[]            = "#bd00ff";  // Electric Violet active background
-static const char selfgcolor[]            = "#ffffff";  // White text (active)
+static const char normbordercolor[]       = "#5c0099";  /* Vibrant purple border (inactive) */
+static const char normbgcolor[]           = "#110022";  /* Dark deep violet background */
+static const char normfgcolor[]           = "#b388ff";  /* Neon Violet text */
+static const char selbordercolor[]        = "#ff2200";  /* Neon Red-Orange accent (active) */
+static const char selbgcolor[]            = "#bd00ff";  /* Electric Violet active background */
+static const char selfgcolor[]            = "#ffffff";  /* White text (active) */
 
-static const char urgbordercolor[]        = "#ff0000";  // Red border for urgent windows
-static const char urgbgcolor[]            = "#ff0000";  // Red background for urgent tags
-static const char urgfgcolor[]            = "#ffffff";  // White text for urgent tags
+static const char urgbordercolor[]        = "#ff0000";  /* Red border for urgent windows */
+static const char urgbgcolor[]            = "#ff0000";  /* Red background for urgent tags */
+static const char urgfgcolor[]            = "#ffffff";  /* White text for urgent tags */
 
-static const char titlebordercolor[]      = "#5c0099";  // Same as norm border
-static const char titlebgcolor[]          = "#1a0033";  // Slightly lighter violet for title
-static const char titlefgcolor[]          = "#ffffff";  // White text for title
+static const char titlebordercolor[]      = "#5c0099";  /* Same as norm border */
+static const char titlebgcolor[]          = "#1a0033";  /* Slightly lighter violet for title */
+static const char titlefgcolor[]          = "#ffffff";  /* White text for title */
 
-static const char layoutbordercolor[]     = "#5c0099";  // Same as norm border
-static const char layoutbgcolor[]         = "#000000";  // Black background for layout symbol
-static const char layoutfgcolor[]         = "#00ffff";  // Cyan text for layout symbol
+static const char layoutbordercolor[]     = "#5c0099";  /* Same as norm border */
+static const char layoutbgcolor[]         = "#000000";  /* Black background for layout symbol */
+static const char layoutfgcolor[]         = "#00ffff";  /* Cyan text for layout symbol */
 
 static const char *colors[][3] = {
-    /*               fg           bg           border   */
-    [SchemeNorm]   = { normfgcolor,   normbgcolor,   normbordercolor },
-    [SchemeSel]    = { selfgcolor,    selbgcolor,    selbordercolor },
-    [SchemeUrg]    = { urgfgcolor,    urgbgcolor,    urgbordercolor },
-    [SchemeTitle]  = { titlefgcolor,  titlebgcolor,  titlebordercolor },
-    [SchemeLayout] = { layoutfgcolor, layoutbgcolor, layoutbordercolor },
+    /*               fg              bg              border            */
+    [SchemeNorm]   = { normfgcolor,   normbgcolor,    normbordercolor   },
+    [SchemeSel]    = { selfgcolor,    selbgcolor,     selbordercolor    },
+    [SchemeUrg]    = { urgfgcolor,    urgbgcolor,     urgbordercolor    },
+    [SchemeTitle]  = { titlefgcolor,  titlebgcolor,   titlebordercolor  },
+    [SchemeLayout] = { layoutfgcolor, layoutbgcolor,  layoutbordercolor },
 };
 
 static const char *const autostart[] = {
@@ -62,7 +63,7 @@ static const char *const autostart[] = {
     "sh", "-c", "legcord &", NULL,
     "sh", "-c", "solaar -w hide &", NULL,
     "dunst", NULL,
-    "xset", "r", "rate", "300", "50", NULL,  // Keyboard repeat rate faster
+    "xset", "r", "rate", "300", "50", NULL,  /* Keyboard repeat rate faster */
     "picom", "-b", NULL,
     "sh", "-c", "feh --randomize --bg-fill ~/Pictures/backgrounds/*", NULL,
     "synergy", NULL,
@@ -120,29 +121,30 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    { "[]=",      tile },    /* first entry is default */
-    { "><>",      NULL },    /* no layout function means floating behavior */
+    { "[]=",      tile },     /* first entry is default */
+    { "><>",      NULL },     /* no layout function means floating behavior */
     { "[M]",      monocle },
 };
 
-/* key definitions */
-#define MODKEY Mod4Mask
+/* Key definitions */
+#define MODKEY     Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-    { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-    { MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-    { MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-    { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+    { MODKEY,                       KEY, view,       {.ui = 1 << TAG} }, \
+    { MODKEY|ControlMask,           KEY, toggleview, {.ui = 1 << TAG} }, \
+    { MODKEY|ShiftMask,             KEY, tag,        {.ui = 1 << TAG} }, \
+    { MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
 
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-#define STATUSBAR "slstatus"
-/* commands */
-static const char *launchercmd[] = { "rofi", "-show", "drun", NULL };
-static const char *termcmd[]     = { "kitty", NULL };
-static const char *editorcmd[]   = { "emacsclient", "-c", "-a", "emacs", NULL };
-static const char *chatcmd[]     = { "legcord", NULL };
-static const char *seccmd[]      = { "burpsuite", NULL };
-static const char *gamescopecmd[] = { "/home/il1v3y/.config/gamescope/steam-gamescope-session", NULL };
+/* Helper for spawning shell commands in the pre dwm-5.0 fashion */
+#define SHCMD(cmd)    { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+#define STATUSBAR     "slstatus"
+
+/* Commands */
+static const char *launchercmd[]   = { "rofi", "-show", "drun", NULL };
+static const char *termcmd[]       = { "kitty", NULL };
+static const char *editorcmd[]     = { "emacsclient", "-c", "-a", "emacs", NULL };
+static const char *chatcmd[]       = { "legcord", NULL };
+static const char *seccmd[]        = { "burpsuite", NULL };
+static const char *gamescopecmd[]  = { "/home/il1v3y/.config/gamescope/steam-gamescope-session", NULL };
 
 static Key keys[] = {
     /* modifier                     key                        function        argument */
@@ -167,7 +169,7 @@ static Key keys[] = {
     { MODKEY,                       XK_p,                      spawn,          SHCMD ("flameshot full -p ~/Screenshots/")},
     { MODKEY|ShiftMask,             XK_p,                      spawn,          SHCMD ("flameshot gui -p ~/Screenshots/")},
     { MODKEY|ControlMask,           XK_p,                      spawn,          SHCMD ("flameshot gui --clipboard")},
-    { 0,                            XK_Print,                  spawn,          SHCMD ("flameshot gui")},  // Print key = GUI
+    { 0,                            XK_Print,                  spawn,          SHCMD ("flameshot gui") }, /* Print key = GUI */
     { MODKEY,                       XK_e,                      spawn,          SHCMD ("pcmanfm-qt")},
     { MODKEY,                       XK_w,                      spawn,          SHCMD ("looking-glass-client -F")},
     { MODKEY|ShiftMask,             XK_w,                      spawn,          SHCMD ("feh --randomize --bg-fill ~/Pictures/backgrounds/*")},
@@ -214,10 +216,10 @@ static Key keys[] = {
     { MODKEY|ControlMask,           XK_Up,                     spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && vol=$(pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1{print $5}') && dunstify -r 9991 -u low \"Volume $vol\"") },
     { MODKEY|ControlMask,           XK_Down,                   spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && vol=$(pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1{print $5}') && dunstify -r 9991 -u low \"Volume $vol\"") },
     { MODKEY|ControlMask,           XK_m,                      spawn,          SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; muted=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}'); dunstify -r 9991 -u low \"Output: $([ \"$muted\" = yes ] && echo Muted || echo Live)\"") },
-    { MODKEY|ControlMask,           XK_space,                  spawn,          SHCMD("playerctl play-pause") },
-    { MODKEY|ShiftMask,             XK_space,                  spawn,          SHCMD("playerctl stop") },
-    { MODKEY|ShiftMask,             XK_Left,                   spawn,          SHCMD("playerctl previous") },
-    { MODKEY|ShiftMask,             XK_Right,                  spawn,          SHCMD("playerctl next") },
+    { MODKEY|ShiftMask,             XK_F5,                     spawn,          SHCMD("playerctl play-pause") },
+    { MODKEY|ShiftMask,             XK_F6,                     spawn,          SHCMD("playerctl stop") },
+    { MODKEY|ShiftMask,             XK_F7,                     spawn,          SHCMD("playerctl previous") },
+    { MODKEY|ShiftMask,             XK_F8,                     spawn,          SHCMD("playerctl next") },
     { MODKEY|ShiftMask,             XK_g,                      spawn,          SHCMD("ghidra &") },
     { MODKEY|ShiftMask,             XK_v,                      spawn,          SHCMD("wireshark &") },
     { MODKEY|ShiftMask,             XK_d,                      spawn,          SHCMD("dunstctl set-paused toggle; state=$(dunstctl is-paused); dunstify -r 9993 \"Do Not Disturb: $([ \"$state\" = true ] && echo ON || echo OFF)\"") },
@@ -244,37 +246,40 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_q,                      quit,           {0} },
     { MODKEY|ControlMask,           XK_q,                      spawn,          SHCMD("$HOME/.config/rofi/powermenu.sh")},
     { MODKEY|ControlMask|ShiftMask, XK_r,                      spawn,          SHCMD("systemctl reboot")},
-    { MODKEY|ControlMask|ShiftMask, XK_s,                      spawn,          SHCMD("systemctl suspend")},
-    // Browser - Qutebrowser
-  { MODKEY, XK_n, spawn, SHCMD ("qutebrowser")},  // Super+n = Qutebrowser
+    { MODKEY|ControlMask|ShiftMask, XK_s,                      spawn,          SHCMD("systemctl suspend") },
 
-  // Quick picom toggle (transparency on/off)
-  { MODKEY|ShiftMask, XK_c, spawn, SHCMD ("$HOME/.config/dwm/scripts/picom-profile-toggle.sh")},
-  
-  // Scratchpad terminal
-  { MODKEY, XK_grave, spawn, SHCMD ("$HOME/.config/dwm/scripts/scratchpad.sh")},
+    /* Browser - Qutebrowser */
+    { MODKEY,                       XK_n,                      spawn,          SHCMD ("qutebrowser") },
 
-  // Night light toggle
-  { MODKEY|ShiftMask, XK_n, spawn, SHCMD ("$HOME/.config/dwm/scripts/toggle-nightlight.sh")},
+    /* Quick picom toggle (transparency on/off) */
+    { MODKEY|ShiftMask,             XK_c,                      spawn,          SHCMD ("$HOME/.config/dwm/scripts/picom-profile-toggle.sh") },
 
-  // Display profile toggle (work/gaming)
-  { MODKEY|ShiftMask, XK_x, spawn, SHCMD ("$HOME/.config/dwm/scripts/toggle-xrandr-profile.sh")},
+    /* Scratchpad terminal */
+    { MODKEY,                       XK_grave,                  spawn,          SHCMD ("$HOME/.config/dwm/scripts/scratchpad.sh") },
 
-  // Lid safety toggle when docked
-  { MODKEY|ShiftMask, XK_F12, spawn, SHCMD ("$HOME/.config/dwm/scripts/toggle-lid-inhibit.sh")},
-  
-  // System monitor
-  { MODKEY, XK_Escape, spawn, SHCMD ("kitty -e htop")},
+    /* Night light toggle */
+    { MODKEY|ShiftMask,             XK_n,                      spawn,          SHCMD ("$HOME/.config/dwm/scripts/toggle-nightlight.sh") },
+
+    /* Display profile toggle (work/gaming) */
+    { MODKEY|ShiftMask,             XK_x,                      spawn,          SHCMD ("$HOME/.config/dwm/scripts/toggle-xrandr-profile.sh") },
+
+    /* Lid safety toggle when docked */
+    { MODKEY|ShiftMask,             XK_F12,                    spawn,          SHCMD ("$HOME/.config/dwm/scripts/toggle-lid-inhibit.sh") },
+
+    /* System monitor */
+    { MODKEY,                       XK_Escape,                 spawn,          SHCMD ("kitty -e htop") },
   };
 
-/* button definitions */
-/* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
+/*
+ * Button definitions
+ * click: ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin
+ */
 static Button buttons[] = {
-    /* click                event mask      button          function        argument */
-    { ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
-    { ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-    { ClkClientWin,         MODKEY,         Button1,        moveorplace,    {.i = 2} },
-    { ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
-    { ClkTagBar,            0,              Button1,        view,           {0} },
-    { ClkTagBar,            0,              Button3,        toggleview,     {0} },
+    /* click          event mask  button  function    argument */
+    { ClkTagBar,      MODKEY,     Button1, tag,          {0} },
+    { ClkTagBar,      MODKEY,     Button3, toggletag,    {0} },
+    { ClkClientWin,   MODKEY,     Button1, moveorplace,  {.i = 2} },
+    { ClkClientWin,   MODKEY,     Button3, resizemouse,  {0} },
+    { ClkTagBar,      0,          Button1, view,         {0} },
+    { ClkTagBar,      0,          Button3, toggleview,   {0} },
 };

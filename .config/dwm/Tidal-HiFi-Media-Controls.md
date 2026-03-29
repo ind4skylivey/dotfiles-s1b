@@ -4,10 +4,10 @@
 
 | Action | Keybinding | Command |
 |--------|-----------|---------|
-| Play/Pause | `Super + Ctrl + Space` | `playerctl play-pause` |
-| Stop | `Super + Shift + Space` | `playerctl stop` |
-| Previous Track | `Super + Shift + ←` | `playerctl previous` |
-| Next Track | `Super + Shift + →` | `playerctl next` |
+| Play/Pause | `Super + Shift + F5` | `playerctl play-pause` |
+| Stop | `Super + Shift + F6` | `playerctl stop` |
+| Previous Track | `Super + Shift + F7` | `playerctl previous` |
+| Next Track | `Super + Shift + F8` | `playerctl next` |
 
 ## 🔊 Volume Controls
 
