@@ -315,10 +315,33 @@ cd ~/dotfiles
 ./install.sh
 ```
 
-**After install:**
+**After install, you need to bootstrap plugins separately:**
+
+| Tool | Command | What it installs |
+|:-----|:---------|:-----------------|
+| Neovim | `:Lazy sync` | All Neovim plugins (LSP, completion, treesitter, etc.) |
+| Tmux | `prefix + I` | TPM plugins (resurrect, continuum, etc.) |
+| Yazi | `ya packa -I` | Yazi file browser plugins |
+| Doom Emacs | `~/.config/emacs/bin/doom sync` | Doom Emacs packages |
+| Fish | `fisher update` | Fish shell plugins |
+
+**Also after install:**
 - Run `./lockscreen-setup.sh` to set up wallpapers
 - Log out and back in to DWM
 - Run `ws-doctor` to check everything's healthy
+
+**What this repo includes vs what gets generated:**
+
+This repo contains configuration files only. Plugins, compiled binaries, and runtime data are generated on your system after running the install commands above. This keeps the repo lightweight and avoids shipping pre-built artifacts.
+
+| Included in repo | Generated after install |
+|:-----------------|:------------------------|
+| Config files (.conf, .lua, .toml, .kdl) | Neovim plugins (lazy/) |
+| Scripts and shell configs | Tmux plugins (tpm/) |
+| DWM source code | Yazi plugins (.local/) |
+| Themes and color schemes | DWM compiled binary |
+| Keybindings and layouts | Doom Emacs packages |
+| Symlinks for shared configs | Fish completions |
 
 **Manual install (without stow):**
 ```bash
