@@ -1,0 +1,23 @@
+inherits = "catppuccin_mocha"
+
+# --- il1v3y Custom Aesthetics ---
+
+# Cursor: Electric Cyan for high visibility
+"ui.cursor.primary" = { fg = "#1e1e2e", bg = "#89dceb" }
+"ui.cursor.match" = { fg = "#1e1e2e", bg = "#f9e2af" }
+
+# Statusline: Darker background, brighter text for clarity
+"ui.statusline" = { fg = "#cdd6f4", bg = "#181825" }
+"ui.statusline.inactive" = { fg = "#6c7086", bg = "#181825" }
+"ui.statusline.normal" = { fg = "#1e1e2e", bg = "#89dceb", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "#1e1e2e", bg = "#a6e3a1", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "#1e1e2e", bg = "#f9e2af", modifiers = ["bold"] }
+
+# UI Elements
+"ui.background" = { bg = "#1e1e2e" } # Consistent dark background
+"ui.linenr.selected" = { fg = "#cdd6f4", modifiers = ["bold"] } # Highlight current line number
+"ui.selection" = { bg = "#313244" } # Subtle selection background
+
+# Diagnostics
+"diagnostic.error" = { underline = { color = "#f38ba8", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "#fab387", style = "curl" } }
