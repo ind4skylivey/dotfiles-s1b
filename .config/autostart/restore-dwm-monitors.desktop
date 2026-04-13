@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Restore DWM Monitors
+Comment=Restore correct monitor configuration for DWM session
+Exec=~/.config/autostart/restore-dwm-monitors.sh
+OnlyShowIn=XFCE;Openbox;
+X-GNOME-Autostart-enabled=true

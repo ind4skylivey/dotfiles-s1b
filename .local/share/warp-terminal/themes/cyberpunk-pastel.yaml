@@ -1,0 +1,25 @@
+name: Cyberpunk Pastel
+accent: '#ff6ec7'      # Pastel neon pink
+cursor: '#00ffcc'      # Pastel cyan cursor
+background: '#0a0e27'  # Deep dark blue-black
+foreground: '#d5a6ff'  # Pastel lavender-magenta
+details: darker
+terminal_colors:
+  bright:
+    black: '#1a1f3a'
+    blue: '#6ec8e1'
+    cyan: '#00ffcc'
+    green: '#00ff88'
+    magenta: '#ff6ec7'
+    red: '#ff5580'
+    white: '#e0d5ff'
+    yellow: '#ffcc00'
+  normal:
+    black: '#0f1219'
+    blue: '#5a9fb5'
+    cyan: '#00ccaa'
+    green: '#00cc66'
+    magenta: '#cc5599'
+    red: '#ff4488'
+    white: '#b8a0ff'
+    yellow: '#ccaa00'

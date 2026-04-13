@@ -1,0 +1,45 @@
+# A TOML linter such as https://taplo.tamasfe.dev/ can use this schema to validate your config.
+# If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+[mgr]
+ratio          = [ 2, 4, 3 ]  # widen preview pane
+linemode       = "mtime"
+mouse_events   = [ "click", "scroll", "touch", "move", "drag"]
+
+[preview]
+image_quality  = 90
+image_filter    = "lanczos3"
+
+[plugin]
+prepend_previewers = [
+  { name = "*.{png,jpg,jpeg,jpe,gif,webp,bmp,avif,heic,heif,svg}", run = "image" },
+  { mime = "image/*", run = "image" },
+  { name = "*.pdf", run = 'piper -- pdftotext -layout "$1" -' },
+  { name = "*.{tar,tar.gz,tgz,zip,7z,rar}", run = 'piper -- bsdtar -tf "$1"' },
+  { name = "*.md", run = "glow" },
+  { name = "*", run = "rich-preview" },
+]
+
+[opener]
+edit = [
+  { run = 'nvim "$@"', block = true, desc = "Edit with nvim (loads user config)", for = "unix" },
+]
+view = [
+  { run = 'bat --paging=always --style=numbers --color=always "$@"', block = true, desc = "View with bat", for = "unix" },
+  { run = 'less -R "$@"', block = true, desc = "View with less (fallback)", for = "unix" },
+]
+extract = [
+  { run = 'bsdtar -xvf "$1"', block = true, desc = "Extract archive here", for = "unix" },
+]
+compress = [
+  { run = 'tar -cvzf "${1%/}.tar.gz" "$1"', block = true, desc = "Compress to tar.gz", for = "unix" },
+]
+
+[open]
+rules = [
+  { name = "*", use = "edit" },
+]
+
+[terminal]
+emulator = "/usr/bin/kitty"

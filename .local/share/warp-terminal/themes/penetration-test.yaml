@@ -1,0 +1,25 @@
+name: Penetration Test
+accent: '#d946ef'      # Threat-level magenta
+cursor: '#f97316'      # Danger orange cursor
+background: '#1a0033'  # Deep purple-black
+foreground: '#e883ff'  # Pastel magenta-purple
+details: darker
+terminal_colors:
+  bright:
+    black: '#2d0052'
+    blue: '#a78bfa'
+    cyan: '#f0abfc'
+    green: '#86efac'
+    magenta: '#d946ef'
+    red: '#f87171'
+    white: '#f0abfc'
+    yellow: '#fbbf24'
+  normal:
+    black: '#16003b'
+    blue: '#8b5cf6'
+    cyan: '#d946ef'
+    green: '#6ee7b7'
+    magenta: '#be185d'
+    red: '#dc2626'
+    white: '#c084fc'
+    yellow: '#f59e0b'

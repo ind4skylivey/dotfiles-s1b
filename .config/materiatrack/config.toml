@@ -1,0 +1,22 @@
+# MatteriaTrack configuration (kept minimal for portability)
+
+[database]
+path = "~/.config/materiatrack/materiatrack.db"
+
+[ui]
+# Themes: fire, ice, lightning, earth, wind, bahamut
+theme = "bahamut"
+
+[tracking]
+auto_import_git = true
+git_repo_path = "~/code"
+
+[notifications]
+enable = false
+
+[integrations]
+obsidian_path = "~/vault/daily"
+
+[security]
+enable_encryption = false
+encryption_key = ""

@@ -1,0 +1,146 @@
+{
+    "id": "waybar-hdmi",
+    "output": "HDMI-A-1",
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "margin-top": 5,
+    "margin-left": 10,
+    "margin-right": 10,
+    "spacing": 0,
+
+    "modules-left": [
+        "custom/launcher",
+        "custom/workspaces",
+        "custom/separator-left",
+        "custom/quick-apps"
+    ],
+    "modules-center": [
+        "custom/window_title",
+        "custom/git_status"
+    ],
+    "modules-right": [
+        "custom/vpn",
+        "custom/separator-right-1",
+        "custom/temperature",
+        "network",
+        "cpu",
+        "memory",
+        "custom/separator-right-2",
+        "custom/uptime",
+        "pulseaudio",
+        "clock",
+        "custom/power"
+    ],
+
+    "custom/launcher": {
+        "format": " <span color='#ff0000'>󰈸</span> SYS.EXEC ",
+        "on-click": "wofi --show drun --style ~/.config/wofi/style.css --width 400 --height 500",
+        "tooltip": false
+    },
+
+    "custom/workspaces": {
+        "exec": "~/.config/waybar/scripts/workspaces.py",
+        "return-type": "json",
+        "interval": 1,
+        "format": " <span color='#ff0000'>󰚀</span> {} ",
+        "on-scroll-up": "qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.previous",
+        "on-scroll-down": "qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.next",
+        "on-click": "qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.next"
+    },
+
+    "custom/separator-left": {
+        "format": "│",
+        "tooltip": false
+    },
+
+    "custom/quick-apps": {
+        "format": " {} ",
+        "exec": "~/.config/waybar/scripts/quick_apps.py",
+        "return-type": "json",
+        "interval": 3600,
+        "on-click-1": "alacritty || konsole || xterm",
+        "on-click-2": "firefox || chromium",
+        "on-click-3": "code || gedit",
+        "on-click-4": "dolphin || nautilus",
+        "on-click-5": "pavucontrol"
+    },
+
+    "custom/window_title": {
+        "exec": "~/.config/waybar/scripts/window_title.py",
+        "return-type": "json",
+        "interval": 1,
+        "format": " <span color='#ff0000'>󰣇</span> {} "
+    },
+
+    "custom/git_status": {
+        "exec": "~/.config/waybar/scripts/git_status.sh",
+        "interval": 5,
+        "format": "{}",
+        "tooltip": false
+    },
+
+    "custom/vpn": {
+        "exec": "~/.config/waybar/scripts/vpn_status.sh",
+        "interval": 5,
+        "format": " <span color='#00ff00'>{}</span> ",
+        "tooltip": "VPN Status"
+    },
+
+    "custom/separator-right-1": {
+        "format": "│",
+        "tooltip": false
+    },
+
+    "custom/temperature": {
+        "exec": "~/.config/waybar/scripts/temperature.py",
+        "return-type": "json",
+        "interval": 3,
+        "format": " <span color='#ff0000'>{}</span> "
+    },
+
+    "custom/separator-right-2": {
+        "format": "│",
+        "tooltip": false
+    },
+
+    "custom/uptime": {
+        "exec": "~/.config/waybar/scripts/uptime.sh",
+        "interval": 60,
+        "format": " <span color='#ff0000'>{}</span> ",
+        "tooltip": "Session Time"
+    },
+
+    "clock": {
+        "format": " <span color='#ff0000'>🕐</span> {:%H:%M:%S} ",
+        "interval": 1
+    },
+
+    "cpu": {
+        "format": " <span color='#ff0000'>󰻠</span> {usage}% ",
+        "interval": 2
+    },
+
+    "memory": {
+        "format": " <span color='#ff0000'>󰍛</span> {used}GB ",
+        "interval": 5
+    },
+
+    "network": {
+        "format-wifi": " <span color='#ff0000'>📶</span> {signalStrength}% ",
+        "format-ethernet": " <span color='#ff0000'>󰈀</span> ",
+        "format-disconnected": " <span color='#ff0000'>󰖪</span> "
+    },
+
+    "pulseaudio": {
+        "format": " <span color='#ff0000'>{icon}</span> {volume}% ",
+        "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+        "on-click": "pavucontrol"
+    },
+
+    "custom/power": {
+        "format": " 󰐥 ",
+        "on-click": "loginctl terminate-user $USER",
+        "tooltip": false
+    }
+}

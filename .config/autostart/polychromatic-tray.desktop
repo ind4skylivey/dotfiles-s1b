@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Polychromatic Tray
+Comment=Start Polychromatic tray applet on login
+Exec=/usr/bin/polychromatic-tray-applet --force-appindicator
+Icon=polychromatic
+Terminal=false
+Categories=Utility;
+X-GNOME-Autostart-enabled=true
+StartupNotify=false

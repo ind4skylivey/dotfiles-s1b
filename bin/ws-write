@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+
+################################################################################
+# ws-write: Bootstrap Doom Emacs for writing and deep work
+#
+# Usage:
+#   ws-write [FILE]
+#   ws-write --daemon
+#
+# This script:
+#   1. Ensures Doom Emacs is installed
+#   2. Starts Emacs in terminal mode (-nw flag)
+#   3. Opens org-agenda for task overview
+#   4. Respects existing .doom.d configuration
+#   5. Supports daemon mode for faster startup
+#
+# Philosophy:
+#   - Deep work sessions (1-4 hours)
+#   - Org-mode mastery (tasks, notes, documentation)
+#   - Magit for git workflows
+#   - Vterm for embedded shell access
+#   - Minimal distractions
+################################################################################
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Defaults
+EMACS_DIR="${HOME}/.config/emacs"
+DOOM_BIN="${EMACS_DIR}/bin/doom"
+FILE_TO_OPEN=""
+USE_DAEMON=0
+
+# Parse arguments
+usage() {
+    cat << EOF
+Usage: ws-write [FILE] [OPTIONS]
+
+Bootstrap Doom Emacs for writing and deep work.
+
+Arguments:
+  FILE              File to open (optional)
+  --daemon          Start Emacs daemon (faster subsequent launches)
+  --client          Connect to existing daemon (emacsclient)
+  --help            Show this help
+
+Features:
+  • Org-mode for tasks and documentation
+  • Magit for git workflows (Ctrl+g)
+  • Vterm for embedded terminal (Ctrl+c Ctrl+o)
+  • Evil mode for Vim keybindings
+  • Auto-loaded .doom.d configuration
+
+Examples:
+  ws-write
+  ws-write ~/org/tasks.org
+  ws-write --daemon          (start daemon)
+  ws-write --client          (connect to daemon)
+
+EOF
+    exit 1
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --help|-h)
+            usage
+            ;;
+        --daemon)
+            USE_DAEMON=1
+            shift
+            ;;
+        --client)
+            # Connect to existing daemon
+            if ! command -v emacsclient &> /dev/null; then
+                echo -e "${RED}Error: emacsclient not found.${NC}" >&2
+                exit 1
+            fi
+            emacsclient -c -nw
+            exit 0
+            ;;
+        -*)
+            echo -e "${RED}Error: Unknown option: $1${NC}" >&2
+            usage
+            ;;
+        *)
+            FILE_TO_OPEN="$1"
+            shift
+            ;;
+    esac
+done
+
+# Check if Emacs is installed
+if ! command -v emacs &> /dev/null; then
+    echo -e "${RED}Error: Emacs not found.${NC}" >&2
+    echo "Install with: pacman -S emacs"
+    exit 1
+fi
+
+# Check if Doom Emacs is installed
+if [[ ! -d "$EMACS_DIR" ]]; then
+    echo -e "${RED}Error: Doom Emacs not found at $EMACS_DIR${NC}" >&2
+    echo "Install Doom Emacs:"
+    echo "  git clone --depth 1 https://github.com/doomemacs/doomemacs $EMACS_DIR"
+    echo "  $DOOM_BIN install"
+    exit 1
+fi
+
+# Ensure doom command is executable
+if [[ ! -x "$DOOM_BIN" ]]; then
+    chmod +x "$DOOM_BIN"
+fi
+
+# Determine context (file name or "default")
+CONTEXT="${FILE_TO_OPEN:-default}"
+
+# Export workflow state
+export LIVEY_WORKFLOW="write"
+export LIVEY_CONTEXT="$CONTEXT"
+export LIVEY_WORKFLOW_FILE="$FILE_TO_OPEN"
+
+# Log session start
+LOG_DIR="${HOME}/.local/share/livey/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="${LOG_DIR}/sessions.log"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] START write | context=$CONTEXT" >> "$LOG_FILE"
+
+echo -e "${BLUE}Initializing Doom Emacs...${NC}"
+echo -e "${BLUE}Profile: ${GREEN}write${BLUE} | Context: ${GREEN}$CONTEXT${NC}"
+echo -e "${BLUE}Export: LIVEY_WORKFLOW=$LIVEY_WORKFLOW LIVEY_CONTEXT=$LIVEY_CONTEXT${NC}"
+
+# Check if doom needs sync
+if [[ ! -d "${EMACS_DIR}/.local" ]]; then
+    echo -e "${YELLOW}First time setup: syncing Doom Emacs...${NC}"
+    "$DOOM_BIN" sync
+fi
+
+# Start daemon if requested (or if not already running)
+if [[ $USE_DAEMON -eq 1 ]]; then
+    echo -e "${BLUE}Starting Emacs daemon...${NC}"
+    emacs --daemon
+    echo -e "${GREEN}Daemon started. Use 'emacsclient -c -nw' for fast launches.${NC}"
+    exit 0
+fi
+
+# Check if daemon is already running
+if pgrep -f "emacs --daemon" > /dev/null 2>&1; then
+    echo -e "${BLUE}Using existing Emacs daemon (fast launch)${NC}"
+    emacsclient -c -nw "$FILE_TO_OPEN"
+else
+    # Start Emacs in terminal mode
+    echo -e "${GREEN}Launching Doom Emacs...${NC}"
+    emacs -nw "$FILE_TO_OPEN"
+fi
+
+echo -e "${GREEN}Session ended.${NC}"

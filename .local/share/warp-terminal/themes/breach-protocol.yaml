@@ -1,0 +1,25 @@
+name: Breach Protocol
+accent: '#00ff00'      # Neon green exploit
+cursor: '#ff0055'      # Red alert cursor
+background: '#000000'  # Absolute black void
+foreground: '#39ff14'  # Electric neon green
+details: darker
+terminal_colors:
+  bright:
+    black: '#0d0d0d'
+    blue: '#00ffff'
+    cyan: '#00ff00'
+    green: '#39ff14'
+    magenta: '#ff0055'
+    red: '#ff1744'
+    white: '#00ff00'
+    yellow: '#ffff00'
+  normal:
+    black: '#000000'
+    blue: '#0099ff'
+    cyan: '#00cc99'
+    green: '#00ff00'
+    magenta: '#ff0099'
+    red: '#cc0000'
+    white: '#00ff00'
+    yellow: '#ffff00'

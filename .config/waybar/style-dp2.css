@@ -1,0 +1,87 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 10px;
+}
+
+window#waybar {
+    background: rgba(10, 10, 10, 0.9);
+    border-bottom: 2px solid #ff0000;
+    color: #ffffff;
+}
+
+#custom-launcher {
+    background: #ff0000;
+    color: #000000;
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+#custom-launcher:hover {
+    background: #ff3333;
+}
+
+#custom-workspaces {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ffffff;
+    padding: 0 5px;
+    border-right: 1px solid #ff0000;
+    font-weight: bold;
+    letter-spacing: 0px;
+    font-size: 9px;
+}
+
+#custom-workspaces:hover {
+    background: rgba(255, 0, 0, 0.2);
+}
+
+#custom-temperature {
+    padding: 0 4px;
+    color: #00ff00;
+}
+
+#custom-temperature.warm {
+    color: #ffaa00;
+}
+
+#custom-temperature.hot {
+    color: #ff0000;
+}
+
+#clock {
+    color: #ff0000;
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+#clock:hover {
+    color: #ff3333;
+}
+
+#cpu {
+    padding: 0 4px;
+    border-left: 1px solid rgba(255, 0, 0, 0.3);
+    font-size: 9px;
+}
+
+#memory {
+    padding: 0 4px;
+    border-left: 1px solid rgba(255, 0, 0, 0.3);
+    font-size: 9px;
+}
+
+#cpu:hover, #memory:hover {
+    color: #ff0000;
+}
+
+#custom-power {
+    background: #ff0000;
+    color: #000000;
+    padding: 0 5px;
+    margin-left: 3px;
+}
+
+#custom-power:hover {
+    background: #ff3333;
+}

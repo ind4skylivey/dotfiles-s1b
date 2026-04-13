@@ -1,0 +1,139 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 12px;
+}
+
+window#waybar {
+    background: rgba(10, 10, 10, 0.9);
+    border-bottom: 2px solid #ff0000;
+    color: #ffffff;
+}
+
+#custom-launcher {
+    background: #ff0000;
+    color: #000000;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+#custom-launcher:hover {
+    background: #ff3333;
+}
+
+#custom-workspaces {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ffffff;
+    padding: 0 10px;
+    border-right: 1px solid #ff0000;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#custom-workspaces:hover {
+    background: rgba(255, 0, 0, 0.2);
+}
+
+#custom-separator-left,
+#custom-separator-right-1,
+#custom-separator-right-2 {
+    color: rgba(255, 0, 0, 0.3);
+    padding: 0 3px;
+}
+
+#custom-quick-apps {
+    color: #ffffff;
+    padding: 0 8px;
+}
+
+#custom-quick-apps:hover {
+    color: #ff0000;
+}
+
+#custom-window_title {
+    color: #ffffff;
+    font-weight: bold;
+    text-shadow: 0 0 8px #ff0000;
+    padding: 0 15px;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+}
+
+#custom-git_status {
+    color: #00ff00;
+    padding: 0 8px;
+    font-weight: bold;
+}
+
+#custom-vpn {
+    color: #00ff00;
+    padding: 0 8px;
+}
+
+#custom-temperature {
+    padding: 0 8px;
+    color: #00ff00;
+}
+
+#custom-temperature.warm {
+    color: #ffaa00;
+}
+
+#custom-temperature.hot {
+    color: #ff0000;
+}
+
+#custom-uptime {
+    color: #ffaa00;
+    padding: 0 8px;
+    font-weight: bold;
+}
+
+#clock {
+    color: #ff0000;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+#clock:hover {
+    color: #ff3333;
+}
+
+#cpu {
+    padding: 0 8px;
+    border-left: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+#memory {
+    padding: 0 8px;
+    border-left: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+#network {
+    padding: 0 8px;
+    border-left: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+#pulseaudio {
+    padding: 0 8px;
+    border-left: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+#cpu:hover, #memory:hover, #network:hover, #pulseaudio:hover {
+    color: #ff0000;
+}
+
+#tray {
+    padding: 0 8px;
+}
+
+#custom-power {
+    background: #ff0000;
+    color: #000000;
+    padding: 0 10px;
+    margin-left: 5px;
+}
+
+#custom-power:hover {
+    background: #ff3333;
+}

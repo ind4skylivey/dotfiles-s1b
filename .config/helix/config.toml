@@ -1,0 +1,156 @@
+# Helix Professional Configuration
+# Modern, robust, and aesthetic setup for serious development.
+
+theme = "il1v3y_cyberpunk"
+
+[editor]
+line-number = "relative"
+cursorline = true
+cursorcolumn = true
+auto-save = true
+idle-timeout = 50
+true-color = true
+color-modes = true
+bufferline = "multiple" # Modern tab-like bufferline
+rulers = [80, 100, 120]   # Guard rails for code style
+scrolloff = 6              # Keep context when moving near edges
+scroll-lines = 3           # Mouse/trackpad scroll granularity
+auto-format = true         # Prefer format on save when available
+auto-pairs = true          # Smart pairing of brackets/quotes
+gutters = ["diagnostics", "line-numbers", "diff"]
+trim-trailing-whitespace = true
+insert-final-newline = true
+trim-final-newlines = true
+popup-border = "popup"
+
+[editor.whitespace]
+render = "all"
+characters = { space = "·", tab = "⇥", newline = "⏎", nbsp = "␣" }
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 32
+wrap-indicator = "↪ "
+
+[editor.indent-guides]
+render = true
+character = "▏" # Clean, modern character
+skip-levels = 1
+rainbow = true
+
+[editor.search]
+smart-case = true
+wrap-around = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+ignore = true
+follow-symlinks = true
+git-ignore = true
+deduplicate-links = true
+parents = true
+git-global = true
+git-exclude = true
+
+[editor.smart-tab]
+enable = true
+supersede-menu = true
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true # Show types/params inline
+auto-signature-help = true
+snippets = true
+
+# Statusline: Minimalist yet informative
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator"]
+center = ["workspace-diagnostics"]
+right = ["version-control", "diagnostics", "selections", "register", "position", "position-percentage", "total-line-numbers", "file-encoding", "file-line-ending", "file-type"]
+separator = "│"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+diagnostics = ["hint", "info", "warning", "error"]
+workspace-diagnostics = ["warning", "error"]
+
+[keys.normal]
+# Navigation Efficiency
+"C-j" = "move_visual_line_down"
+"C-k" = "move_visual_line_up"
+"C-h" = "move_char_left"
+"C-l" = "move_char_right"
+"C-d" = "half_page_down"
+"C-u" = "half_page_up"
+"G" = "goto_file_end"
+"0" = "goto_line_start"
+"$" = "goto_line_end"
+"K" = "hover"
+"A-b" = "move_prev_word_start"
+"A-f" = "move_next_word_start"
+
+# Leader actions (Space)
+"space" = { w = ":w", q = ":q", b = "buffer_picker", f = "file_picker", p = "workspace_symbol_picker", e = "diagnostics_picker", s = "symbol_picker", g = "global_search", c = "command_mode", o = "symbol_picker", O = "workspace_symbol_picker", r = "last_picker", "/" = "global_search", d = "diagnostics_picker", " " = "command_palette", B = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}" }
+
+# Window/Buffer Management
+"tab" = ":buffer-next"
+"S-tab" = ":buffer-previous"
+"C-p" = "file_picker"
+"C-b" = "buffer_picker"
+
+# Quick Actions
+"C-s" = ":w"
+"C-q" = ":q"
+"esc" = ["collapse_selection", "keep_primary_selection"]
+"g" = { a = "code_action", d = "goto_definition", r = "goto_reference", i = "goto_implementation", t = "goto_type_definition" }
+
+# Move lines up/down (VSCode style)
+"A-j" = ["extend_to_line_bounds", "delete_selection", "paste_after"]
+"A-k" = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+
+# Multi-cursor power moves
+"A-n" = "extend_search_next"
+"A-p" = "extend_search_prev"
+"C-/" = "toggle_comments"
+
+# Emacs-style line endpoints and yank
+"C-a" = "goto_line_start"
+"C-e" = "goto_line_end"
+"C-y" = "paste_after"
+
+# Macro control (explicit for muscle-memory)
+"Q" = "record_macro"
+"q" = "replay_macro"
+
+# Zellij/Tmux-like split control on Ctrl-w prefix
+[keys.normal."C-w"]
+h = "jump_view_left"
+j = "jump_view_down"
+k = "jump_view_up"
+l = "jump_view_right"
+s = "hsplit"
+v = "vsplit"
+w = "rotate_view"
+W = "rotate_view_reverse"
+H = "swap_view_left"
+J = "swap_view_down"
+K = "swap_view_up"
+L = "swap_view_right"
+t = "transpose_view"
+q = ":q"
+"." = ":new"
+"x" = ":buffer-close"
+
+[keys.insert]
+"C-c" = "normal_mode"
+"j" = { k = "normal_mode" } # "jk" escape
+"C-space" = "completion"    # Force completion
+"A-[" = "move_parent_node_start"
+"A-]" = "move_parent_node_end"
+"C-Q" = "record_macro"
+"C-q" = "replay_macro"
