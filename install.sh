@@ -255,6 +255,53 @@ if command_exists emacs && [ ! -d "$HOME/.config/emacs" ]; then
     fi
 fi
 
+# --- Personal Projects (Rust) ---
+
+PERSONAL_REPOS=(
+    "matteria-track|https://github.com/ind4skylivey/matteria-track.git"
+    "iridex-prism-terminal|https://github.com/ind4skylivey/iridex-prism-terminal.git"
+)
+
+read -p "Install personal projects (matteria-track, iridex-prism-terminal)? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if ! command_exists cargo; then
+        info "Rust/Cargo not found. Installing rustup..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source "$HOME/.cargo/env"
+        success "Rust installed"
+    fi
+
+    for repo_entry in "${PERSONAL_REPOS[@]}"; do
+        IFS='|' read -r repo_name repo_url <<< "$repo_entry"
+        repo_dir="$HOME/code/$repo_name"
+
+        if [ -d "$repo_dir" ]; then
+            warning "$repo_name already exists at $repo_dir, skipping"
+            continue
+        fi
+
+        info "Cloning $repo_name..."
+        mkdir -p "$HOME/code"
+        git clone "$repo_url" "$repo_dir"
+        cd "$repo_dir"
+
+        info "Building $repo_name..."
+        if cargo build --release 2>/dev/null; then
+            # Install binary to ~/.local/bin if it exists
+            if [ -d "$HOME/.local/bin" ]; then
+                find target/release/ -maxdepth 1 -type f -executable ! -name "*.d" -exec cp {} "$HOME/.local/bin/" \; 2>/dev/null
+                success "$repo_name installed to ~/.local/bin/"
+            fi
+            success "$repo_name built successfully"
+        else
+            warning "$repo_name build failed. You can build it manually with: cd $repo_dir && cargo build --release"
+        fi
+
+        cd "$DOTFILES_DIR"
+    done
+fi
+
 echo
 success "=========================================="
 success "Dotfiles installation completed!"
@@ -263,10 +310,11 @@ echo
 info "Next steps:"
 echo "  1. Logout and login to apply shell changes"
 echo "  2. Open tmux and press 'prefix + I' to install plugins"
-echo "  3. Open Neovim and run ':PackerSync' or ':Lazy sync' (depending on your config)"
+echo "  3. Open Neovim and run ':Lazy sync'"
 if [ -d "$HOME/.config/emacs" ]; then
     echo "  4. Run '~/.config/emacs/bin/doom sync' for Doom Emacs"
 fi
+echo "  5. Add \$HOME/.local/bin to your PATH if you installed personal projects"
 echo
 info "Backup location: $BACKUP_DIR"
 echo
