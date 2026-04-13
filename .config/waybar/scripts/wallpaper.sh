@@ -25,15 +25,15 @@ set_wallpaper() {
         return 1
     fi
     
-    # Iniciar swww si no está corriendo
-    if ! pgrep -x "swww-daemon" > /dev/null; then
-        swww-daemon &
+    # Iniciar awww si no está corriendo
+    if ! pgrep -x "awww-daemon" > /dev/null; then
+        awww-daemon &
         sleep 1
     fi
     
     # Cambiar wallpaper para el monitor específico
-    swww img "$wallpaper" --outputs "$monitor" --transition-type fade --transition-duration 1 2>>"$LOG_FILE"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] swww ejecutado para $monitor" >> "$LOG_FILE"
+    awww img "$wallpaper" --outputs "$monitor" --transition-type fade --transition-duration 1 2>>"$LOG_FILE"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] awww ejecutado para $monitor" >> "$LOG_FILE"
     
     # Guardar estado por monitor
     case "$monitor" in
