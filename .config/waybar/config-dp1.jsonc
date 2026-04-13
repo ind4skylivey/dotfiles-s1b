@@ -61,29 +61,29 @@
     },
 
     "custom/app-terminal": {
-        "format": " 󰓛 ",
-        "on-click": "warp-terminal &",
+        "format": " >_ ",
+        "on-click": "warp-terminal",
         "tooltip": "Terminal",
         "interval": "once"
     },
 
     "custom/app-browser": {
         "format": " 󰊯 ",
-        "on-click": "zen-browser &",
+        "on-click": "zen-browser",
         "tooltip": "Zen Browser",
         "interval": "once"
     },
 
     "custom/app-editor": {
-        "format": " 󰨳 ",
-        "on-click": "phpstorm &",
+        "format": " 󰟆 ",
+        "on-click": "phpstorm",
         "tooltip": "PhpStorm",
         "interval": "once"
     },
 
     "custom/app-filemanager": {
         "format": " 󰉋 ",
-        "on-click": "krusader &",
+        "on-click": "krusader",
         "tooltip": "Krusader",
         "interval": "once"
     },
@@ -149,7 +149,7 @@
         "format-disconnected": " <span color='#ff0000'>󰖪</span> "
     },
 
-    "pulseaudio": {
+    "wireplumber": {
         "format": " <span color='#ff0000'>{icon}</span> {volume}% ",
         "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
         "on-click": "pavucontrol"

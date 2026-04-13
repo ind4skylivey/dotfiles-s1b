@@ -26,9 +26,9 @@ set_wallpapers_different() {
         return 1
     fi
     
-    # Iniciar swww si no está corriendo
-    if ! pgrep -x "swww-daemon" > /dev/null; then
-        swww-daemon &
+    # Iniciar awww si no está corriendo
+    if ! pgrep -x "awww-daemon" > /dev/null; then
+        awww-daemon &
         sleep 2
     fi
     
@@ -56,7 +56,7 @@ set_wallpapers_different() {
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] $monitor: $action -> índice $current_idx -> $(basename $wallpaper)" >> "$LOG_FILE"
         
         # Cambiar wallpaper
-        swww img "$wallpaper" --outputs "$monitor" --transition-type fade --transition-duration 1 2>>"$LOG_FILE" &
+        awww img "$wallpaper" --outputs "$monitor" --transition-type fade --transition-duration 1 2>>"$LOG_FILE" &
         
         # Guardar índice
         echo "$current_idx" > "$state_file"

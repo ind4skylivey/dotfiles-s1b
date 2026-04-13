@@ -1,10 +1,10 @@
 #!/bin/bash
-# Restaurar wallpaper al iniciar sesión con swww
+# Restaurar wallpaper al iniciar sesión con awww
 sleep 2
 
-# Iniciar swww daemon si no está corriendo
-if ! pgrep -x "swww-daemon" > /dev/null; then
-    swww-daemon &
+# Iniciar awww daemon si no está corriendo
+if ! pgrep -x "awww-daemon" > /dev/null; then
+    awww-daemon &
     sleep 1
 fi
 
@@ -12,6 +12,6 @@ fi
 if [ -f ~/.cache/waybar_wallpaper_state.txt ]; then
     WALLPAPER=$(cat ~/.cache/waybar_wallpaper_state.txt)
     if [ -f "$WALLPAPER" ]; then
-        swww img "$WALLPAPER" --transition-type fade --transition-duration 0 &
+        awww img "$WALLPAPER" --transition-type fade --transition-duration 0 &
     fi
 fi
