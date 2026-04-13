@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# Wrapper to run any command inside Gamescope with sane defaults for 1080p native.
+# - Default compositor size: -W/-H 1920x1080 (pixel-perfect on 1080p panels).
+# - --force-1080p reuses width/height for -w/-h to clamp internal render to native.
+# - Profiles set common FPS caps; --fps overrides them.
+set -euo pipefail
+
+monitor="${GAMESCOPE_MONITOR:-0}"
+monitor_set=1
+output_name="${GAMESCOPE_OUTPUT:-DisplayPort-0}" # default to primary DP-0; override via env/flag
+output_force=1
+width=1920
+height=1080
+fps=""
+force_internal=0
+profile=""
+ESPORT_FPS="${ESPORT_FPS:-144}"
+script_dir=""  # script-dir unsupported on gamescope 3.16.x; keep placeholder
+
+# If user provided monitor via env, mark it set.
+[ -n "$monitor" ] && monitor_set=1
+
+# If an output name is given and we're on X11, map it to a monitor index for nested mode.
+if [ -n "${DISPLAY:-}" ] && command -v xrandr >/dev/null 2>&1; then
+  if [ -n "$output_name" ]; then
+    xr_index=$(XR_TARGET="$output_name" xrandr --listmonitors 2>/dev/null | awk 't=ENVIRON["XR_TARGET"]; length(t)>0 && index($0, t){ gsub(":", "", $1); print $1; exit }')
+    if [ -n "$xr_index" ]; then
+      monitor="$xr_index"
+      monitor_set=1
+      echo "[gamescope-run] mapped output '$output_name' to monitor index $monitor via xrandr"
+    fi
+  fi
+  if [ -z "$output_name" ]; then
+    primary_line=$(xrandr --listmonitors 2>/dev/null | awk '/\\*/{gsub(":", "", $1); print $1" "$NF; exit}')
+    if [ -n "$primary_line" ]; then
+      monitor="$(printf '%s' "$primary_line" | awk '{print $1}')"
+      output_name="$(printf '%s' "$primary_line" | awk '{print $2}')"
+      monitor_set=1
+      echo "[gamescope-run] auto-selected primary monitor index $monitor output $output_name via xrandr"
+    fi
+  fi
+fi
+
+usage() {
+  cat >&2 <<'EOF'
+usage: gamescope-run [--monitor N] [--output NAME] [--width W] [--height H] [--fps N] [--profile {high|60fps|esport}] [--force-1080p] -- <command>
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --monitor) monitor="$2"; monitor_set=1; shift 2 ;;
+    --output) output_name="$2"; shift 2 ;;
+    --width) width="$2"; shift 2 ;;
+    --height) height="$2"; shift 2 ;;
+    --fps) fps="$2"; shift 2 ;;
+    --profile) profile="$2"; shift 2 ;;
+    --force-1080p) force_internal=1; shift ;;
+    --help|-h) usage; exit 0 ;;
+    --) shift; break ;;
+    *) echo "Unknown arg: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+[ $# -gt 0 ] || { usage; exit 1; }
+command_to_run=("$@")
+
+if ! command -v gamescope >/dev/null 2>&1; then
+  echo "[gamescope-run] gamescope is not installed (try: pacman -S gamescope)." >&2
+  exit 1
+fi
+
+if [ -n "$script_dir" ] && ! mkdir -p "$script_dir"; then
+  echo "[gamescope-run] failed to create script dir: $script_dir" >&2
+  exit 1
+fi
+
+profile_fps=""
+case "$profile" in
+  "") ;;
+  high) profile_fps="";;
+  60fps) profile_fps="60";;
+  esport) profile_fps="$ESPORT_FPS";;
+  *) echo "[gamescope-run] unknown profile: $profile" >&2; usage; exit 1 ;;
+esac
+
+# explicit --fps wins over profile
+effective_fps="${fps:-$profile_fps}"
+
+fps_flag=()
+[ -n "$effective_fps" ] && fps_flag=(-r "$effective_fps")
+
+internal_flags=()
+[ "$force_internal" -eq 1 ] && internal_flags=(-w "$width" -h "$height")
+
+echo "[gamescope-run] monitor=$monitor"
+echo "[gamescope-run] compositor size ( -W/-H ) = ${width}x${height}"
+if [ "$force_internal" -eq 1 ]; then
+  echo "[gamescope-run] internal render forced ( -w/-h ) = ${width}x${height}"
+else
+  echo "[gamescope-run] internal render left to the game (no -w/-h)"
+fi
+if [ -n "$effective_fps" ]; then
+  echo "[gamescope-run] fps cap = $effective_fps"
+else
+  echo "[gamescope-run] fps cap = none"
+fi
+[ -n "$output_name" ] && echo "[gamescope-run] prefer output = $output_name"
+
+gs_cmd=(
+  gamescope
+  -f
+  -W "$width" -H "$height"
+  ${monitor_set:+--display-index "$monitor"}
+  ${output_name:+--prefer-output "$output_name"}
+  ${output_force:+--prefer-output "$output_name"}
+  --force-windows-fullscreen
+  ${script_dir:+--script-dir "$script_dir"}
+  "${fps_flag[@]}"
+  "${internal_flags[@]}"
+  --
+  "${command_to_run[@]}"
+)
+
+echo "[gamescope-run] exec: ${gs_cmd[*]}"
+
+set +e
+if [ -n "$monitor_set" ]; then
+  SDL_VIDEO_FULLSCREEN_DISPLAY="$monitor" exec env SDL_VIDEO_FULLSCREEN_DISPLAY="$monitor" "${gs_cmd[@]}"
+else
+  "${gs_cmd[@]}"
+fi
+status=$?
+set -e
+
+if [ $status -ne 0 ]; then
+  echo "[gamescope-run] gamescope exited with code $status" >&2
+fi
+exit $status

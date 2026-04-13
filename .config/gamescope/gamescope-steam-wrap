@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# Helper to launch a Steam appID through gamescope-run with profiles/monitor selection.
+# Example: gamescope-steam-wrap --app 239140 --monitor 1 --profile high
+set -euo pipefail
+
+appid=""
+monitor="${GAMESCOPE_MONITOR:-0}"
+monitor_set=1
+output_name="${GAMESCOPE_OUTPUT:-DisplayPort-0}" # default DP-0; override via env/flag
+output_force=1
+profile=""
+fps=""
+width=1920
+height=1080
+force_internal=0
+
+# If user provided monitor via env, mark it set.
+[ -n "$monitor" ] && monitor_set=1
+
+# If an output name is given and we're on X11, map it to a monitor index for nested mode.
+if [ -n "${DISPLAY:-}" ] && command -v xrandr >/dev/null 2>&1; then
+  if [ -n "$output_name" ]; then
+    xr_index=$(XR_TARGET="$output_name" xrandr --listmonitors 2>/dev/null | awk 't=ENVIRON["XR_TARGET"]; length(t)>0 && index($0, t){ gsub(":", "", $1); print $1; exit }')
+    if [ -n "$xr_index" ]; then
+      monitor="$xr_index"
+      monitor_set=1
+      echo "[gamescope-steam-wrap] mapped output '$output_name' to monitor index $monitor via xrandr"
+    fi
+  fi
+  if [ -z "$output_name" ]; then
+    primary_line=$(xrandr --listmonitors 2>/dev/null | awk '/\\*/{gsub(":", "", $1); print $1" "$NF; exit}')
+    if [ -n "$primary_line" ]; then
+      monitor="$(printf '%s' "$primary_line" | awk '{print $1}')"
+      output_name="$(printf '%s' "$primary_line" | awk '{print $2}')"
+      monitor_set=1
+      echo "[gamescope-steam-wrap] auto-selected primary monitor index $monitor output $output_name via xrandr"
+    fi
+  fi
+fi
+
+usage() {
+  cat >&2 <<'EOF'
+usage: gamescope-steam-wrap --app APPID [--monitor N] [--output NAME] [--profile {high|60fps|esport}] [--fps N] [--width W] [--height H] [--force-1080p]
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --app) appid="$2"; shift 2 ;;
+    --monitor) monitor="$2"; monitor_set=1; shift 2 ;;
+    --output) output_name="$2"; shift 2 ;;
+    --profile) profile="$2"; shift 2 ;;
+    --fps) fps="$2"; shift 2 ;;
+    --width) width="$2"; shift 2 ;;
+    --height) height="$2"; shift 2 ;;
+    --force-1080p) force_internal=1; shift ;;
+    --help|-h) usage; exit 0 ;;
+    *) echo "Unknown arg: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+[ -n "$appid" ] || { echo "[gamescope-steam-wrap] --app APPID is required." >&2; usage; exit 1; }
+
+if ! command -v steam >/dev/null 2>&1; then
+  echo "[gamescope-steam-wrap] steam is not in PATH." >&2
+  exit 1
+fi
+
+# Resolve gamescope-run (prefer PATH, then sibling directory)
+runner="$(command -v gamescope-run || true)"
+if [ -z "$runner" ]; then
+  script_dir="$(cd -- "$(dirname -- "$0")" && pwd)"
+  if [ -x "$script_dir/gamescope-run" ]; then
+    runner="$script_dir/gamescope-run"
+  else
+    echo "[gamescope-steam-wrap] gamescope-run not found in PATH or next to this script." >&2
+    exit 1
+  fi
+fi
+
+run_args=(
+  "$runner"
+  ${monitor_set:+--monitor "$monitor"}
+  ${output_name:+--output "$output_name"}
+  ${output_force:+--output "$output_name"}
+  --width "$width"
+  --height "$height"
+)
+[ -n "$profile" ] && run_args+=(--profile "$profile")
+[ -n "$fps" ] && run_args+=(--fps "$fps")
+[ "$force_internal" -eq 1 ] && run_args+=(--force-1080p)
+
+run_args+=( -- steam "steam://rungameid/${appid}" )
+
+echo "[gamescope-steam-wrap] monitor=$monitor"
+echo "[gamescope-steam-wrap] profile=${profile:-none}, fps override=${fps:-none}"
+echo "[gamescope-steam-wrap] resolution ${width}x${height} (compositor); force_internal=$force_internal"
+echo "[gamescope-steam-wrap] exec: ${run_args[*]}"
+
+set +e
+"${run_args[@]}"
+status=$?
+set -e
+
+if [ $status -ne 0 ]; then
+  echo "[gamescope-steam-wrap] launch failed with code $status" >&2
+fi
+exit $status
+
+# Tip: create a .desktop entry or dmenu/rofi binding that runs:
+# gamescope-steam-wrap --app <APPID> --monitor 1 --profile high

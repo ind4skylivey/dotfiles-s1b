@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# Launch full Steam client inside Gamescope with adjustable output size and monitor.
+# Keeps native 1080p by default; use --force-1080p to clamp Steam/games to that render size.
+set -euo pipefail
+
+monitor="${GAMESCOPE_MONITOR:-0}"
+monitor_set=1
+output_name="${GAMESCOPE_OUTPUT:-DisplayPort-0}" # default to primary DP-0; override via env/flag
+output_force=1
+width=1920
+height=1080
+force_internal=0
+script_dir=""  # script-dir unsupported on gamescope 3.16.x; keep placeholder
+
+# If user provided monitor via env, mark it set.
+[ -n "$monitor" ] && monitor_set=1
+
+# If an output name is given and we're on X11, map it to a monitor index for nested mode.
+if [ -n "${DISPLAY:-}" ] && command -v xrandr >/dev/null 2>&1; then
+  # If user set an output, try to map to its index.
+  if [ -n "$output_name" ]; then
+    xr_index=$(XR_TARGET="$output_name" xrandr --listmonitors 2>/dev/null | awk 't=ENVIRON["XR_TARGET"]; length(t)>0 && index($0, t){ gsub(":", "", $1); print $1; exit }')
+    if [ -n "$xr_index" ]; then
+      monitor="$xr_index"
+      monitor_set=1
+      echo "[steam-gamescope-session] mapped output '$output_name' to monitor index $monitor via xrandr"
+    fi
+  fi
+  # If no output provided, choose the primary monitor from xrandr.
+  if [ -z "$output_name" ]; then
+    primary_line=$(xrandr --listmonitors 2>/dev/null | awk '/\\*/{gsub(":", "", $1); print $1" "$NF; exit}')
+    if [ -n "$primary_line" ]; then
+      monitor="$(printf '%s' "$primary_line" | awk '{print $1}')"
+      output_name="$(printf '%s' "$primary_line" | awk '{print $2}')"
+      monitor_set=1
+      echo "[steam-gamescope-session] auto-selected primary monitor index $monitor output $output_name via xrandr"
+    fi
+  fi
+fi
+
+usage() {
+  cat >&2 <<'EOF'
+usage: steam-gamescope-session [--monitor N] [--output NAME] [--width W] [--height H] [--force-1080p]
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --monitor) monitor="$2"; monitor_set=1; shift 2 ;;
+    --output) output_name="$2"; shift 2 ;;
+    --width) width="$2"; shift 2 ;;
+    --height) height="$2"; shift 2 ;;
+    --force-1080p) force_internal=1; shift ;;
+    --help|-h) usage; exit 0 ;;
+    *) echo "Unknown arg: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+if ! command -v gamescope >/dev/null 2>&1; then
+  echo "[steam-gamescope-session] gamescope is not installed (pacman -S gamescope)." >&2
+  exit 1
+fi
+
+if ! command -v steam >/dev/null 2>&1; then
+  echo "[steam-gamescope-session] steam is not in PATH." >&2
+  exit 1
+fi
+
+if [ -n "$script_dir" ] && ! mkdir -p "$script_dir"; then
+  echo "[steam-gamescope-session] failed to create script dir: $script_dir" >&2
+  exit 1
+fi
+
+internal_flags=()
+[ "$force_internal" -eq 1 ] && internal_flags=(-w "$width" -h "$height")
+
+echo "[steam-gamescope-session] monitor=${monitor:-<none>}"
+echo "[steam-gamescope-session] monitor_set=${monitor_set:-<unset>}"
+echo "[steam-gamescope-session] compositor size ( -W/-H ) = ${width}x${height}"
+if [ "$force_internal" -eq 1 ]; then
+  echo "[steam-gamescope-session] internal render forced ( -w/-h ) = ${width}x${height}"
+else
+  echo "[steam-gamescope-session] internal render left to Steam/games (no -w/-h)"
+fi
+[ -n "$output_name" ] && echo "[steam-gamescope-session] prefer output = $output_name"
+
+gs_cmd=(
+  gamescope
+  -f
+  -W "$width" -H "$height"
+  ${monitor_set:+--display-index "$monitor"}
+  ${output_name:+--prefer-output "$output_name"}
+  ${output_force:+--prefer-output "$output_name"}
+  --force-windows-fullscreen
+  ${script_dir:+--script-dir "$script_dir"}
+  "${internal_flags[@]}"
+  --
+  steam
+)
+
+echo "[steam-gamescope-session] exec: ${gs_cmd[*]}"
+
+set +e
+if [ -n "$monitor_set" ]; then
+  SDL_VIDEO_FULLSCREEN_DISPLAY="$monitor" exec env SDL_VIDEO_FULLSCREEN_DISPLAY="$monitor" "${gs_cmd[@]}"
+else
+  "${gs_cmd[@]}"
+fi
+status=$?
+set -e
+
+if [ $status -ne 0 ]; then
+  echo "[steam-gamescope-session] gamescope exited with code $status" >&2
+fi
+exit $status
