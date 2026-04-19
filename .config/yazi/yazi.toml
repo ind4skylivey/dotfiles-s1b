@@ -13,32 +13,32 @@ image_filter    = "lanczos3"
 
 [plugin]
 prepend_previewers = [
-  { name = "*.{png,jpg,jpeg,jpe,gif,webp,bmp,avif,heic,heif,svg}", run = "image" },
+  { url = "*.{png,jpg,jpeg,jpe,gif,webp,bmp,avif,heic,heif,svg}", run = "image" },
   { mime = "image/*", run = "image" },
-  { name = "*.pdf", run = 'piper -- pdftotext -layout "$1" -' },
-  { name = "*.{tar,tar.gz,tgz,zip,7z,rar}", run = 'piper -- bsdtar -tf "$1"' },
-  { name = "*.md", run = "glow" },
-  { name = "*", run = "rich-preview" },
+  { url = "*.pdf", run = 'piper -- pdftotext -layout %s1 -' },
+  { url = "*.{tar,tar.gz,tgz,zip,7z,rar}", run = 'piper -- bsdtar -tf %s1' },
+  { url = "*.md", run = "glow" },
+  { url = "*", run = "rich-preview" },
 ]
 
 [opener]
 edit = [
-  { run = 'nvim "$@"', block = true, desc = "Edit with nvim (loads user config)", for = "unix" },
+  { run = 'nvim %s', block = true, desc = "Edit with nvim", for = "unix" },
 ]
 view = [
-  { run = 'bat --paging=always --style=numbers --color=always "$@"', block = true, desc = "View with bat", for = "unix" },
-  { run = 'less -R "$@"', block = true, desc = "View with less (fallback)", for = "unix" },
+  { run = 'bat --paging=always --style=numbers --color=always %s', block = true, desc = "View with bat", for = "unix" },
+  { run = 'less -R %s', block = true, desc = "View with less (fallback)", for = "unix" },
 ]
 extract = [
-  { run = 'bsdtar -xvf "$1"', block = true, desc = "Extract archive here", for = "unix" },
+  { run = 'bsdtar -xvf %s1', block = true, desc = "Extract archive here", for = "unix" },
 ]
 compress = [
-  { run = 'tar -cvzf "${1%/}.tar.gz" "$1"', block = true, desc = "Compress to tar.gz", for = "unix" },
+  { run = 'tar -cvzf %s1.tar.gz %s1', block = true, desc = "Compress to tar.gz", for = "unix" },
 ]
 
 [open]
 rules = [
-  { name = "*", use = "edit" },
+  { url = "*", use = "edit" },
 ]
 
 [terminal]
