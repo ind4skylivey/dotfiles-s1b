@@ -1,0 +1,214 @@
+/*******************************************************************************
+ * ROFI Color theme
+ * User: il1v3y
+ * Theme: Cybers1b (Cyberpunk HUD + Tech Sidebar + Status Footer)
+ *******************************************************************************/
+
+* {
+    /* Color Palette */
+    bg-col:         #05060Aee;
+    bg-col-light:   #0F1520ee;
+    fg-col:         #C5C8C9ff;
+    fg-col2:        #8B90A0ff;
+    
+    cyan:           #00F6FFff;
+    magenta:        #FF00C8ff;
+    yellow:         #FFE900ff;
+    
+    border-col:     #1A1F2Eff;
+    cyan-alpha:     #00F6FFcc;
+    magenta-alpha:  #FF00C8cc;
+    
+    /* Typography */
+    font:           "JetBrains Mono 11";
+    font-mono:      "Iosevka Nerd Font 10";
+    font-small:     "JetBrains Mono 8";
+}
+
+element-text, element-icon, mode-switcher {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+window {
+    height: 45%;
+    width: 35%;
+    transparency: "real";
+    location: center;
+    anchor: center;
+    fullscreen: false;
+    background-color: transparent;
+    border: 0px;
+    /* Un borde invisible o glow global si quisieras, pero mantenemos lo flotante */
+}
+
+/* Contenedor Principal: Orientación Horizontal */
+mainbox {
+    background-color: transparent;
+    children: [ mode-switcher, listbox ];
+    spacing: 15px;
+    orientation: horizontal;
+}
+
+/* Nuevo contenedor vertical para el contenido (Input + Lista + Footer) */
+listbox {
+    spacing: 10px;
+    background-color: transparent;
+    orientation: vertical;
+    children: [ inputbar, message, listview, textbox-help ];
+}
+
+/* --- TECH SIDEBAR (Izquierda) --- */
+mode-switcher {
+    orientation: vertical;
+    width: 90px;
+    enabled: true;
+    padding: 20px 10px;
+    spacing: 20px;
+    background-color: @bg-col;
+    border: 2px;
+    border-color: @cyan;
+    border-radius: 2px;
+}
+
+button {
+    padding: 10px;
+    background-color: transparent;
+    text-color: @fg-col2;
+    vertical-align: 0.5;
+    horizontal-align: 0.5;
+    border: 0px;
+    border-radius: 0px;
+    cursor: pointer;
+}
+
+button selected {
+    background-color: @bg-col-light;
+    text-color: @magenta;
+    border: 0px 0px 0px 3px;
+    border-color: @magenta;
+    background-image: linear-gradient(to right, #FF00C820, transparent);
+    /* Icono brilla al seleccionarse */
+}
+
+/* --- CONTENIDO (Derecha) --- */
+
+inputbar {
+    children: [ prompt, textbox-prompt-colon, entry ];
+    background-color: @bg-col;
+    border: 2px;
+    border-color: @cyan;
+    border-radius: 2px;
+    padding: 12px;
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @cyan;
+    font: @font-mono;
+    vertical-align: 0.5;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: " 󰍉 ";
+    text-color: @cyan;
+    background-color: transparent;
+    font: @font-mono;
+    vertical-align: 0.5;
+}
+
+entry {
+    background-color: transparent;
+    text-color: @fg-col;
+    placeholder: "SYSTEM_ACCESS_GRANTED...";
+    placeholder-color: @fg-col2;
+    vertical-align: 0.5;
+}
+
+listview {
+    border: 2px;
+    border-color: @magenta;
+    border-radius: 2px;
+    padding: 10px;
+    background-color: @bg-col;
+    columns: 1;
+    lines: 6;
+    spacing: 6px;
+    scrollbar: true;
+}
+
+/* --- STATUS FOOTER (NUEVO) --- */
+textbox-help {
+    padding: 5px;
+    border: 0px;
+    background-color: transparent;
+    text-color: @fg-col2;
+    font: @font-small;
+    horizontal-align: 1.0; /* Alinear a la derecha */
+    vertical-align: 0.5;
+    expand: false;
+    str: " CPU: NOMINAL  |   NET: SECURE  |   ROOT: ACCESS ";
+}
+
+scrollbar {
+    background-color: @bg-col-light;
+    handle-color: @cyan;
+    handle-width: 4px;
+    border-radius: 2px;
+}
+
+element {
+    padding: 8px 12px;
+    spacing: 10px;
+    background-color: transparent;
+    border: 0px;
+    border-radius: 2px;
+}
+
+element-text {
+    text-color: @cyan;
+    vertical-align: 0.5;
+}
+
+element-icon {
+    size: 28px;
+    vertical-align: 0.5;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color: @cyan;
+}
+
+element selected.normal {
+    background-image: linear-gradient(to right, #00F6FF30, #FF00C830);
+    border: 0px 0px 0px 4px;
+    border-color: @magenta;
+    text-color: @magenta;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color: @cyan;
+}
+
+element-text selected {
+    text-color: @magenta;
+}
+
+element-icon selected {
+    text-color: @magenta;
+}
+
+message {
+    background-color: @bg-col;
+    border: 1px;
+    border-color: @cyan;
+    padding: 10px;
+}
+
+textbox {
+    text-color: @cyan;
+    background-color: transparent;
+}
