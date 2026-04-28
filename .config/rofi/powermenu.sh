@@ -1,29 +1,27 @@
 #!/usr/bin/env bash
 
-## Author : Aditya Shakya (adi1090x)
-## Github : @adi1090x
+## DWM Powermenu
+## Styled for S1B Gr0uP.inc setup
 
-# CMDs
-uptime="`uptime -p | sed -e 's/up //g'`"
-
-# Options
-shutdown='󰐥'
-reboot='󰜉'
-lock=''
-suspend=''
-logout='󰍃'
+# Options — Nerd Font icons + labels
+lock='󰌾  Lock'
+lockblur='󰍁  Blur'
+suspend='󰤄  Sleep'
+logout='󰍃  Logout'
+reboot='󰜉  Reboot'
+shutdown='󰐥  Power'
 
 # Rofi CMD
 rofi_cmd() {
 	rofi -dmenu \
 		-p "" \
-		-mesg "Uptime: $uptime" \
+		-mesg "S1B Gr0uP.inc" \
 		-theme "$HOME/.config/rofi/themes/powermenu.rasi"
 }
 
 # Pass variables to rofi dmenu
 run_rofi() {
-	echo -e "$lock\n$suspend\n$logout\n$reboot\n$shutdown" | rofi_cmd
+	echo -e "$lock\n$lockblur\n$suspend\n$logout\n$reboot\n$shutdown" | rofi_cmd
 }
 
 # Execute Command
@@ -39,6 +37,20 @@ run_cmd() {
 			mpc -q pause
 			amixer set Master mute
 			systemctl suspend
+			;;
+		--lock)
+			if [[ -x '/usr/bin/betterlockscreen' ]]; then
+				betterlockscreen -l
+			elif [[ -x '/usr/bin/i3lock' ]]; then
+				i3lock
+			fi
+			;;
+		--lockblur)
+			if [[ -x '/usr/bin/betterlockscreen' ]]; then
+				betterlockscreen -l blur --blur 0.5
+			elif [[ -x '/usr/bin/i3lock' ]]; then
+				i3lock
+			fi
 			;;
 		--logout)
 			case "$DESKTOP_SESSION" in
@@ -65,23 +77,22 @@ run_cmd() {
 # Actions
 chosen="$(run_rofi)"
 case "${chosen}" in
-    "${shutdown}")
-		run_cmd --shutdown
-        ;;
-    "${reboot}")
-		run_cmd --reboot
-        ;;
     "${lock}")
-		if [[ -x '/usr/bin/betterlockscreen' ]]; then
-			betterlockscreen -l
-		elif [[ -x '/usr/bin/i3lock' ]]; then
-			i3lock
-		fi
+		run_cmd --lock
+        ;;
+    "${lockblur}")
+		run_cmd --lockblur
         ;;
     "${suspend}")
 		run_cmd --suspend
         ;;
     "${logout}")
 		run_cmd --logout
+        ;;
+    "${reboot}")
+		run_cmd --reboot
+        ;;
+    "${shutdown}")
+		run_cmd --shutdown
         ;;
 esac

@@ -229,23 +229,46 @@ picom_animations() {
 clone_config_folders() {
     [ ! -d ~/.config ] && mkdir -p ~/.config
 
-    print_step "Copying configuration files..."
+    print_step "Linking configuration files..."
     
     local count=0
     for dir in config/*/; do
         dir_name=$(basename "$dir")
+        target="$HOME/.config/$dir_name"
 
         if [ -d "$dir" ]; then
-            cp -r "$dir" ~/.config/
-            print_info "Copied $dir_name"
+            # Remove existing file/dir/symlink to replace with symlink
+            if [ -L "$target" ]; then
+                rm "$target"
+            elif [ -e "$target" ]; then
+                rm -rf "$target"
+            fi
+
+            # Create directory if it doesn't exist, then symlink individual files
+            # This preserves any local-only files the user may have added
+            mkdir -p "$target"
+
+            for item in "$dir"*; do
+                item_name=$(basename "$item")
+                link_path="$target/$item_name"
+
+                # Remove existing file/symlink at link path
+                if [ -L "$link_path" ] || [ -e "$link_path" ]; then
+                    rm -rf "$link_path"
+                fi
+
+                ln -s "$(cd "$dir" && pwd)/$item_name" "$link_path"
+            done
+
+            print_info "Linked $dir_name"
             ((count++))
         fi
     done
     
     if [ $count -gt 0 ]; then
-        print_success "Copied $count configuration folder(s)"
+        print_success "Linked $count configuration folder(s)"
     else
-        print_info "No configuration folders to copy"
+        print_info "No configuration folders to link"
     fi
 }
 
