@@ -95,6 +95,8 @@ static const Rule rules[] = {
     { "steam_app_default",  NULL,     NULL,                    0,         1,          0,          0,         0 },
     { "gamescope",          NULL,     NULL,                    0,         0,          0,          0,         0 },
     { "dolphin",            NULL,     NULL,               1 << 3,        1,          0,          0,         0 },
+    { "retroarch",          NULL,     NULL,                    0,         1,          0,          0,         0 },
+    { "es-de",              NULL,     NULL,                    0,         1,          0,          0,         0 },
     { "Pcmanfm-qt",         NULL,     NULL,               1 << 3,        1,          0,          0,         0 },
     { "Thunar",             NULL,     NULL,               1 << 3,        1,          0,          0,         0 },
     { "vesktop",            NULL,     NULL,               1 << 4,        0,          0,          0,        -1 },
