@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_FILE=/tmp/dwm-picom-profile
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/dwm-picom-profile"
+
+if [[ -L "$STATE_FILE" ]]; then
+    echo "Refusing to follow symlink" >&2
+    exit 1
+fi
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/picom"
 TRANSPARENT_CONF="$CONFIG_DIR/picom.conf"
 SOLID_CONF="$CONFIG_DIR/picom-solid.conf"

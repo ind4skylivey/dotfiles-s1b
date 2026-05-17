@@ -73,7 +73,6 @@
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 /* XEMBED messages */
 #define XEMBED_EMBEDDED_NOTIFY      0
-#define XEMBED_WINDOW_ACTIVATE      1
 #define XEMBED_FOCUS_IN             4
 #define XEMBED_MODALITY_ON         10
 #define XEMBED_MAPPED              (1 << 0)
@@ -114,6 +113,7 @@ typedef struct Monitor Monitor;
 typedef struct Client Client;
 struct Client {
 	char name[256];
+	char classname[256];
 	float mina, maxa;
 	float cfact;
 	int x, y, w, h;
@@ -327,7 +327,7 @@ static const char autostartsh[] = "autostart.sh";
 static Systray *systray = NULL;
 static const char broken[] = "broken";
 static const char dwmdir[] = "dwm/scripts";
-static const char localshare[] = "";
+static const char localshare[] = ".local/share";
 static char stext[2048];
 static int statusw;
 static int statussig;
@@ -406,7 +406,7 @@ autostart_exec()
 	for (p = autostart; *p; autostart_len++, p++)
 		while (*++p);
 
-	autostart_pids = malloc(autostart_len * sizeof(pid_t));
+	autostart_pids = ecalloc(autostart_len, sizeof(pid_t));
 	for (p = autostart; *p; i++, p++) {
 		if ((autostart_pids[i] = fork()) == 0) {
 			setsid();
@@ -443,6 +443,8 @@ applyrules(Client *c)
 	XGetClassHint(dpy, c->win, &ch);
 	class    = ch.res_class ? ch.res_class : broken;
 	instance = ch.res_name  ? ch.res_name  : broken;
+	if (ch.res_class)
+		strncpy(c->classname, ch.res_class, sizeof(c->classname) - 1);
 
 	for (i = 0; i < LENGTH(rules); i++) {
 		r = &rules[i];
@@ -565,15 +567,9 @@ void
 attachbottom(Client *c) {
     Client **tc, *lastNonChatterino = NULL;
 
-    // Iterate through the clients to find the last window that is not "chatterino"
     for (tc = &c->mon->clients; *tc; tc = &(*tc)->next) {
-        XClassHint ch = { NULL, NULL };
-        if (XGetClassHint(dpy, (*tc)->win, &ch)) {
-            if (!(ch.res_class && strstr(ch.res_class, "chatterino"))) {
-                lastNonChatterino = *tc; // Update last non-"chatterino" window
-            }
-            if (ch.res_class) XFree(ch.res_class);
-            if (ch.res_name) XFree(ch.res_name);
+        if (!strstr((*tc)->classname, "chatterino")) {
+            lastNonChatterino = *tc;
         }
     }
 
@@ -1098,6 +1094,7 @@ drawbar(Monitor *m)
 				} else {
 					char col[8];
 					char type = *(ts+1);
+					if (strlen(ts) < 10) break;
 					strncpy(col, ts+2, 7); col[7] = '\0';
 					/* copy current scheme */
 					statusscheme[ColFg] = drw->scheme[ColFg];
@@ -1433,7 +1430,9 @@ getstatusbarpid()
 		return -1;
 	fgets(buf, sizeof(buf), fp);
 	pclose(fp);
-	return strtol(buf, NULL, 10);
+	pid_t p = strtol(buf, NULL, 10);
+	if (p <= 0) return -1;
+	return p;
 }
 
 int
@@ -2350,8 +2349,15 @@ runautostart(void)
 		free(pathpfx);
 	}
 
-	if (access(path, X_OK) == 0)
-		system(path);
+	if (access(path, X_OK) == 0) {
+		pid_t pid = fork();
+		if (pid == 0) {
+			setsid();
+			execvp(path, (char *const []){ path, NULL });
+			perror("dwm: runautostart: execvp");
+			_exit(EXIT_FAILURE);
+		}
+	}
 
 	/* now the non-blocking script */
 	if (sprintf(path, "%s/%s", pathpfx, autostartsh) <= 0) {
@@ -2359,8 +2365,15 @@ runautostart(void)
 		free(pathpfx);
 	}
 
-	if (access(path, X_OK) == 0)
-		system(strcat(path, " &"));
+	if (access(path, X_OK) == 0) {
+		pid_t pid = fork();
+		if (pid == 0) {
+			setsid();
+			execvp(path, (char *const []){ path, NULL });
+			perror("dwm: runautostart: execvp");
+			_exit(EXIT_FAILURE);
+		}
+	}
 
 	free(pathpfx);
 	free(path);
@@ -3470,6 +3483,7 @@ updatestatus(void)
 		char *p = plain;
 		for (s = stext; *s; s++) {
 			if (*s == '^' && (*(s+1) == 'c' || *(s+1) == 'b')) {
+				if (strlen(s) < 10) break;
 				s += 9; /* skip ^c#rrggbb or ^b#rrggbb (9 chars after ^) */
 			} else if (*s == '^' && *(s+1) == 'd' && *(s+2) == '^') {
 				s += 2; /* skip ^d^ */
@@ -3488,8 +3502,8 @@ void
 updatesystrayicongeom(Client *i, int w, int h)
 {
 	if (i) {
-        i->w = w = 20; // Set icon width to 16
-        i->h = h = 20; // Set icon height to 16
+        i->w = w = ICONSIZE;
+        i->h = h = ICONSIZE;
 		i->y = ((bh - h) / 2); // Calculate y to center icon vertically
         XMoveResizeWindow(dpy, i->win, i->x, i->y, i->w, i->h);
     }

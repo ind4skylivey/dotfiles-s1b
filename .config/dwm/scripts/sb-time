@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "^c#b388ff^[^c#ffffff^$(date '+%a %H:%M')^c#b388ff^]^d^"

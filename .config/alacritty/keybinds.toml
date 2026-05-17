@@ -1,49 +1,15 @@
-# ═════════════════════════════════════════════════════════════════
-# ALACRITTY GOD MODE KEYBINDS
-# Power User Workflow - Security Research Edition
-# ═════════════════════════════════════════════════════════════════
-
 [keyboard]
 bindings = [
-  # ═══════════════════════════════════════════════════════════════
-  # CLIPBOARD OPERATIONS (Multi-modal)
-  # ═══════════════════════════════════════════════════════════════
+  # Clipboard
   { key = "V", mods = "Super", action = "Paste" },
-  { key = "C", mods = "Super", action = "Copy" },
   { key = "S", mods = "Control|Shift", action = "Paste" },
-  { key = "C", mods = "Control|Shift", action = "Copy" },
+  { key = "C", mods = "Super", action = "Copy" },
   { key = "Insert", mods = "Shift", action = "PasteSelection" },
-  { key = "V", mods = "Control|Shift", action = "PasteSelection" },
+  # { key = "C", mods = "Control", action = "Copy" }, # commented out
+  { key = "V", mods = "Control", action = "Paste" },
+  { key = "Insert", mods = "Shift", action = "Paste" },
 
-  # ═══════════════════════════════════════════════════════════════
-  # TABS - Window Management (Super + Number)
-  # ═══════════════════════════════════════════════════════════════
-  { key = "T", mods = "Super", action = "CreateNewTab" },
-
-  { key = "Tab", mods = "Super", action = "SelectNextTab" },
-  { key = "Tab", mods = "Super|Shift", action = "SelectPreviousTab" },
-  { key = "Key1", mods = "Super", action = "SelectTab1" },
-  { key = "Key2", mods = "Super", action = "SelectTab2" },
-  { key = "Key3", mods = "Super", action = "SelectTab3" },
-  { key = "Key4", mods = "Super", action = "SelectTab4" },
-  { key = "Key5", mods = "Super", action = "SelectTab5" },
-  { key = "Key6", mods = "Super", action = "SelectTab6" },
-  { key = "Key7", mods = "Super", action = "SelectTab7" },
-  { key = "Key8", mods = "Super", action = "SelectTab8" },
-  { key = "Key9", mods = "Super", action = "SelectLastTab" },
-
-  # ═══════════════════════════════════════════════════════════════
-  # SPLITS - Terminal Multiplexing
-  # ═══════════════════════════════════════════════════════════════
-  { key = "H", mods = "Super|Alt", action = "CreateNewWindow" },
-  { key = "N", mods = "Super|Shift", action = "SpawnNewInstance" },
-  { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" },
-  { key = "W", mods = "Super", action = "Quit" },
-  { key = "Q", mods = "Control|Shift", action = "Quit" },
-
-  # ═══════════════════════════════════════════════════════════════
-  # SCROLLING - Vim Style Navigation
-  # ═══════════════════════════════════════════════════════════════
+  # Scrolling
   { key = "Up", mods = "Control|Shift", action = "ScrollLineUp" },
   { key = "Down", mods = "Control|Shift", action = "ScrollLineDown" },
   { key = "K", mods = "Control|Shift", action = "ScrollLineUp" },
@@ -52,135 +18,39 @@ bindings = [
   { key = "PageDown", mods = "Control|Shift", action = "ScrollPageDown" },
   { key = "Home", mods = "Control|Shift", action = "ScrollToTop" },
   { key = "End", mods = "Control|Shift", action = "ScrollToBottom" },
-  { key = "U", mods = "Control|Shift", action = "ScrollHalfPageUp" },
-  { key = "D", mods = "Control|Shift", action = "ScrollHalfPageDown" },
-  { key = "G", mods = "Control|Shift", action = "ScrollToTop" },
-  { key = "G", mods = "Control|Shift|Alt", action = "ScrollToBottom" },
+ # { key = "H", mods = "Control|Shift", action = "ShowScrollback" },
 
-  # ═══════════════════════════════════════════════════════════════
-  # FONT SIZE - Quick Zoom
-  # ═══════════════════════════════════════════════════════════════
-  { key = "Up", mods = "Control|Shift|Alt", action = "IncreaseFontSize" },
-  { key = "Down", mods = "Control|Shift|Alt", action = "DecreaseFontSize" },
-  { key = "K", mods = "Control|Shift|Alt", action = "IncreaseFontSize" },
-  { key = "J", mods = "Control|Shift|Alt", action = "DecreaseFontSize" },
-  { key = "Key0", mods = "Control", action = "ResetFontSize" },
-  { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
-  { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
+  # Window management
+#  { key = "N", mods = "Super", action = "SpawnNewInstance" },
+#  { key = "W", mods = "Super", action = "Close" },
+#  { key = "Enter", mods = "Control|Shift", action = "SpawnNewInstance" },
+#  { key = "RightBracket", mods = "Control|Shift", action = "NextWindow" },
+#  { key = "LeftBracket", mods = "Control|Shift", action = "PreviousWindow" },
+#  { key = "F", mods = "Control|Shift", action = "MoveForward" },
+#  { key = "B", mods = "Control|Shift", action = "MoveBackward" },
+#  { key = "Grave", mods = "Control|Shift", action = "MoveToTop" },
+#  { key = "Key1", mods = "Control|Shift", action = "MoveToFirst" },
+#  { key = "Key2", mods = "Control|Shift", action = "MoveToSecond" },
+#  { key = "Key3", mods = "Control|Shift", action = "MoveToThird" },
+#  { key = "Key4", mods = "Control|Shift", action = "MoveToFourth" },
+#  { key = "Key5", mods = "Control|Shift", action = "MoveToFifth" },
+#  { key = "Key6", mods = "Control|Shift", action = "MoveToSixth" },
+#  { key = "Key7", mods = "Control|Shift", action = "MoveToSeventh" },
+#  { key = "Key8", mods = "Control|Shift", action = "MoveToEighth" },
+#  { key = "Key9", mods = "Control|Shift", action = "MoveToNinth" },
+#  { key = "Key0", mods = "Control|Shift", action = "MoveToTenth" },
 
-  # ═══════════════════════════════════════════════════════════════
-  # SEARCH - Bidirectional with Regex
-  # ═══════════════════════════════════════════════════════════════
-  { key = "F", mods = "Control", action = "SearchForward" },
-  { key = "B", mods = "Control", action = "SearchBackward" },
-  { key = "Key1", mods = "Control", action = "SearchForward", mode = "~Search" },
-  { key = "Key2", mods = "Control", action = "SearchBackward", mode = "~Search" },
-  { key = "N", mods = "Control", action = "SearchNext", mode = "Search" },
-  { key = "N", mods = "Control|Shift", action = "SearchPrevious", mode = "Search" },
-  { key = "Escape", mods = "None", action = "SearchCancel", mode = "Search" },
-  { key = "Return", mods = "None", action = "SearchConfirm", mode = "Search" },
+  # Tab management
+#  { key = "Right", mods = "Control|Shift", action = "NextTab" },
+#  { key = "Left", mods = "Control|Shift", action = "PreviousTab" },
+#  { key = "T", mods = "Control|Shift", action = "SpawnNewTab" },
+#  { key = "Q", mods = "Control|Shift", action = "CloseTab" },
+#  { key = "L", mods = "Control|Shift", action = "NextLayout" },
+#  { key = "Period", mods = "Control|Shift", action = "MoveTabForward" },
+#  { key = "Comma", mods = "Control|Shift", action = "MoveTabBackward" },
 
-  # ═══════════════════════════════════════════════════════════════
-  # VI MODE - Complete Navigation
-  # ═══════════════════════════════════════════════════════════════
-  { key = "Space", mods = "Control|Shift", action = "ToggleViMode" },
-  { key = "Key3", mods = "Control", action = "ToggleViMode" },
-  { key = "Escape", mods = "None", action = "ToggleViMode" },
-  
-  # Vi Mode: Basic Movement
-  { key = "H", mods = "None", action = "Left", mode = "Vi" },
-  { key = "J", mods = "None", action = "Down", mode = "Vi" },
-  { key = "K", mods = "None", action = "Up", mode = "Vi" },
-  { key = "L", mods = "None", action = "Right", mode = "Vi" },
-  
-  # Vi Mode: Word Movement
-  { key = "W", mods = "None", action = "WordRight", mode = "Vi" },
-  { key = "E", mods = "None", action = "WordRightEnd", mode = "Vi" },
-  { key = "B", mods = "None", action = "WordLeft", mode = "Vi" },
-  { key = "W", mods = "Shift", action = "SemanticRight", mode = "Vi" },
-  { key = "B", mods = "Shift", action = "SemanticLeft", mode = "Vi" },
-  
-  # Vi Mode: Line Movement
-  { key = "Key0", mods = "None", action = "First", mode = "Vi" },
-  { key = "Key4", mods = "Shift", action = "Last", mode = "Vi" },
-  { key = "H", mods = "Shift", action = "High", mode = "Vi" },
-  { key = "M", mods = "Shift", action = "Middle", mode = "Vi" },
-  { key = "L", mods = "Shift", action = "Low", mode = "Vi" },
-  
-  # Vi Mode: Paragraph/Bracket Movement
-  { key = "Left", mods = "None", action = "Bracket", mode = "Vi" },
-  { key = "Right", mods = "None", action = "Bracket", mode = "Vi" },
-  { key = "Up", mods = "Shift", action = "ParagraphUp", mode = "Vi" },
-  { key = "Down", mods = "Shift", action = "ParagraphDown", mode = "Vi" },
-  
-  # Vi Mode: Scrolling
-  { key = "U", mods = "None", action = "ScrollHalfPageUp", mode = "Vi" },
-  { key = "D", mods = "None", action = "ScrollHalfPageDown", mode = "Vi" },
-  { key = "G", mods = "None", action = "ScrollToTop", mode = "Vi" },
-  { key = "G", mods = "Shift", action = "ScrollToBottom", mode = "Vi" },
-  
-  # Vi Mode: Search
-  { key = "Slash", mods = "None", action = "SearchForward", mode = "Vi" },
-  { key = "Slash", mods = "Shift", action = "SearchBackward", mode = "Vi" },
-  { key = "N", mods = "None", action = "SearchNext", mode = "Vi" },
-  { key = "N", mods = "Shift", action = "SearchPrevious", mode = "Vi" },
-  
-  # Vi Mode: Inline Search
-  { key = "F", mods = "None", action = "InlineSearchForward", mode = "Vi" },
-  { key = "F", mods = "Shift", action = "InlineSearchBackward", mode = "Vi" },
-  { key = "T", mods = "None", action = "InlineSearchForwardShort", mode = "Vi" },
-  { key = "T", mods = "Shift", action = "InlineSearchBackwardShort", mode = "Vi" },
-  { key = "Semicolon", mods = "None", action = "InlineSearchNext", mode = "Vi" },
-  { key = "Comma", mods = "None", action = "InlineSearchPrevious", mode = "Vi" },
-  
-  # Vi Mode: Selection
-  { key = "V", mods = "None", action = "ToggleNormalSelection", mode = "Vi" },
-  { key = "V", mods = "Shift", action = "ToggleLineSelection", mode = "Vi" },
-  { key = "V", mods = "Control", action = "ToggleBlockSelection", mode = "Vi" },
-  { key = "A", mods = "Shift", action = "ToggleSemanticSelection", mode = "Vi" },
-  
-  # Vi Mode: Copy/Yank
-  { key = "Y", mods = "None", action = "Copy", mode = "Vi" },
-  { key = "Y", mods = "Shift", action = "ScrollToTop", mode = "Vi" },
-  { key = "C", mods = "None", action = "Copy", mode = "Vi" },
-  
-  # Vi Mode: Open/Actions
-  { key = "Return", mods = "None", action = "Open", mode = "Vi" },
-  { key = "O", mods = "None", action = "Open", mode = "Vi" },
-  { key = "Z", mods = "None", action = "CenterAroundViCursor", mode = "Vi" },
-  { key = "Q", mods = "None", action = "ReceiveChar", mode = "Vi" },
-  { key = "I", mods = "None", action = "ScrollToBottom", mode = "Vi" },
-  { key = "I", mods = "Shift", action = "ScrollToBottom", mode = "Vi" },
-
-  # ═══════════════════════════════════════════════════════════════
-  # CLEAR & HISTORY
-  # ═══════════════════════════════════════════════════════════════
-  { key = "K", mods = "Control", action = "ClearHistory" },
-  { key = "L", mods = "Control", action = "ClearLogNotice" },
-  { key = "C", mods = "Control|Shift", action = "ClearSelection" },
-
-  # ═══════════════════════════════════════════════════════════════
-  # WINDOW STATES
-  # ═══════════════════════════════════════════════════════════════
-  { key = "F11", mods = "None", action = "ToggleFullscreen" },
-  { key = "F", mods = "Super|Shift", action = "ToggleFullscreen" },
-  { key = "M", mods = "Super", action = "ToggleMaximized" },
-  { key = "H", mods = "Super", action = "Hide" },
-
-  # ═══════════════════════════════════════════════════════════════
-  # DEBUG & MISC
-  # ═══════════════════════════════════════════════════════════════
-  { key = "R", mods = "Control|Shift", action = "ResetFontSize" },
-]
-
-# ═══════════════════════════════════════════════════════════════
-# MOUSE BINDINGS
-# ═══════════════════════════════════════════════════════════════
-[mouse]
-hide_when_typing = true
-bindings = [
-  { mouse = "Right", mods = "Control", action = "ExpandSelection" },
-  { mouse = "Right", mods = "Control|Shift", action = "ExpandSelection" },
-  { mouse = "Middle", mods = "None", action = "PasteSelection" },
-  { mouse = "Left", mods = "Shift", action = "ExpandSelection" },
+  # Miscellaneous
+  { key = "Up", mods = "Control|Shift", action = "IncreaseFontSize" },
+  { key = "Down", mods = "Control|Shift", action = "DecreaseFontSize" },
+  { key = "Backspace", mods = "Control|Shift", action = "ResetFontSize" },
 ]

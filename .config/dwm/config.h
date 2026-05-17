@@ -19,7 +19,7 @@ static const int systraypinningfailfirst      = 1;   /* 1: if pinning fails, dis
 static const int showsystray                  = 1;   /* 0 means no systray */
 static const int showbar                      = 1;   /* 0 means no bar */
 static const int topbar                       = 1;   /* 0 means bottom bar */
-#define ICONSIZE                              12    /* icon size */
+#define ICONSIZE                              18    /* icon size */
 #define ICONSPACING                           6      /* space between icon and title */
 #define SHOWWINICON                           1      /* 0 means no winicon */
 static const char *fonts[]                    = { "MesloLGS Nerd Font Mono:size=11", "NotoColorEmoji:pixelsize=11:antialias=true:autohint=true" };
@@ -60,7 +60,6 @@ static const char *const autostart[] = {
     "sh", "-c", "QT_QPA_PLATFORM=xcb flameshot &", NULL,
     "sh", "-c", "openrgb --startminimized &", NULL,
     "sh", "-c", "emacs --daemon &", NULL,
-    "sh", "-c", "legcord &", NULL,
     "sh", "-c", "solaar -w hide &", NULL,
     "dunst", NULL,
     "xset", "r", "rate", "300", "50", NULL,  /* Keyboard repeat rate faster */
@@ -68,13 +67,13 @@ static const char *const autostart[] = {
     "sh", "-c", "feh --randomize --bg-fill ~/Pictures/backgrounds/*", NULL,
     "synergy", NULL,
     "/home/il1v3y/.config/dwm/slstatus/slstatus", NULL,
-    "sh", "-c", "/home/il1v3y/.config/dwm/scripts/apply-xrandr-layout.sh", NULL,
+    "sh", "-c", "$HOME/.config/dwm/scripts/apply-xrandr-layout.sh", NULL,
     NULL,
     NULL /* terminate */
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "󰊖", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "󰳆", "", "", "", "", "", "" };
 
 static const char ptagf[] = "[%s %s]";  /* format of a tag label */
 static const char etagf[] = "[%s]";     /* format of an empty tag */
@@ -146,7 +145,7 @@ static const char *termcmd[]       = { "kitty", NULL };
 static const char *editorcmd[]     = { "emacsclient", "-c", "-a", "emacs", NULL };
 static const char *chatcmd[]       = { "legcord", NULL };
 static const char *seccmd[]        = { "burpsuite", NULL };
-static const char *gamescopecmd[]  = { "/home/il1v3y/.config/gamescope/steam-gamescope-session", NULL };
+static const char *gamescopecmd[]  = { "sh", "-c", "$HOME/.config/gamescope/steam-gamescope-session", NULL };
 
 static Key keys[] = {
     /* modifier                     key                        function        argument */
@@ -166,7 +165,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_t,                      spawn,          SHCMD("thunar") },
     { MODKEY|ControlMask,           XK_a,                      spawn,          SHCMD("emacsclient -c -a emacs --eval '(org-agenda)'") },
     { MODKEY,                       XK_o,                      spawn,          SHCMD("keepassxc") },
-    { MODKEY,                       XK_c,                      spawn,          SHCMD("cliphist list | rofi -dmenu | cliphist decode | wl-copy || xclip -selection clipboard") },
+    { MODKEY,                       XK_c,                      spawn,          SHCMD("$HOME/.config/dwm/scripts/cliphist-select.sh") },
     { MODKEY,                       XK_b,                      spawn,          SHCMD ("zen-browser")},
     { MODKEY,                       XK_p,                      spawn,          SHCMD ("flameshot full -p ~/Screenshots/")},
     { MODKEY|ShiftMask,             XK_p,                      spawn,          SHCMD ("flameshot gui -p ~/Screenshots/")},
@@ -178,9 +177,9 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_s,                      spawn,          {.v = gamescopecmd } },
     { 0,                            XF86XK_MonBrightnessUp,    spawn,          SHCMD ("xbacklight -inc 10 && dunstify -r 9992 -u low \"Brightness $(xbacklight -get | cut -d. -f1)%\"")},
     { 0,                            XF86XK_MonBrightnessDown,  spawn,          SHCMD ("xbacklight -dec 10 && dunstify -r 9992 -u low \"Brightness $(xbacklight -get | cut -d. -f1)%\"")},
-    { 0,                            XF86XK_AudioLowerVolume,   spawn,          SHCMD ("amixer sset Master 5%- unmute && vol=$(amixer get Master | awk -F'[][]' '/Left:/{print $2; exit}') && dunstify -r 9991 -u low \"Volume $vol\"")},
-    { 0,                            XF86XK_AudioMute,          spawn,          SHCMD ("amixer sset Master $(amixer get Master | grep -q '\\[on\\]' && echo 'mute' || echo 'unmute') && vol=$(amixer get Master | awk -F'[][]' '/Left:/{print $2; exit}') && dunstify -r 9991 -u low \"Volume $vol\"")},
-    { 0,                            XF86XK_AudioRaiseVolume,   spawn,          SHCMD ("amixer sset Master 5%+ unmute && vol=$(amixer get Master | awk -F'[][]' '/Left:/{print $2; exit}') && dunstify -r 9991 -u low \"Volume $vol\"")},
+    { 0,                            XF86XK_AudioLowerVolume,   spawn,          SHCMD ("$HOME/.config/dwm/scripts/vol-lower.sh")},
+    { 0,                            XF86XK_AudioMute,          spawn,          SHCMD ("$HOME/.config/dwm/scripts/vol-mute.sh")},
+    { 0,                            XF86XK_AudioRaiseVolume,   spawn,          SHCMD ("$HOME/.config/dwm/scripts/vol-raise.sh")},
     { MODKEY|ShiftMask,             XK_b,                      togglebar,      {0} },
     { MODKEY|ControlMask,           XK_plus,                   incrgaps,       {.i = +1 } },
     { MODKEY|ControlMask,           XK_minus,                  incrgaps,       {.i = -1 } },
@@ -202,7 +201,7 @@ static Key keys[] = {
     { MODKEY,                       XK_Return,                 zoom,           {0} },
     { MODKEY,                       XK_KP_Enter,               zoom,           {0} },
     { Mod1Mask,                     XK_Return,                 zoom,           {0} },
-    { MODKEY|ControlMask|ShiftMask, XK_l,                      spawn,          SHCMD("/home/il1v3y/lockscreen.sh") },
+    { MODKEY|ControlMask|ShiftMask, XK_l,                      spawn,          SHCMD("$HOME/lockscreen.sh") },
     { MODKEY,                       XK_Tab,                    view,           {0} },
     { MODKEY,                       XK_q,                      killclient,     {0} },
     { MODKEY,                       XK_t,                      setlayout,      {.v = &layouts[0]} },
@@ -215,9 +214,9 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_y,                      togglefakefullscreen, {0} },
     { MODKEY,                       XK_Up,                     spawn,          SHCMD ("xbacklight -inc 10 && dunstify -r 9992 -u low \"Brightness $(xbacklight -get | cut -d. -f1)%\"") },
     { MODKEY,                       XK_Down,                   spawn,          SHCMD ("xbacklight -dec 10 && dunstify -r 9992 -u low \"Brightness $(xbacklight -get | cut -d. -f1)%\"") },
-    { MODKEY|ControlMask,           XK_Up,                     spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && vol=$(pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1{print $5}') && dunstify -r 9991 -u low \"Volume $vol\"") },
-    { MODKEY|ControlMask,           XK_Down,                   spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && vol=$(pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1{print $5}') && dunstify -r 9991 -u low \"Volume $vol\"") },
-    { MODKEY|ControlMask,           XK_m,                      spawn,          SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; muted=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}'); dunstify -r 9991 -u low \"Output: $([ \"$muted\" = yes ] && echo Muted || echo Live)\"") },
+    { MODKEY|ControlMask,           XK_Up,                     spawn,          SHCMD("$HOME/.config/dwm/scripts/vol-raise.sh") },
+    { MODKEY|ControlMask,           XK_Down,                   spawn,          SHCMD("$HOME/.config/dwm/scripts/vol-lower.sh") },
+    { MODKEY|ControlMask,           XK_m,                      spawn,          SHCMD("$HOME/.config/dwm/scripts/vol-mute.sh") },
     { MODKEY|ShiftMask,             XK_F5,                     spawn,          SHCMD("playerctl play-pause") },
     { MODKEY|ShiftMask,             XK_F6,                     spawn,          SHCMD("playerctl stop") },
     { MODKEY|ShiftMask,             XK_F7,                     spawn,          SHCMD("playerctl previous") },
@@ -269,7 +268,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,             XK_F12,                    spawn,          SHCMD ("$HOME/.config/dwm/scripts/toggle-lid-inhibit.sh") },
 
     /* System monitor */
-    { MODKEY,                       XK_Escape,                 spawn,          SHCMD ("kitty -e htop") },
+    { MODKEY,                       XK_Escape,                 spawn,          SHCMD ("gleam") },
   };
 
 /*
