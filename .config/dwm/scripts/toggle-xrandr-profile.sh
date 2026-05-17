@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_FILE=/tmp/dwm-xrandr-profile
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/dwm-xrandr-profile"
+
+if [[ -L "$STATE_FILE" ]]; then
+    echo "Refusing to follow symlink" >&2
+    exit 1
+fi
 
 set_triple() {
   xrandr \
+    --fb 1920x1080 \
     --output DisplayPort-0 --primary --mode 1920x1080 --rate 180 \
     --output DisplayPort-1 --mode 1920x1080 --rate 60 --left-of DisplayPort-0 --rotate left --pos 0x0 \
     --output HDMI-A-0 --mode 1920x1080 --rate 60 --above DisplayPort-0 --pos 0x1080 \
@@ -15,6 +21,7 @@ set_triple() {
 
 set_solo() {
   xrandr \
+    --fb 1920x1080 \
     --output DisplayPort-0 --primary --mode 1920x1080 --rate 180 \
     --output DisplayPort-1 --off \
     --output HDMI-A-0 --off \
