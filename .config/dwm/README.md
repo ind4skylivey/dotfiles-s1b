@@ -16,13 +16,18 @@ My personal DWM configuration with custom patches and settings.
 - **Win icons** - Window icons in the bar
 - **Hide vacant tags** - Only show tags with windows
 - **Status command** - Click actions on status bar
+- **Gaps** - Configurable inner/outer gaps between windows
+- **Cyclelayout** - Cycle through layouts
+- **Shiftview** - Move between tags without losing focus
 
 ## Color Scheme
 
-Custom purple/lavender theme inspired by Catppuccin:
-- Inactive border: `#7b3ff2` (Dark purple)
-- Active border: `#cba6f7` (Bright purple/mauve)
-- Background: Purple gradient with light text
+Custom purple/violet theme with neon accents:
+- Inactive border: `#5c0099` (Deep purple)
+- Active border: `#ff2200` (Neon red-orange)
+- Background: `#110022` (Dark violet)
+- Text: `#b388ff` (Light violet)
+- Accent: `#bd00ff` (Electric purple)
 
 ## Prerequisites
 
@@ -93,11 +98,15 @@ exec dwm
 ### General
 | Key | Action |
 |-----|--------|
-| `Super + z` | Launch Rofi (app launcher) |
-| `Super + x` | Open terminal (Kitty) |
-| `Super + n` | Open browser (Zen Browser) |
-| `Super + e` | Open file manager (PCManFM-Qt) |
-| `Super + b` | Open browser with URL prompt |
+| `Super + z` | Rofi app launcher |
+| `Super + x` | Terminal (kitty) |
+| `Super + Alt + e` | Emacs (fresh frame) |
+| `Super + v` | Legcord (Discord client) |
+| `Super + g` | BurpSuite |
+| `Super + b` | Zen Browser |
+| `Super + n` | QuteBrowser |
+| `Super + Alt + h` | Helium |
+| `Super + e` | File manager (PCManFM-Qt) |
 | `Super + q` | Kill focused window |
 | `Super + Shift + q` | Quit DWM |
 | `Super + Ctrl + q` | Power menu (rofi) |
@@ -118,44 +127,62 @@ exec dwm
 ### Layouts
 | Key | Layout |
 |-----|--------|
-| `Super + t` | Tile layout (default) |
-| `Super + f` | Floating layout |
-| `Super + m` | Monocle (fullscreen) layout |
+| `Super + t` | Tile (default) |
+| `Super + f` | Floating |
+| `Super + m` | Monocle |
 
-### Tags (Workspaces)
+### Tags
 | Key | Action |
 |-----|--------|
-| `Super + [1-5]` | Switch to tag 1-5 |
-| `Super + Shift + [1-5]` | Move window to tag |
-| `Super + Tab` | Toggle between last two tags |
+| `Super + 1-9` | Switch to tag |
+| `Super + Shift + 1-9` | Move window to tag |
+| `Super + Tab` | Last tag |
 | `Super + 0` | View all tags |
 
 ### Multi-Monitor
 | Key | Action |
 |-----|--------|
-| `Super + ,/.` | Focus previous/next monitor |
+| `Super + ,/.` | Focus left/right monitor |
 | `Super + Shift + ,/.` | Move window to monitor |
 
 ### System
 | Key | Action |
 |-----|--------|
-| `Super + p` | Screenshot (full screen to ~/Screenshots/) |
-| `Super + Shift + p` | Screenshot (selection to ~/Screenshots/) |
-| `Super + Ctrl + p` | Screenshot (to clipboard) |
-| `Print` | Screenshot (GUI mode) |
-| `Super + Escape` | System monitor (htop) |
-| `Super + Shift + c` | Toggle picom (transparency) |
+| `Super + p` | Screenshot full → ~/Screenshots/ |
+| `Super + Shift + p` | Screenshot GUI → ~/Screenshots/ |
+| `Super + Ctrl + p` | Screenshot to clipboard |
+| `Super + Alt + p` | Screenshot region → clipboard |
+| `Print` | Screenshot GUI |
+| `Super + Escape` | System monitor (gleam) |
+| `Super + Shift + b` | Toggle bar |
 | `Super + Shift + w` | Randomize wallpaper |
-| `Super + Shift + b` | Toggle bar visibility |
+| `Super + c` | Clipboard history |
+| `Super + ;` | Emoji picker |
+| `Super + o` | KeePassXC |
+| `Super + ` ` ` | Scratchpad terminal |
 
-### Media Keys
+### Media
 | Key | Action |
 |-----|--------|
-| `XF86AudioRaiseVolume` | Volume up 5% |
-| `XF86AudioLowerVolume` | Volume down 5% |
-| `XF86AudioMute` | Toggle mute |
-| `XF86MonBrightnessUp` | Brightness up |
-| `XF86MonBrightnessDown` | Brightness down |
+| `Super + Up/Down` | Brightness ±10% |
+| `Super + Ctrl + Up/Down` | Volume ± |
+| `Super + Ctrl + m` | Mute |
+| `Super + Shift + F5-F8` | Play/pause, stop, prev, next |
+
+### Notifications & Mic
+| Key | Action |
+|-----|--------|
+| `Super + Shift + d` | Do Not Disturb (pause dunst) |
+| `Super + Shift + u` | Toggle mic mute |
+
+### Custom Scripts
+| Key | Action |
+|-----|--------|
+| `Super + Alt + o` | Toggle picom (transparent/solid) |
+| `Super + Alt + n` | Toggle nightlight (gammastep 4500K) |
+| `Super + Alt + x` | Toggle display profile (triple/solo) |
+| `Super + Alt + F12` | Toggle lid inhibit (when docked) |
+| `Super + Ctrl + a` | Emacs org-agenda |
 
 ## Monitor Setup
 
@@ -164,20 +191,25 @@ Configured for triple monitor setup:
 - **DisplayPort-1** (Left): 1920x1080 @ 60Hz, rotated left
 - **HDMI-A-0** (Top): 1920x1080 @ 60Hz
 
+Toggle between triple and solo mode with `Super + Alt + x`.
+
 Edit `config.h` and recompile to adjust for your setup.
 
 ## Autostart Programs
 
 The following programs launch automatically:
 - mate-polkit (authentication agent)
-- flameshot (screenshot tool)
-- openrgb (RGB control)
+- flameshot (screenshot tool, runs in tray)
+- openrgb (RGB control, starts minimized)
 - emacs (daemon mode)
 - legcord (Discord client)
 - dunst (notification daemon)
 - picom (compositor)
-- synergy (keyboard/mouse sharing)
+- synergy (keyboard/mouse sharing across machines)
 - slstatus (status bar)
+- feh (random wallpaper on startup)
+- picom (compositor)
+- gammastep (nightlight, off by default)
 
 Edit the `autostart[]` array in `config.h` to customize.
 
@@ -193,7 +225,7 @@ Edit the `autostart[]` array in `config.h` to customize.
 ### Required Programs
 - **Terminal**: kitty
 - **Launcher**: rofi
-- **Browser**: zen-browser
+- **Browsers**: zen-browser, qutebrowser, helium
 - **File Manager**: pcmanfm-qt
 - **Screenshots**: flameshot
 - **Compositor**: picom
@@ -205,7 +237,10 @@ Edit the `autostart[]` array in `config.h` to customize.
 - openrgb (RGB control)
 - synergy (multi-computer keyboard/mouse sharing)
 - looking-glass (VM client)
-- htop (system monitor)
+- gleam (system monitor)
+- KeePassXC (password manager)
+- legcord (Discord client)
+- burpsuite, ghidra, zaproxy, wireshark (security tools)
 
 ## Slstatus Configuration
 
