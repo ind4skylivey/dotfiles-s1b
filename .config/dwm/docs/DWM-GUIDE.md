@@ -36,23 +36,30 @@
 - **Launchers/apps**
   - `Super+z` rofi drun
   - `Super+x` kitty
-  - `Super+a` emacsclient
+  - `Super+Alt+e` emacsclient
   - `Super+v` legcord
   - `Super+g` burpsuite
-  - `Super+b` `xdg-open https://`
-  - `Super+p` / `Super+Shift+p` / `Super+Ctrl+p` flameshot full/gui/clipboard
+  - `Super+b` zen-browser
+  - `Super+p` / `Super+Shift+p` / `Super+Ctrl+p` / `Super+Alt+p` flameshot full/gui/clipboard/region-clipboard
   - `Print` flameshot gui
   - `Super+e` pcmanfm-qt
   - `Super+w` looking-glass-client; `Super+Shift+w` random wallpaper
   - `Super+Shift+s` gamescope session
-  - `Super+n` zen-browser
+  - `Super+n` qutebrowser
+  - `Super+Alt+h` helium
 - **Security/lock**
   - `Super+Ctrl+Shift+l` → `/home/il1v3y/lockscreen.sh` (betterlockscreen)
 - **Clipboard/emoji**
-  - `Super+c` cliphist | rofi | wl-copy (fallback xclip)
+  - `Super+c` cliphist → rofi → wl-copy (falls back to xclip on pure X11)
   - `Super+;` rofimoji copy
 - **Password manager**
   - `Super+o` keepassxc
+
+- **Media/aux shortcuts**
+  - `Super+Up/Down` brightness ±10%
+  - `Super+Ctrl+Up/Down` volume ±
+  - `Super+Ctrl+m` mute
+  - `Super+Shift+F5-F8` playerctl: play-pause/stop/prev/next
 - **Color temperature**
   - `Super+F1` redshift 3500K
   - `Super+Shift+F1` redshift -x
@@ -64,6 +71,10 @@
   - `Super+Enter` zoom
   - `Super+t/f/m/space` set layouts; `Super+Ctrl+Left/Right` cycle layouts
   - `Super+Shift+m` toggle floating; `Super+Shift+y` fake fullscreen toggle
+
+- **Notifications & mic**
+  - `Super+Shift+d` dunst pause (Do Not Disturb mode)
+  - `Super+Shift+u` toggle mic mute
 - **Navigation/tags**
   - `Super+Tab` last view; `Super+q` kill client
   - `Super+1..9` view; `Super+Shift+1..9` tag; Ctrl variants toggleview/toggletag
@@ -76,12 +87,12 @@
   - `Super+Ctrl+Shift+r` reboot
   - `Super+Ctrl+Shift+s` suspend
 - **Custom scripts** (`~/.config/dwm/scripts/`)
-  - `Super+Shift+c` picom profile toggle
+  - `Super+Alt+o` picom profile toggle (transparent/solid)
   - `Super+\`` scratchpad terminal
-  - `Super+Shift+n` toggle-nightlight
-  - `Super+Shift+x` toggle-xrandr profile
-  - `Super+Shift+F12` toggle lid inhibit
-  - `Super+Esc` htop (kitty)
+  - `Super+Alt+n` toggle nightlight (gammastep 4500K)
+  - `Super+Alt+x` toggle xrandr profile (triple/solo display)
+  - `Super+Alt+F12` toggle lid inhibit (when docked)
+  - `Super+Esc` system monitor (gleam)
 
 ## Mouse Bindings
 - Tag bar: Mod+Button1 tag, Mod+Button3 toggletag; no Mod: view/toggleview.
@@ -89,8 +100,8 @@
 
 ## Rules (class → behavior/tag)
 - Terminals (St/kitty/Alacritty): terminal, no swallow.
-- Browsers (firefox/chrome/brave/zen): tag 2.
-- Gaming: lutris, steam floating; gamescope normal.
+- Browsers (firefox/chrome/brave/zen/zen-alpha/helium/qutebrowser): tag 2.
+- Gaming: lutris, steam_app_default, retroarch, es-de floating; gamescope normal.
 - File managers (dolphin/pcmanfm-qt/Thunar): floating on tag 4.
 - Chat (vesktop/discord/Legcord): tag 5.
 - Security tools (BurpSuite, Ghidra, ZAP): tag 6; Wireshark: tag 7.
@@ -132,9 +143,9 @@
 
 ## Dependencies Referenced
 - Core: X11 libs, xbacklight, amixer, dunst/notify-send, flameshot, feh, picom, synergy, slstatus, xrandr.
-- Apps/tools: betterlockscreen, openrgb, emacsclient, legcord, burpsuite, kitty, pcmanfm-qt, looking-glass-client, gamescope session, zen-browser.
-- Clipboard/emoji/temp: cliphist, rofi, wl-copy, xclip, redshift, rofimoji.
-- Monitoring: htop; power actions via systemctl.
+- Apps/tools: betterlockscreen, openrgb, emacsclient, legcord, burpsuite, kitty, pcmanfm-qt, looking-glass-client, gamescope session, zen-browser, helium, qutebrowser.
+- Clipboard/emoji/temp: cliphist, rofi, wl-copy, xclip, redshift, rofimoji, protontray.
+- Monitoring: gleam, htop, pavucontrol; power actions via systemctl.
 
 ## Monitors & Inputs
 - Triple monitor layout coded in autostart:
@@ -183,7 +194,7 @@ Custom scripts in `~/.config/dwm/scripts/` for extended functionality.
 
 ### toggle-nightlight.sh
 - **Purpose**: Toggle color temperature adjustment (blue light filter)
-- **Keybind**: `Super+Shift+n`
+- **Keybind**: `Super+Alt+n`
 - **Behavior**:
   - On: gammastep at 4500K
   - Off: kill gammastep
@@ -192,22 +203,24 @@ Custom scripts in `~/.config/dwm/scripts/` for extended functionality.
 
 ### toggle-lid-inhibit.sh
 - **Purpose**: Prevent laptop lid close from suspending when docked
-- **Keybind**: `Super+Shift+F12`
+- **Keybind**: `Super+Alt+F12`
 - **Behavior**:
   - On: systemd-inhibit handle-lid-switch
   - Off: follow default behavior
 - **Notifications**: dunstify "Laptop lid follows default behavior" or "Lid switch inhibited (docked)"
 - **Dependencies**: systemd-inhibit, dunstify
 
-### picom-profile-toggle.sh
-- **Purpose**: Toggle between transparent and solid compositor profiles
-- **Keybind**: `Super+Shift+c`
-- **Profiles**:
-  - Transparent: uses `picom.conf` (default, xrender backend)
-  - Solid: uses `picom-solid.conf` (no transparency, better performance)
-- **State**: Persisted in `/tmp/dwm-picom-profile`
-- **Notifications**: dunstify with profile name
-- **Dependencies**: picom, dunstify
+### vol-raise.sh / vol-lower.sh / vol-mute.sh
+- **Purpose**: PulseAudio volume control with notifications
+- **Keybinds**: `Super+Ctrl+Up` / `Super+Ctrl+Down` / `Super+Ctrl+m`
+- **Behavior**: Adjusts default sink volume by 5%, shows dunst notification with current level
+- **Dependencies**: pactl, dunstify
+
+### cliphist-select.sh
+- **Purpose**: Browse and select from clipboard history
+- **Keybind**: `Super+c`
+- **Behavior**: Opens rofi with recent clipboard entries, selected item copied to clipboard
+- **Dependencies**: cliphist, rofi, wl-copy (falls back to xclip on pure X11)
 
 ---
 
@@ -230,7 +243,7 @@ Custom scripts in `~/.config/dwm/scripts/` for extended functionality.
 ```
 
 ### Quick Actions
-- **Screenshot**: `Super+p` (full), `Super+Shift+p` (gui), `Super+Ctrl+p` (clipboard)
+- **Screenshot**: `Super+p` (full), `Super+Shift+p` (gui), `Super+Ctrl+p` (clipboard), `Super+Alt+p` (region→clipboard)
 - **Clipboard history**: `Super+c` → rofi → select → wl-copy
 - **Emoji picker**: `Super+;` → rofimoji
 - **Scratchpad**: `` Super+` `` → type notes → toggle off
@@ -388,17 +401,21 @@ Runtime:
 ├── .xinitrc               # X session start
 ├── setup.sh               # Automated setup
 ├── autostart              # Autostart script
-├── slstatus/               # Status bar
+├── slstatus/              # Status bar
 │   ├── config.h
 │   └── Makefile
-├── scripts/                # Custom scripts
+├── scripts/               # Custom scripts
 │   ├── scratchpad.sh
 │   ├── toggle-xrandr-profile.sh
 │   ├── toggle-nightlight.sh
 │   ├── toggle-lid-inhibit.sh
 │   ├── picom-profile-toggle.sh
+│   ├── vol-raise.sh
+│   ├── vol-lower.sh
+│   ├── vol-mute.sh
+│   ├── cliphist-select.sh
 │   └── apply-xrandr-layout.sh
-├── config/                 # App configs
+├── config/                # App configs
 │   ├── rofi/
 │   ├── kitty/
 │   └── alacritty/
@@ -436,8 +453,8 @@ App configs use **symlinks** from runtime paths to templates:
 ```
 MOD = Super (Mod4)
 
-LAUNCH     : Super+z    TERMINAL   : Super+x    BROWSER : Super+n
-EMACS      : Super+a    FILEMGR    : Super+e    CHAT    : Super+v
+LAUNCH     : Super+z    TERMINAL   : Super+x    BROWSER : Super+n/Alt+h/b
+EMACS      : Super+Alt+e    FILEMGR    : Super+e    CHAT    : Super+v
 GAMES      : Super+Shift+s   LOCK      : Super+Ctrl+Shift+l
 
 FOCUS      : j/k       MOVE       : Shift+j/k

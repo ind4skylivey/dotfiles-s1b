@@ -90,6 +90,7 @@ static const Rule rules[] = {
     { "Google-chrome",      NULL,     NULL,               1 << 1,        0,          0,          0,        -1 },
     { "Brave-browser",      NULL,     NULL,               1 << 1,        0,          0,          0,        -1 },
     { "zen-alpha",          NULL,     NULL,               1 << 1,        0,          0,          0,        -1 },
+    { "helium",             NULL,     NULL,               1 << 1,        0,          0,          0,        -1 },
     { "lutris",             NULL,     NULL,                    0,         1,          0,          0,         0 },
     { "steam_app_default",  NULL,     NULL,                    0,         1,          0,          0,         0 },
     { "gamescope",          NULL,     NULL,                    0,         0,          0,          0,         0 },
@@ -142,9 +143,9 @@ static const Layout layouts[] = {
 /* Commands */
 static const char *launchercmd[]   = { "rofi", "-show", "drun", NULL };
 static const char *termcmd[]       = { "kitty", NULL };
-static const char *editorcmd[]     = { "emacsclient", "-c", "-a", "emacs", NULL };
 static const char *chatcmd[]       = { "legcord", NULL };
 static const char *seccmd[]        = { "burpsuite", NULL };
+static const char *heliumcmd[]      = { "helium", NULL };
 static const char *gamescopecmd[]  = { "sh", "-c", "$HOME/.config/gamescope/steam-gamescope-session", NULL };
 
 static Key keys[] = {
@@ -152,7 +153,7 @@ static Key keys[] = {
     { MODKEY,                       XK_z,                      spawn,          {.v = launchercmd} },
     { MODKEY|ControlMask,           XK_r,                      spawn,          SHCMD ("protonrestart")},
     { MODKEY,                       XK_x,                      spawn,          {.v = termcmd } },
-    { MODKEY,                       XK_a,                      spawn,          {.v = editorcmd } },
+    { MODKEY|Mod1Mask,              XK_e,                      spawn,          SHCMD ("emacsclient -c") },
     { MODKEY,                       XK_v,                      spawn,          {.v = chatcmd } },
     { MODKEY,                       XK_g,                      spawn,          {.v = seccmd } },
     { MODKEY,                       XK_r,                      spawn,          SHCMD ("rofi -show window -modi window,run,drun,ssh") },
@@ -170,6 +171,7 @@ static Key keys[] = {
     { MODKEY,                       XK_p,                      spawn,          SHCMD ("flameshot full -p ~/Screenshots/")},
     { MODKEY|ShiftMask,             XK_p,                      spawn,          SHCMD ("flameshot gui -p ~/Screenshots/")},
     { MODKEY|ControlMask,           XK_p,                      spawn,          SHCMD ("flameshot gui --clipboard")},
+    { MODKEY|Mod1Mask,              XK_p,                      spawn,          SHCMD ("flameshot gui -r --clipboard")},
     { 0,                            XK_Print,                  spawn,          SHCMD ("flameshot gui") }, /* Print key = GUI */
     { MODKEY,                       XK_e,                      spawn,          SHCMD ("pcmanfm-qt")},
     { MODKEY,                       XK_w,                      spawn,          SHCMD ("looking-glass-client -F")},
@@ -251,6 +253,9 @@ static Key keys[] = {
 
     /* Browser - Qutebrowser */
     { MODKEY,                       XK_n,                      spawn,          SHCMD ("qutebrowser") },
+
+    /* Browser - Helium */
+    { MODKEY|Mod1Mask,              XK_h,                      spawn,          {.v = heliumcmd } },
 
     /* Quick picom toggle (transparency on/off) */
     { MODKEY|ShiftMask,             XK_c,                      spawn,          SHCMD ("$HOME/.config/dwm/scripts/picom-profile-toggle.sh") },
