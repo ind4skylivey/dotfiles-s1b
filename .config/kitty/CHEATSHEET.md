@@ -122,6 +122,14 @@ The hints system allows you to quickly detect and interact with text patterns in
 |------------|--------|-------------|
 | `Ctrl+Shift+Z` | Toggle Stack | Switch to stack layout |
 | `Ctrl+Shift+Space` | Toggle Horizontal | Switch to horizontal layout |
+| `Ctrl+Shift+O` | Toggle Vertical | Switch to vertical layout |
+
+### Window Splitting
+
+| Keybinding | Action | Description |
+|------------|--------|-------------|
+| `Ctrl+Alt+H` | Split Horizontal | Split window horizontally |
+| `Ctrl+Alt+V` | Split Vertical | Split window vertically |
 
 ---
 
