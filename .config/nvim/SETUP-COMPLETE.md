@@ -1,12 +1,72 @@
 # 🎉 Multi-Language Professional Workflow Setup - COMPLETE!
 
+> **Leader Key:** `<Space>` (Space bar)  
+> **Local Leader Key:** `\` (Backslash)
+
 ## ✅ What Was Installed
 
-### Neovim Plugins (Configured)
-- ✅ **php-laravel.lua** - PHPActor LSP + Laravel.nvim + Blade syntax
-- ✅ **python.lua** - Pyright LSP + Ruff + venv-selector + debugpy
-- ✅ **rust.lua** - rust-analyzer + rustaceanvim + crates.nvim + LLDB
-- ✅ **dap-php.lua** - Xdebug debugging support for PHP/Laravel
+### Neovim Plugins (32 files, ~45 plugins)
+
+**Core:**
+- ✅ **conform.nvim** - Formatter engine (Ruff, clang-format, stylua, etc.)
+- ✅ **nvim-lspconfig** - LSP client configuration
+- ✅ **catppuccin/nvim** - Colorscheme (mocha flavour, transparent bg)
+- ✅ **mason.nvim** (v1.11.0) - LSP/tool package manager
+- ✅ **mason-lspconfig.nvim** (v1.32.0) - Mason ↔ lspconfig bridge
+- ✅ **trouble.nvim** - Diagnostic list with signs
+- ✅ **symbols-outline.nvim** - Tree-like LSP symbol outline (`<leader>cs`)
+
+**LSP & Completion:**
+- ✅ **blink.cmp** - Completion engine with Avante compat sources
+- ✅ **blink.compat** - Compatibility layer for blink.cmp
+
+**AI Assistants:**
+- ✅ **copilot.lua** - GitHub Copilot inline suggestions
+- ✅ **CopilotChat.nvim** - Full Copilot chat with 20+ custom prompts
+- ✅ **codecompanion.nvim** - AI chat (gpt-4o/gpt-4.1) with inline code changes, agent tools
+- ⚠️ **avante.nvim** - AI coding assistant (currently **disabled**)
+
+**Navigation:**
+- ✅ **nvim-tmux-navigation** - Seamless Neovim ↔ tmux pane navigation
+- ✅ **fzf-lua** - Fuzzy finder for files, buffers, grep
+- ✅ **oil.nvim** - File explorer (directories as editable buffers)
+- ✅ **nvim-ufo** - Advanced code folding (treesitter + indent)
+
+**Git:**
+- ✅ **git.nvim** - Git blame and browse (`<leader>gb`, `<leader>go`)
+
+**Debugging (DAP):**
+- ✅ **nvim-dap** - Debug Adapter Protocol client (18 keybindings)
+- ✅ **nvim-dap-ui** - Debug UI overlay
+- ✅ **nvim-dap-virtual-text** - Inline debug info
+- ⚠️ **dap-php.lua** - PHP Xdebug debugging (currently **disabled**, npm build issues)
+
+**Language Support:**
+- ✅ **rust.lua** - rustaceanvim (v5) + crates.nvim + LLDB debugger
+- ✅ **python.lua** - Pyright + Ruff + venv-selector + debugpy
+- ✅ **php-laravel.lua** - PHPActor + laravel.nvim + vim-blade
+- ✅ **render-markdown.nvim** - Styled Markdown rendering with icons
+
+**Aesthetic / UI:**
+- ✅ **nvim-scrollbar** - Visual scrollbar with diagnostics, git, search marks
+- ✅ **nvim-hlslens** - Calm search result indicators
+- ✅ **neoscroll.nvim** - Smooth animated scrolling
+- ✅ **zen-mode.nvim** - Distraction-free focus mode (120-col centered)
+- ✅ **twilight.nvim** - Dims inactive code (treesitter-aware)
+- ✅ **cellular-automaton.nvim** - Matrix rain + Game of Life animations
+- ✅ **nvim-colorizer.lua** - Live color preview (hex/rgb/hsl/tailwind)
+- ✅ **indent-blankline.nvim** - Rainbow indent guides (7 Catppuccin colors)
+- ✅ **noice.nvim** - UI overhaul (cmdline, messages, notifications, LSP progress)
+- ✅ **nvim-notify** - Animated notification system
+- ✅ **nui.nvim** - UI component library (noice dependency)
+- ✅ **screenkey.nvim** - On-screen key display for screencasts
+- ✅ **which-key.nvim** - Keybinding discovery popup (300ms timeout)
+
+**Utilities:**
+- ✅ **nvim-rip-substitute** - Fast regex search-and-replace via ripgrep (`<leader>fs`)
+- ✅ **vim-multiple-cursors** - Multi-cursor editing (like VS Code)
+- ✅ **goto-preview** - Floating window LSP previews (`gpd`, `gpD`, `gpi`, etc.)
+- ✅ **mini.hipatterns** - Inline HSL color highlighting
 
 ### Zellij Layouts (Auto-launch)
 - ✅ **laravel-dev.kdl** - Laravel development environment
@@ -16,14 +76,6 @@
 
 ### Scripts & Tools
 - ✅ **dev-start** - Smart project detector (auto-launches correct layout)
-
-### LSP Config Updates
-- ✅ **lspconfig.lua** - Added PHPActor, Pyright, rust-analyzer, clangd
-- ✅ **mason.lua** - Auto-install list for all LSP servers
-
-### Documentation
-- ✅ **WORKFLOW-GUIDE.md** - Complete usage guide (58 KB)
-- ✅ **QUICK-REFERENCE.md** - Quick reference card (3 KB)
 
 ## 🚀 Next Steps
 
@@ -39,7 +91,7 @@ Open Neovim and run:
 In Mason UI, press `I` to install all servers from ensure_installed list, or manually:
 
 ```vim
-:MasonInstall phpactor php-debug-adapter pyright ruff debugpy rust-analyzer codelldb clangd
+:MasonInstall phpactor php-debug-adapter pyright ruff debugpy rust-analyzer codelldb clangd clang-format vtsls html-lsp css-lsp tailwindcss-language-server vue-language-server bash-language-server shellcheck shfmt lua-language-server stylua json-lsp marksman
 ```
 
 **Wait for all installations to complete** (you'll see progress bars)
@@ -205,8 +257,11 @@ dev-start                    # Auto-launches Security layout
 
 | File | Location | Description |
 |------|----------|-------------|
-| **Complete Guide** | `~/.config/nvim/WORKFLOW-GUIDE.md` | Full documentation (14 KB) |
-| **Quick Reference** | `~/.config/nvim/QUICK-REFERENCE.md` | Keybindings cheat sheet (3 KB) |
+| **Keybindings** | `~/.config/nvim/KEYBINDINGS.md` | Full keybinding reference |
+| **Complete Guide** | `~/.config/nvim/WORKFLOW-GUIDE.md` | Full workflow documentation |
+| **Quick Reference** | `~/.config/nvim/QUICK-REFERENCE.md` | Keybindings cheat sheet |
+| **Error Fixes** | `~/.config/nvim/ERRORS-FIXED.md` | Known issues and fixes |
+| **Treesitter Fix** | `~/.config/nvim/treesitter-fix-README.md` | Neovim 0.12+ workaround |
 | **This File** | `~/.config/nvim/SETUP-COMPLETE.md` | Setup summary |
 
 ## 🔧 Useful Commands
@@ -234,6 +289,16 @@ zellij attach <session>
 ```bash
 # View installed servers:
 ls ~/.local/share/nvim/mason/packages/
+
+# Full ensure_installed list:
+# PHP:      intelephense, php-debug-adapter
+# Python:   pyright, ruff, debugpy
+# Rust:     rust-analyzer, codelldb
+# TS/JS:    vtsls
+# Web:      html-lsp, css-lsp, tailwindcss-language-server, vue-language-server
+# Shell:    bash-language-server, shellcheck, shfmt
+# C/C++:    clangd, clang-format
+# General:  lua-language-server, stylua, json-lsp, marksman
 
 # Manually install PHPActor:
 cd ~/.local/share/nvim/mason/packages/phpactor
@@ -300,6 +365,17 @@ nvim ~/.config/nvim/WORKFLOW-GUIDE.md
 
 ---
 
+## ⚠️ Disabled Plugins
+
+| Plugin | File | Reason |
+|--------|------|--------|
+| **avante.nvim** | `lua/plugins/avante.lua` | Disabled (`enabled = false`) |
+| **dap-php.lua** | `lua/plugins/dap-php.lua` | npm build issues with vscode-php-debug |
+
+To re-enable, edit the respective file and set `enabled = true` (avante) or uncomment the return block (dap-php).
+
+---
+
 ## 🤝 Support & Resources
 
 - **NvChad Docs:** https://nvchad.com/docs/quickstart/install
@@ -309,4 +385,5 @@ nvim ~/.config/nvim/WORKFLOW-GUIDE.md
 
 **Happy Coding! 🚀**
 
-*Generated: 2025-11-04*
+*Generated: 2025-11-04*  
+*Last Updated: 2026-07-03*

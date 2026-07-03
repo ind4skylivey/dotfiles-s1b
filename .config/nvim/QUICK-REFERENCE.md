@@ -1,5 +1,8 @@
 # Quick Reference Card - Multi-Language Dev Setup
 
+> **Leader Key:** `<Space>` (Space bar)  
+> **Local Leader Key:** `\` (Backslash) - for filetype-specific actions
+
 ## 🚀 Launch Development Environment
 
 ```bash
@@ -135,4 +138,5 @@ cd ~/rust-project && dev-start
 
 ---
 
-**Full Guide:** `~/.config/nvim/WORKFLOW-GUIDE.md`
+**Full Guide:** `~/.config/nvim/WORKFLOW-GUIDE.md`  
+**Last Updated:** 2026-07-03
