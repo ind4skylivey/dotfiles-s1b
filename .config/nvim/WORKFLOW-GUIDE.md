@@ -1,5 +1,8 @@
 # Multi-Language Professional Workflow Guide
 
+> **Leader Key:** `<Space>` (Space bar) - for global keybindings  
+> **Local Leader Key:** `\` (Backslash) - for filetype-specific keybindings
+
 ## 🚀 Quick Start
 
 Your Neovim + Zellij setup is now configured for professional development in:
@@ -375,3 +378,5 @@ dev-start
 **Happy Coding! 🚀**
 
 *For questions or issues, check `:checkhealth` and `:LspInfo` in Neovim.*
+
+*Last Updated: 2026-07-03*

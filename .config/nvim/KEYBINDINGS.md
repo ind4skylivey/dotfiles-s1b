@@ -1,6 +1,7 @@
 # 🔥 il1v3y's Neovim Keybindings Reference
 
-> **Leader Key:** `<Space>` (Space bar)
+> **Leader Key:** `<Space>` (Space bar)  
+> **Local Leader Key:** `\` (Backslash) - for filetype-specific actions  
 > **Mode Legend:** `n` = Normal mode, `i` = Insert mode, `v` = Visual mode
 
 ---
@@ -297,7 +298,15 @@
 
 ### WhichKey
 - Press `<Space>` and wait → Shows all available keybindings
+- Press `\` and wait → Shows filetype-specific keybindings
 - Hierarchical menu for discovering shortcuts
+
+### Leader vs Local Leader
+- **`<leader>` (Space)**: Global keybindings that work in any buffer
+  - Example: `<Space>ff` (find files), `<Space>gb` (git blame)
+- **`<localleader>` (\\)**: Filetype-specific keybindings
+  - Example: In Python buffer `\r` could run tests, in Markdown `\p` could preview
+  - Plugins use this for context-aware actions
 
 ---
 
@@ -441,7 +450,7 @@
 ┌─────────────────────────────────────────────────────────┐
 │  il1v3y's Neovim Quick Reference                        │
 ├─────────────────────────────────────────────────────────┤
-│  LEADER: Space                                          │
+│  LEADER: Space        LOCAL LEADER: \                   │
 │                                                         │
 │  FILES:    <leader>ff  Find     <leader>e   Explorer   │
 │  SEARCH:   <leader>fw  Grep     /           Search     │
@@ -458,7 +467,7 @@
 
 ---
 
-**Last Updated:** 2025-11-05  
+**Last Updated:** 2026-07-03  
 **Neovim Version:** 0.10+  
 **Config Location:** `~/.config/nvim/`
 
