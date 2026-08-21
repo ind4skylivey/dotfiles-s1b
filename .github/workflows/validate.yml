@@ -1,0 +1,21 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Syntax and ShellCheck
+        run: bash ./validate.sh
+      - name: Unit tests
+        run: bash tests/run.sh
+      - name: Dry-run
+        run: ./install.sh --dry-run
+      - name: Docs present
+        run: test -f docs/architecture.md && test -f docs/audit/current-state.md

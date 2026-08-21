@@ -1,18 +1,19 @@
-.PHONY: help lint test validate dry-run audit docs install uninstall doctor
+.PHONY: help lint test validate dry-run audit docs install uninstall doctor backup-list
 
 help:
 	@printf '%s\n' \
 		'Targets:' \
 		'  make help         this list' \
 		'  make lint         bash -n + ShellCheck (new scripts only)' \
-		'  make test         unit tests (detect, log, dry-run)' \
+		'  make test         unit tests (detect, log, dry-run, backup, link)' \
 		'  make validate     repository validation (no host changes)' \
 		'  make dry-run      ./install.sh --dry-run' \
 		'  make doctor       ./doctor.sh' \
 		'  make audit        print docs/audit/current-state.md path' \
 		'  make docs         list documentation files' \
 		'  make install      refuse silent privileged install; print command' \
-		'  make uninstall    not implemented'
+		'  make uninstall    not implemented' \
+		'  make backup-list  ./restore.sh --list'
 
 lint validate:
 	./validate.sh
@@ -42,3 +43,6 @@ install:
 uninstall:
 	@printf '%s\n' 'uninstall is not implemented yet. ./install.sh --uninstall'
 	@exit 3
+
+backup-list:
+	./restore.sh --list

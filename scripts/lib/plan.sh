@@ -51,8 +51,8 @@ dotfiles_plan_report() {
 dotfiles_plan_stub_current() {
   dotfiles_plan_reset
   dotfiles_plan_add skip "package install" "package layer not implemented yet"
-  dotfiles_plan_add skip "symlinks" "linker not implemented yet"
-  dotfiles_plan_add skip "file changes" "no linker yet — backup library is ready"
+  dotfiles_plan_add skip "module links" "linker is ready; no module manifests declared yet (see docs/linker.md)"
+  dotfiles_plan_add skip "file changes" "no module install path yet"
   dotfiles_plan_add skip "niri" "desktop import pending; live config is NiriPURA"
   dotfiles_plan_add skip "dwm" "desktop module not migrated"
   dotfiles_plan_add skip "security tools" "requires --profile security (not implemented)"

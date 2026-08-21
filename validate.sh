@@ -32,7 +32,12 @@ SCRIPTS=(
   "${DOTFILES_ROOT}/scripts/lib/log.sh"
   "${DOTFILES_ROOT}/scripts/lib/detect.sh"
   "${DOTFILES_ROOT}/scripts/lib/plan.sh"
+  "${DOTFILES_ROOT}/scripts/lib/backup.sh"
+  "${DOTFILES_ROOT}/scripts/lib/link.sh"
   "${DOTFILES_ROOT}/scripts/lib/load.sh"
+  "${DOTFILES_ROOT}/scripts/backup.sh"
+  "${DOTFILES_ROOT}/scripts/link.sh"
+  "${DOTFILES_ROOT}/restore.sh"
 )
 
 for f in "${SCRIPTS[@]}"; do
@@ -45,6 +50,9 @@ if dotfiles_have_cmd shellcheck; then
     "${DOTFILES_ROOT}/doctor.sh" \
     "${DOTFILES_ROOT}/validate.sh" \
     "${DOTFILES_ROOT}/scripts/detect-platform.sh" \
+    "${DOTFILES_ROOT}/scripts/backup.sh" \
+    "${DOTFILES_ROOT}/scripts/link.sh" \
+    "${DOTFILES_ROOT}/restore.sh" \
     "${DOTFILES_ROOT}/scripts/lib/"*.sh; then
     dotfiles_log_info "shellcheck ok"
   else
@@ -55,8 +63,8 @@ else
   dotfiles_log_warn "shellcheck not installed — skipped"
 fi
 
-if [[ ! -f "${DOTFILES_ROOT}/docs/architecture.md" ]]; then
-  dotfiles_log_error "missing docs/architecture.md"
+if [[ ! -f "${DOTFILES_ROOT}/docs/linker.md" ]]; then
+  dotfiles_log_error "missing docs/linker.md"
   FAILED=1
 fi
 
