@@ -39,7 +39,8 @@ Cyberpunk aesthetics are an **optional layer**. The base system must work withou
 │   ├── backup.sh
 │   ├── link.sh                # per-path linker (not stow)
 │   └── legacy/install.sh
-├── modules/                   # filled during migration
+├── modules/
+│   └── shell/                 # portable zsh + fish (not the dump)
 ├── packages/                  # filled during migration
 ├── home/                      # portable overlay (migration)
 ├── hosts/*.example.toml
@@ -126,7 +127,7 @@ Module logic calls `install_package` / `install_optional_package` / `install_aur
 1. Detection + logging + dry-run + tests.
 2. Backup / manifest / restore / rollback.
 3. Idempotent linker (`scripts/link.sh`, not GNU Stow).
-4. Modules: shell → git → terminal → tmux/zellij → editor.
+4. Modules: **shell** (portable zsh/fish) → git → terminal → tmux/zellij → editor.
 5. Full doctor + expanded CI.
 6. Desktop: **Niri first**, then DWM; Waybar only with `--desktop plasma`.
 7. Security opt-in, gaming, themes, browser (`userChrome` only).
@@ -139,6 +140,7 @@ Module logic calls `install_package` / `install_optional_package` / `install_aur
 | `./install.sh --legacy` | same, explicit |
 | `./install.sh --help` | new CLI |
 | `./install.sh --dry-run` | detect → plan → report |
+| `./install.sh --dry-run --profile minimal` | same, plus portable shell `[link]` rows |
 | `./install.sh --doctor` | non-destructive checks |
 | `./install.sh --link SRC DEST` | idempotent per-path symlink (see [linker.md](linker.md)) |
 | `bin/ws-*` | path unchanged in this phase |

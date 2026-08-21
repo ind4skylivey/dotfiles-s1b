@@ -34,6 +34,7 @@ SCRIPTS=(
   "${DOTFILES_ROOT}/scripts/lib/plan.sh"
   "${DOTFILES_ROOT}/scripts/lib/backup.sh"
   "${DOTFILES_ROOT}/scripts/lib/link.sh"
+  "${DOTFILES_ROOT}/scripts/lib/module.sh"
   "${DOTFILES_ROOT}/scripts/lib/load.sh"
   "${DOTFILES_ROOT}/scripts/backup.sh"
   "${DOTFILES_ROOT}/scripts/link.sh"
@@ -63,8 +64,22 @@ else
   dotfiles_log_warn "shellcheck not installed — skipped"
 fi
 
+if [[ ! -f "${DOTFILES_ROOT}/docs/architecture.md" ]]; then
+  dotfiles_log_error "missing docs/architecture.md"
+  FAILED=1
+fi
 if [[ ! -f "${DOTFILES_ROOT}/docs/linker.md" ]]; then
   dotfiles_log_error "missing docs/linker.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/shell.md" ]]; then
+  dotfiles_log_error "missing docs/modules/shell.md"
+  FAILED=1
+fi
+
+if grep -R -E 'alias[[:space:]]+kali[= ]|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' \
+  "${DOTFILES_ROOT}/modules/shell/home" >/dev/null 2>&1; then
+  dotfiles_log_error "portable shell module contains forbidden host or offensive strings"
   FAILED=1
 fi
 

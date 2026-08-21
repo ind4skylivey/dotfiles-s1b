@@ -1,0 +1,3 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/shell/home/.zshrc	.zshrc
+modules/shell/home/.config/fish/config.fish	.config/fish/config.fish

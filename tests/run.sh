@@ -362,6 +362,28 @@ fi
 DOTFILES_LINK_HOME="${DOTFILES_LINK_HOME}" bash "${ROOT}/install.sh" --link "${src_rel}" "${cli_dest}" >/dev/null
 assert_eq "$(readlink -- "${cli_dest}")" "${src_abs}" "install.sh --link creates symlink"
 
+# --- shell module ---
+assert_file "${ROOT}/modules/shell/home/.zshrc" "portable zshrc exists"
+assert_file "${ROOT}/modules/shell/home/.config/fish/config.fish" "portable fish config exists"
+if grep -R -E 'alias[[:space:]]+kali|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' "${ROOT}/modules/shell/home" >/dev/null 2>&1; then
+  fail "portable shell contains forbidden host or offensive strings"
+else
+  ok "portable shell has no dump/host/offensive strings"
+fi
+if grep -qE 'alias[[:space:]]+kali=' "${ROOT}/.zshrc"; then
+  ok "repo-root dump zshrc still has kali (not copied into the module)"
+else
+  fail "expected dump .zshrc to still contain kali alias (module must be a new file)"
+fi
+
+dry_min="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile minimal 2>/dev/null)"
+assert_contains "${dry_min}" "[link]" "minimal dry-run plans links"
+assert_contains "${dry_min}" ".zshrc" "minimal dry-run plans .zshrc"
+assert_contains "${dry_min}" "No files were modified" "minimal dry-run still writes nothing"
+
+dry_none="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run 2>/dev/null)"
+assert_contains "${dry_none}" "pass --profile minimal" "no-profile dry-run skips shell until asked"
+
 # --- detect-platform.sh --kv ---
 kv="$(
   DOTFILES_OS_RELEASE_FILE="${ROOT}/tests/fixtures/os-release-arch" \
