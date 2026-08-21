@@ -389,6 +389,35 @@ assert_contains "${dry_min}" ".zshrc" "minimal dry-run plans .zshrc"
 assert_contains "${dry_min}" ".config/git/config" "minimal dry-run plans git config"
 assert_contains "${dry_min}" "No files were modified" "minimal dry-run still writes nothing"
 
+assert_contains "${dry_min}" ".config/nvim/init.lua" "minimal dry-run plans portable nvim"
+if [[ "${dry_min}" == *".config/kitty/kitty.conf"* ]]; then
+  fail "minimal dry-run must not plan kitty"
+else
+  ok "minimal dry-run skips terminal"
+fi
+
+dry_ws="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile workstation 2>/dev/null)"
+assert_contains "${dry_ws}" ".config/kitty/kitty.conf" "workstation dry-run plans kitty"
+assert_contains "${dry_ws}" ".config/alacritty/alacritty.toml" "workstation dry-run plans alacritty"
+assert_contains "${dry_ws}" ".config/tmux/tmux.conf" "workstation dry-run plans tmux"
+assert_contains "${dry_ws}" ".config/zellij/config.kdl" "workstation dry-run plans zellij"
+assert_contains "${dry_ws}" "No files were modified" "workstation dry-run still writes nothing"
+
+assert_file "${ROOT}/modules/terminal/home/.config/kitty/kitty.conf" "portable kitty exists"
+assert_file "${ROOT}/modules/mux/home/.config/tmux/tmux.conf" "portable tmux exists"
+assert_file "${ROOT}/modules/editor/home/.config/nvim/init.lua" "portable nvim exists"
+if grep -R -E '/home/il1v3y|/media/il1v3y|/Users/il1v3y|default-shell /usr/bin/fish' \
+  "${ROOT}/modules/terminal" "${ROOT}/modules/mux" "${ROOT}/modules/editor" >/dev/null 2>&1; then
+  fail "portable terminal/mux/editor contain dump host strings"
+else
+  ok "portable terminal/mux/editor have no dump host strings"
+fi
+if grep -q 'default-shell /usr/bin/fish' "${ROOT}/.config/tmux/tmux.conf"; then
+  ok "dump tmux still forces fish (module is a new file)"
+else
+  fail "expected dump tmux.conf to still force fish"
+fi
+
 dry_none="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run 2>/dev/null)"
 assert_contains "${dry_none}" "pass --profile minimal" "no-profile dry-run skips shell until asked"
 

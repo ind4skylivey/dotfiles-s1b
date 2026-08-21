@@ -41,7 +41,10 @@ Cyberpunk aesthetics are an **optional layer**. The base system must work withou
 │   └── legacy/install.sh
 ├── modules/
 │   ├── shell/                 # portable zsh + fish (not the dump)
-│   └── git/                   # portable git defaults (no identity)
+│   ├── git/                   # portable git defaults (no identity)
+│   ├── editor/                # portable nvim init (not the dump)
+│   ├── terminal/              # portable kitty + alacritty
+│   └── mux/                   # portable tmux + zellij
 ├── packages/                  # filled during migration
 ├── home/                      # portable overlay (migration)
 ├── hosts/*.example.toml
@@ -141,7 +144,8 @@ Module logic calls `install_package` / `install_optional_package` / `install_aur
 | `./install.sh --legacy` | same, explicit |
 | `./install.sh --help` | new CLI |
 | `./install.sh --dry-run` | detect → plan → report |
-| `./install.sh --dry-run --profile minimal` | same, plus portable shell `[link]` rows |
+| `./install.sh --dry-run --profile minimal` | same, plus shell/git/editor `[link]` rows |
+| `./install.sh --dry-run --profile workstation` | minimal plus kitty, alacritty, tmux, zellij |
 | `./install.sh --doctor` | non-destructive checks |
 | `./install.sh --link SRC DEST` | idempotent per-path symlink (see [linker.md](linker.md)) |
 | `bin/ws-*` | path unchanged in this phase |

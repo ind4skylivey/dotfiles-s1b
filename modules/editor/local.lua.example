@@ -1,0 +1,2 @@
+-- Copy to ~/.config/nvim/local.lua (not versioned).
+-- vim.opt.shiftwidth = 4

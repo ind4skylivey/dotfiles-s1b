@@ -5,6 +5,7 @@
 #   dotfiles_module_root NAME     Print modules/NAME
 #   dotfiles_module_plan NAME     Add [link]/[skip] rows from links.tsv
 #   dotfiles_module_has NAME      Return 0 if module.toml exists
+#   dotfiles_plan_named_modules NAME...
 #   dotfiles_plan_for_profile     Fill the plan from DOTFILES_PROFILE
 
 dotfiles_module_root() {
@@ -36,30 +37,43 @@ dotfiles_module_plan() {
   done <"${tsv}"
 }
 
+dotfiles_plan_named_modules() {
+  local name
+  for name in "$@"; do
+    if dotfiles_module_has "${name}"; then
+      dotfiles_module_plan "${name}"
+    else
+      dotfiles_plan_add skip "${name}" "module missing"
+    fi
+  done
+}
+
 dotfiles_plan_for_profile() {
   dotfiles_plan_reset
   dotfiles_plan_add skip "package install" "package layer not implemented yet"
 
   case "${DOTFILES_PROFILE:-}" in
-    minimal|workstation|developer|full|security)
-      if dotfiles_module_has shell; then
-        dotfiles_module_plan shell
-      else
-        dotfiles_plan_add skip "shell" "module missing"
-      fi
-      if dotfiles_module_has git; then
-        dotfiles_module_plan git
-      else
-        dotfiles_plan_add skip "git" "module missing"
-      fi
+    minimal)
+      dotfiles_plan_named_modules shell git editor
+      dotfiles_plan_add skip "terminal module" "not in minimal; use --profile workstation"
+      dotfiles_plan_add skip "mux module" "not in minimal; use --profile workstation"
+      ;;
+    workstation|developer|full|security)
+      dotfiles_plan_named_modules shell git editor terminal mux
       ;;
     desktop|gaming)
       dotfiles_plan_add skip "shell module" "not in this profile; use --profile minimal"
       dotfiles_plan_add skip "git module" "not in this profile; use --profile minimal"
+      dotfiles_plan_add skip "editor module" "not in this profile; use --profile minimal"
+      dotfiles_plan_add skip "terminal module" "not in this profile; use --profile workstation"
+      dotfiles_plan_add skip "mux module" "not in this profile; use --profile workstation"
       ;;
     "")
       dotfiles_plan_add skip "shell module" "pass --profile minimal to include portable shell links"
       dotfiles_plan_add skip "git module" "pass --profile minimal to include portable git config"
+      dotfiles_plan_add skip "editor module" "pass --profile minimal to include portable nvim"
+      dotfiles_plan_add skip "terminal module" "pass --profile workstation for kitty/alacritty"
+      dotfiles_plan_add skip "mux module" "pass --profile workstation for tmux/zellij"
       ;;
     *)
       dotfiles_plan_add skip "profile ${DOTFILES_PROFILE}" "unknown profile"

@@ -80,6 +80,18 @@ if [[ ! -f "${DOTFILES_ROOT}/docs/modules/git.md" ]]; then
   dotfiles_log_error "missing docs/modules/git.md"
   FAILED=1
 fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/terminal.md" ]]; then
+  dotfiles_log_error "missing docs/modules/terminal.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/mux.md" ]]; then
+  dotfiles_log_error "missing docs/modules/mux.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/editor.md" ]]; then
+  dotfiles_log_error "missing docs/modules/editor.md"
+  FAILED=1
+fi
 
 if grep -R -E 'alias[[:space:]]+kali[= ]|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' \
   "${DOTFILES_ROOT}/modules/shell/home" >/dev/null 2>&1; then
@@ -90,6 +102,28 @@ fi
 if grep -R -E '^[[:space:]]*(email|signingkey)[[:space:]]*=' \
   "${DOTFILES_ROOT}/modules/git/home" >/dev/null 2>&1; then
   dotfiles_log_error "portable git module contains identity or host strings"
+  FAILED=1
+fi
+
+# Secret scan: portable modules + scripts only (the dump still has PII).
+if grep -R -E --binary-files=without-match \
+  'BEGIN (RSA|OPENSSH|EC) PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|xox[baprs]-|AKIA[0-9A-Z]{16}' \
+  "${DOTFILES_ROOT}/modules" "${DOTFILES_ROOT}/scripts" \
+  "${DOTFILES_ROOT}/install.sh" "${DOTFILES_ROOT}/doctor.sh" \
+  "${DOTFILES_ROOT}/validate.sh" "${DOTFILES_ROOT}/tests" >/dev/null 2>&1; then
+  dotfiles_log_error "secret-like token or private key in modules/scripts/tests"
+  FAILED=1
+fi
+
+if grep -R -E --binary-files=without-match '/home/il1v3y|/media/il1v3y|/Users/il1v3y' \
+  "${DOTFILES_ROOT}/modules" >/dev/null 2>&1; then
+  dotfiles_log_error "portable modules contain host home paths"
+  FAILED=1
+fi
+
+if grep -R -F --binary-files=without-match 'default-shell /usr/bin/fish' \
+  "${DOTFILES_ROOT}/modules/mux" >/dev/null 2>&1; then
+  dotfiles_log_error "portable mux must not force Fish"
   FAILED=1
 fi
 

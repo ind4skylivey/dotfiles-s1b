@@ -1,0 +1,22 @@
+# Portable Alacritty. Fonts and colors stay in a host overlay (not versioned).
+# Copy modules/terminal/local.alacritty.example to ~/.config/alacritty/local.toml
+
+[general]
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+padding = { x = 8, y = 8 }
+
+[font]
+size = 12.0
+
+[font.normal]
+family = "monospace"
+style = "Regular"
+
+[cursor.style]
+shape = "Beam"
+blinking = "Never"

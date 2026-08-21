@@ -1,0 +1,10 @@
+# modules/editor — portable Neovim (not the dump under .config/nvim).
+#
+# Dump NvChad/Valet/host paths stay out. Host overlay: ~/.config/nvim/local.lua
+
+name = "editor"
+graphical = false
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux", "darwin"]
