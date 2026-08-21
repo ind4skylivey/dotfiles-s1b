@@ -13,4 +13,6 @@ source "${_dotfiles_this}/plan.sh"
 source "${_dotfiles_this}/backup.sh"
 # shellcheck source=link.sh
 source "${_dotfiles_this}/link.sh"
+# shellcheck source=module.sh
+source "${_dotfiles_this}/module.sh"
 unset _dotfiles_this

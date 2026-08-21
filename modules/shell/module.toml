@@ -1,0 +1,16 @@
+# modules/shell — portable interactive shell (zsh + fish).
+#
+# No host paths, no offensive aliases, no /tmp dumps, no CachyOS hard fail.
+# Live ~/.zshrc in this repo is the old dump; do not link that file.
+
+name = "shell"
+graphical = false
+privilege = false
+experimental = false
+skippable = true
+
+# Tiers: 1 Arch/CachyOS, 2 Fedora/Debian/Ubuntu, 4 macOS CLI
+supported = ["linux", "darwin"]
+
+[links]
+# See links.tsv (src repo-relative, dest home-relative)

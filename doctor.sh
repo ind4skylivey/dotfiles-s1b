@@ -52,6 +52,25 @@ else
   print_status FAIL "linker library missing"
 fi
 
+if [[ -f "${DOTFILES_ROOT}/modules/shell/module.toml" ]]; then
+  print_status PASS "shell module present"
+else
+  print_status FAIL "shell module missing"
+fi
+
+_live_zshrc="${HOME}/.zshrc"
+if [[ -f "${_live_zshrc}" ]]; then
+  if grep -qE 'alias[[:space:]]+kali=|/tmp/\.tmp' "${_live_zshrc}" 2>/dev/null; then
+    print_status WARN "live HOME/.zshrc looks like the dump (offensive or /tmp overlay); portable file is modules/shell/home/.zshrc"
+  elif grep -q 'Portable zshrc' "${_live_zshrc}" 2>/dev/null; then
+    print_status PASS "live HOME/.zshrc matches the portable shell module"
+  else
+    print_status SKIP "live HOME/.zshrc present but not the portable module"
+  fi
+else
+  print_status SKIP "HOME/.zshrc not present"
+fi
+
 if [[ "${DOTFILES_DETECT_IS_ROOT}" == "yes" ]]; then
   print_status WARN "running as root — installer should be run as your user"
 else
@@ -117,7 +136,6 @@ if [[ "${DOTFILES_DETECT_SESSION_TYPE}" == "wayland" && "${DOTFILES_DETECT_DESKT
   print_status WARN "Wayland session without niri — --desktop niri is the default when desktop is selected"
 fi
 
-print_status SKIP "module links (no manifests declared yet; linker is ready)"
 print_status SKIP "git identity (git module not migrated)"
 print_status SKIP "font check (desktop/themes not migrated)"
 

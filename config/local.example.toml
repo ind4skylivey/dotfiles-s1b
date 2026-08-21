@@ -4,6 +4,10 @@
 [user]
 # name = "il1v3y"
 
+# Host-only shell overlay (not the dump). Example:
+# ~/.config/zsh/local.zsh
+# ~/.config/fish/local.fish
+
 [paths]
 # ollama_models = "~/Ollama"
 
