@@ -6,6 +6,8 @@
 #   dotfiles_module_plan NAME     Add [link]/[skip] rows from links.tsv
 #   dotfiles_module_has NAME      Return 0 if module.toml exists
 #   dotfiles_plan_named_modules NAME...
+#   dotfiles_desktop_backend      niri|dwm|plasma|empty
+#   dotfiles_plan_desktop_backend
 #   dotfiles_plan_for_profile     Fill the plan from DOTFILES_PROFILE
 
 dotfiles_module_root() {
@@ -48,6 +50,51 @@ dotfiles_plan_named_modules() {
   done
 }
 
+dotfiles_desktop_backend() {
+  if [[ -n "${DOTFILES_DESKTOP:-}" ]]; then
+    printf '%s' "${DOTFILES_DESKTOP}"
+    return 0
+  fi
+  case "${DOTFILES_PROFILE:-}" in
+    desktop|full)
+      printf 'niri'
+      ;;
+    *)
+      printf ''
+      ;;
+  esac
+}
+
+dotfiles_plan_desktop_backend() {
+  local backend
+  backend="$(dotfiles_desktop_backend)"
+  case "${backend}" in
+    niri)
+      dotfiles_plan_named_modules niri
+      dotfiles_plan_add skip "dwm" "mutually exclusive: this plan is --desktop niri (Wayland)"
+      dotfiles_plan_add skip "waybar" "Waybar is --desktop plasma only; Niri uses Noctalia, not Waybar"
+      ;;
+    dwm)
+      dotfiles_plan_named_modules dwm
+      dotfiles_plan_add skip "niri" "mutually exclusive: this plan is --desktop dwm (X11)"
+      dotfiles_plan_add skip "waybar" "Waybar is --desktop plasma only; DWM uses slstatus"
+      ;;
+    plasma)
+      dotfiles_plan_named_modules waybar
+      dotfiles_plan_add skip "niri" "mutually exclusive: this plan is --desktop plasma (KDE Wayland)"
+      dotfiles_plan_add skip "dwm" "mutually exclusive: this plan is --desktop plasma"
+      ;;
+    "")
+      dotfiles_plan_add skip "niri" "pass --profile desktop or --desktop niri (Wayland default)"
+      dotfiles_plan_add skip "dwm" "pass --desktop dwm for the X11 session"
+      dotfiles_plan_add skip "waybar" "pass --desktop plasma; never with niri"
+      ;;
+    *)
+      dotfiles_plan_add skip "desktop ${backend}" "unknown --desktop (use niri|dwm|plasma)"
+      ;;
+  esac
+}
+
 dotfiles_plan_for_profile() {
   dotfiles_plan_reset
   dotfiles_plan_add skip "package install" "package layer not implemented yet"
@@ -58,10 +105,20 @@ dotfiles_plan_for_profile() {
       dotfiles_plan_add skip "terminal module" "not in minimal; use --profile workstation"
       dotfiles_plan_add skip "mux module" "not in minimal; use --profile workstation"
       ;;
-    workstation|developer|full|security)
+    workstation|developer|security)
       dotfiles_plan_named_modules shell git editor terminal mux
       ;;
-    desktop|gaming)
+    full)
+      dotfiles_plan_named_modules shell git editor terminal mux
+      ;;
+    desktop)
+      dotfiles_plan_add skip "shell module" "not in this profile; use --profile minimal"
+      dotfiles_plan_add skip "git module" "not in this profile; use --profile minimal"
+      dotfiles_plan_add skip "editor module" "not in this profile; use --profile minimal"
+      dotfiles_plan_add skip "terminal module" "not in this profile; use --profile workstation"
+      dotfiles_plan_add skip "mux module" "not in this profile; use --profile workstation"
+      ;;
+    gaming)
       dotfiles_plan_add skip "shell module" "not in this profile; use --profile minimal"
       dotfiles_plan_add skip "git module" "not in this profile; use --profile minimal"
       dotfiles_plan_add skip "editor module" "not in this profile; use --profile minimal"
@@ -82,10 +139,10 @@ dotfiles_plan_for_profile() {
 
   if [[ "${DOTFILES_PROFILE:-}" == "security" ]]; then
     dotfiles_plan_add skip "offensive aliases" "security module not migrated; portable shell has none"
+    dotfiles_plan_add skip "niri Burp/ZAP binds" "security overlay not migrated; portable niri has none"
   else
     dotfiles_plan_add skip "security tools" "requires --profile security (not implemented)"
   fi
 
-  dotfiles_plan_add skip "niri" "desktop import pending; live config is NiriPURA"
-  dotfiles_plan_add skip "dwm" "desktop module not migrated"
+  dotfiles_plan_desktop_backend
 }

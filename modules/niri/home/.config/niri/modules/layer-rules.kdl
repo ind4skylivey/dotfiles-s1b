@@ -1,0 +1,37 @@
+// ============================================================
+// modules/layer-rules.kdl
+// Layer shell surface rules for Noctalia.
+// ============================================================
+
+// Blur wallpaper on overview (requires "Overview wallpaper" enabled in Noctalia settings)
+layer-rule {
+    match namespace="^noctalia-backdrop*"
+    place-within-backdrop true
+}
+
+// Blur on bar/notifications/dock/panel/osd, without xray (more opaque look)
+layer-rule {
+    match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
+    background-effect {
+        xray false
+        blur true
+    }
+}
+
+// Blur on Noctalia window switcher
+layer-rule {
+    match namespace="noctalia-window-switcher"
+    background-effect {
+        blur true
+        xray false
+    }
+}
+
+// Blur on Fuzzel launcher (glassmorphism effect)
+layer-rule {
+    match namespace="launcher"
+    background-effect {
+        blur true
+        xray true
+    }
+}

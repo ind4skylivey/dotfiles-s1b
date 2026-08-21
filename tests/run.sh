@@ -421,6 +421,43 @@ fi
 dry_none="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run 2>/dev/null)"
 assert_contains "${dry_none}" "pass --profile minimal" "no-profile dry-run skips shell until asked"
 
+dry_niri="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile desktop 2>/dev/null)"
+assert_contains "${dry_niri}" ".config/niri/config.kdl" "desktop dry-run defaults to niri"
+assert_contains "${dry_niri}" "Waybar is --desktop plasma only" "niri plan skips waybar"
+if [[ "${dry_niri}" == *".config/waybar/config.jsonc"* ]]; then
+  fail "niri desktop must not plan waybar links"
+else
+  ok "niri desktop does not plan waybar links"
+fi
+if [[ "${dry_niri}" == *".config/dwm/xinitrc"* ]]; then
+  fail "niri desktop must not plan dwm xinitrc"
+else
+  ok "niri desktop does not plan dwm"
+fi
+
+dry_dwm="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --desktop dwm 2>/dev/null)"
+assert_contains "${dry_dwm}" ".config/dwm/xinitrc" "dwm dry-run plans xinitrc"
+assert_contains "${dry_dwm}" "mutually exclusive: this plan is --desktop dwm" "dwm skips niri"
+
+dry_plasma="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --desktop plasma 2>/dev/null)"
+assert_contains "${dry_plasma}" ".config/waybar/config.jsonc" "plasma dry-run plans waybar"
+if [[ "${dry_plasma}" == *".config/niri/config.kdl"* ]]; then
+  fail "plasma must not plan niri links"
+else
+  ok "plasma does not plan niri links"
+fi
+
+if grep -R -E 'burpsuite|/home/il1v3y|open-on-output "DP-1"' "${ROOT}/modules/niri/home" >/dev/null 2>&1; then
+  fail "portable niri contains dump host or security strings"
+else
+  ok "portable niri has no dump host/security strings"
+fi
+if grep -q 'output": "DP-1"' "${ROOT}/.config/waybar/config-dp1.jsonc"; then
+  ok "dump waybar still pins DP-1 (module is a new file)"
+else
+  fail "expected dump waybar config-dp1.jsonc to still pin DP-1"
+fi
+
 # --- detect-platform.sh --kv ---
 kv="$(
   DOTFILES_OS_RELEASE_FILE="${ROOT}/tests/fixtures/os-release-arch" \

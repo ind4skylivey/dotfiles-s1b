@@ -1,0 +1,24 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 8,
+    "modules-left": ["clock"],
+    "modules-center": [],
+    "modules-right": ["pulseaudio", "cpu", "memory", "tray"],
+    "clock": {
+        "format": "{:%H:%M}"
+    },
+    "pulseaudio": {
+        "format": "{volume}%"
+    },
+    "cpu": {
+        "format": "CPU {usage}%"
+    },
+    "memory": {
+        "format": "MEM {percentage}%"
+    },
+    "tray": {
+        "spacing": 8
+    }
+}

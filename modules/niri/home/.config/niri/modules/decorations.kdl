@@ -1,0 +1,31 @@
+// ============================================================
+// modules/decorations.kdl
+// Blur and recent windows configuration.
+// Requires niri >= 26.04 for the blur block (already confirmed).
+// ============================================================
+
+blur {
+    passes 2
+    offset 3.0
+    noise 0.03
+    saturation 1.0
+}
+
+// Recent Windows (Alt+Tab) -- does not conflict with Mod+Tab (toggle-overview)
+recent-windows {
+    highlight {
+        active-color "#ffb59f"
+        urgent-color "#ffb4ab"
+        padding 30
+        corner-radius 10
+    }
+
+    previews {
+        max-height 480
+        max-scale 0.5
+    }
+
+    binds {
+        Alt+Tab { next-window scope="workspace"; }
+    }
+}

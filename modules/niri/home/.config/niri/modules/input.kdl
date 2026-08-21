@@ -1,0 +1,40 @@
+// ============================================================
+// modules/input.kdl
+// Mouse, keyboard, touchpad, and input device configuration.
+// ============================================================
+
+input {
+    keyboard {
+        xkb {
+            // Empty: niri inherits layout from org.freedesktop.locale1.
+            // Control it with: localectl set-x11-keymap <layout>
+        }
+
+        numlock
+    }
+
+    touchpad {
+        tap
+        dwt
+        natural-scroll
+    }
+
+    mouse {
+    }
+
+    trackpoint {
+    }
+
+    // Focus follows mouse (matches Noctara-Dots)
+    focus-follows-mouse
+
+    // Cursor jumps to focused window
+    warp-mouse-to-focus
+}
+
+// Hot corners disabled (matches Noctara-Dots)
+gestures {
+    hot-corners {
+        off
+    }
+}

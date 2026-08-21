@@ -1,0 +1,12 @@
+// Named workspaces. Output pins stay in the host overlay (copy local.monitors.example).
+// Workspace "sec" belongs to --profile security, not generic desktop.
+
+workspace "term"
+workspace "web"
+workspace "dev"
+workspace "docs"
+workspace "conf"
+workspace "s1b"
+workspace "chill"
+workspace "games"
+workspace "wm"

@@ -1,0 +1,3 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/waybar/home/.config/waybar/config.jsonc	.config/waybar/config.jsonc
+modules/waybar/home/.config/waybar/style.css	.config/waybar/style.css

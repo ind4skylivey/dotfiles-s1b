@@ -1,0 +1,12 @@
+# modules/niri — portable Niri (Wayland). Source: NiriPURA, not invented.
+#
+# Mutually exclusive with dwm and plasma/waybar.
+# Host monitors, OpenRGB, Burp/ZAP binds stay out.
+
+name = "niri"
+graphical = true
+wayland = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux"]
