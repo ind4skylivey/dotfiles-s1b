@@ -1,0 +1,16 @@
+# Default configuration (documentation for later TOML parsing).
+# Highest-priority live overrides: CLI > env > config/local.toml > profile.
+
+[log]
+level = "info"
+
+[backup]
+# Empty = ${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/backups
+root = ""
+
+[desktop]
+# Used when --profile desktop is set and --desktop is omitted.
+default = "niri"
+
+[security]
+require_explicit_consent = true

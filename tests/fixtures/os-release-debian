@@ -1,0 +1,4 @@
+ID=debian
+ID_LIKE=debian
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+VERSION_ID="12"
