@@ -82,7 +82,7 @@ run_dry_run() {
   if [[ -n "${DOTFILES_PROFILE:-}" ]]; then
     printf 'Selected profile: %s\n\n' "${DOTFILES_PROFILE}"
   else
-    printf 'Selected profile: (none — pass --profile minimal for portable shell links)\n\n'
+    printf 'Selected profile: (none — pass --profile minimal or workstation)\n\n'
   fi
   printf 'Selected desktop default (when implemented): niri\n\n'
   dotfiles_plan_report

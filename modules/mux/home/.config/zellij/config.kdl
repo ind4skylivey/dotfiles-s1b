@@ -1,0 +1,5 @@
+// Portable Zellij. Not the dump (which referenced another user's home).
+// Keep layouts and default_shell in a host overlay; do not force Fish.
+
+pane_frames false
+session_serialization false

@@ -8,7 +8,7 @@ jobs:
   scripts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Syntax and ShellCheck
@@ -18,4 +18,9 @@ jobs:
       - name: Dry-run
         run: ./install.sh --dry-run
       - name: Docs present
-        run: test -f docs/architecture.md && test -f docs/audit/current-state.md
+        run: |
+          test -f docs/architecture.md
+          test -f docs/audit/current-state.md
+          test -f docs/modules/terminal.md
+          test -f docs/modules/mux.md
+          test -f docs/modules/editor.md

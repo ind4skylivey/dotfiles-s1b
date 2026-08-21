@@ -1,0 +1,2 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/editor/home/.config/nvim/init.lua	.config/nvim/init.lua

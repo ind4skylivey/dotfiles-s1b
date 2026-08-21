@@ -142,6 +142,24 @@ else
   print_status FAIL "git module missing"
 fi
 
+if [[ -f "${DOTFILES_ROOT}/modules/editor/module.toml" ]]; then
+  print_status PASS "editor module present"
+else
+  print_status FAIL "editor module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/terminal/module.toml" ]]; then
+  print_status PASS "terminal module present"
+else
+  print_status FAIL "terminal module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/mux/module.toml" ]]; then
+  print_status PASS "mux module present"
+else
+  print_status FAIL "mux module missing"
+fi
+
 _git_local="${HOME}/.config/git/local"
 if [[ -f "${_git_local}" ]] && git config --file "${_git_local}" --get user.email >/dev/null 2>&1; then
   print_status PASS "git identity in HOME/.config/git/local (not in the module)"
@@ -151,6 +169,20 @@ else
   print_status SKIP "no git user.email yet; copy modules/git/local.example"
 fi
 print_status SKIP "font check (desktop/themes not migrated)"
+
+_check_optional_bin() {
+  local bin="$1"
+  if command -v "${bin}" >/dev/null 2>&1; then
+    print_status PASS "${bin} on PATH"
+  else
+    print_status SKIP "${bin} not installed"
+  fi
+}
+_check_optional_bin nvim
+_check_optional_bin kitty
+_check_optional_bin alacritty
+_check_optional_bin tmux
+_check_optional_bin zellij
 
 printf '\nResults: %s passed, %s warned, %s failed, %s skipped\n' \
   "${PASSED}" "${WARNED}" "${FAILED}" "${SKIPPED}"

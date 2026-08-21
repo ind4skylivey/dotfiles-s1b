@@ -1,0 +1,4 @@
+# Copy to ~/.config/tmux/local.conf (not versioned).
+
+# Optional: pin a shell only on this host.
+# set-option -g default-shell /usr/bin/zsh

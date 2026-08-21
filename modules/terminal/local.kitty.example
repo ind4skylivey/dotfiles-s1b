@@ -1,0 +1,5 @@
+# Copy to ~/.config/kitty/local.conf (not versioned).
+
+# font_family MesloLGS Nerd Font Mono
+# font_size 14.0
+# background_opacity 0.9

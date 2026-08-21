@@ -1,0 +1,9 @@
+# Copy to ~/.config/alacritty/local.toml (not versioned).
+# Then add an import in the portable alacritty.toml if your Alacritty supports it.
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "monospace"
+style = "Regular"

@@ -1,0 +1,11 @@
+# modules/mux — portable tmux + zellij (not the dump).
+#
+# Does not force Fish. Default shell is the user's login shell.
+# TPM and host layouts stay out of this module.
+
+name = "mux"
+graphical = false
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux", "darwin"]

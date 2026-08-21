@@ -1,0 +1,11 @@
+# modules/terminal — portable kitty + alacritty (not the dump themes).
+#
+# Host fonts and colors go in ~/.config/kitty/local.conf and
+# ~/.config/alacritty/local.toml (copy from local.example).
+
+name = "terminal"
+graphical = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux", "darwin"]
