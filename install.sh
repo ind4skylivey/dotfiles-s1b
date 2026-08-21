@@ -28,6 +28,7 @@ Modes:
   --legacy                Same as no flags, explicit
   --dry-run               Detect platform, print plan, change nothing
   --doctor                Non-destructive health checks
+  --backup                show backup root and existing ids
   --help                  This help
 
 Declared (not implemented yet — exit 3):
@@ -95,6 +96,7 @@ FLAG_HELP=0
 FLAG_DRY_RUN=0
 FLAG_DOCTOR=0
 FLAG_LEGACY=0
+FLAG_BACKUP=0
 FLAG_NOTIMPL=()
 
 while [[ $# -gt 0 ]]; do
@@ -122,6 +124,7 @@ while [[ $# -gt 0 ]]; do
       fi
       shift 2
       ;;
+    --backup) FLAG_BACKUP=1; shift ;;
     --yes|-y|--non-interactive|--uninstall)
       FLAG_NOTIMPL+=("$1")
       shift
@@ -155,6 +158,23 @@ if [[ "${FLAG_DRY_RUN}" -eq 1 ]]; then
     dotfiles_log_warn "Flags not implemented yet (ignored in dry-run): ${local_list}"
   fi
   run_dry_run
+  if [[ "${FLAG_BACKUP}" -eq 1 ]]; then
+    printf '\nBackup root (no files written): %s\n' "$(dotfiles_backup_root)"
+  fi
+  exit "${DOTFILES_E_OK}"
+fi
+
+if [[ "${FLAG_BACKUP}" -eq 1 ]]; then
+  dotfiles_log_init
+  printf 'Backup root: %s\n' "$(dotfiles_backup_root)"
+  printf 'Backups are created automatically before file changes.\n'
+  printf 'Restore: ./restore.sh --list | --latest | --backup-id ID\n'
+  printf 'Manual snapshot: ./scripts/backup.sh PATH [PATH...]\n'
+  mapfile -t _ids < <(dotfiles_backup_list)
+  if ((${#_ids[@]} > 0)); then
+    printf '\nExisting backups:\n'
+    printf '  %s\n' "${_ids[@]}"
+  fi
   exit "${DOTFILES_E_OK}"
 fi
 
