@@ -1,0 +1,11 @@
+# Copy to ~/.config/git/local (not versioned). Git includes this from config.
+# Never commit this file. Never put tokens here.
+
+[user]
+	name = Your Name
+	email = you@example.com
+
+# [commit]
+#	gpgsign = true
+# [user]
+#	signingkey = YOURKEY

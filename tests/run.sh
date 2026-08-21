@@ -362,7 +362,7 @@ fi
 DOTFILES_LINK_HOME="${DOTFILES_LINK_HOME}" bash "${ROOT}/install.sh" --link "${src_rel}" "${cli_dest}" >/dev/null
 assert_eq "$(readlink -- "${cli_dest}")" "${src_abs}" "install.sh --link creates symlink"
 
-# --- shell module ---
+# --- shell + git modules ---
 assert_file "${ROOT}/modules/shell/home/.zshrc" "portable zshrc exists"
 assert_file "${ROOT}/modules/shell/home/.config/fish/config.fish" "portable fish config exists"
 if grep -R -E 'alias[[:space:]]+kali|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' "${ROOT}/modules/shell/home" >/dev/null 2>&1; then
@@ -370,6 +370,13 @@ if grep -R -E 'alias[[:space:]]+kali|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' "${R
 else
   ok "portable shell has no dump/host/offensive strings"
 fi
+assert_file "${ROOT}/modules/git/home/.config/git/config" "portable gitconfig exists"
+if grep -R -E '^[[:space:]]*(email|signingkey)[[:space:]]*=' "${ROOT}/modules/git/home" >/dev/null 2>&1; then
+  fail "portable git config contains identity"
+else
+  ok "portable git config has no identity"
+fi
+assert_file "${ROOT}/modules/git/local.example" "git local.example exists"
 if grep -qE 'alias[[:space:]]+kali=' "${ROOT}/.zshrc"; then
   ok "repo-root dump zshrc still has kali (not copied into the module)"
 else
@@ -379,6 +386,7 @@ fi
 dry_min="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile minimal 2>/dev/null)"
 assert_contains "${dry_min}" "[link]" "minimal dry-run plans links"
 assert_contains "${dry_min}" ".zshrc" "minimal dry-run plans .zshrc"
+assert_contains "${dry_min}" ".config/git/config" "minimal dry-run plans git config"
 assert_contains "${dry_min}" "No files were modified" "minimal dry-run still writes nothing"
 
 dry_none="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run 2>/dev/null)"

@@ -136,7 +136,20 @@ if [[ "${DOTFILES_DETECT_SESSION_TYPE}" == "wayland" && "${DOTFILES_DETECT_DESKT
   print_status WARN "Wayland session without niri — --desktop niri is the default when desktop is selected"
 fi
 
-print_status SKIP "git identity (git module not migrated)"
+if [[ -f "${DOTFILES_ROOT}/modules/git/module.toml" ]]; then
+  print_status PASS "git module present"
+else
+  print_status FAIL "git module missing"
+fi
+
+_git_local="${HOME}/.config/git/local"
+if [[ -f "${_git_local}" ]] && git config --file "${_git_local}" --get user.email >/dev/null 2>&1; then
+  print_status PASS "git identity in HOME/.config/git/local (not in the module)"
+elif git config --global --get user.email >/dev/null 2>&1; then
+  print_status SKIP "git user.email is set globally; prefer HOME/.config/git/local"
+else
+  print_status SKIP "no git user.email yet; copy modules/git/local.example"
+fi
 print_status SKIP "font check (desktop/themes not migrated)"
 
 printf '\nResults: %s passed, %s warned, %s failed, %s skipped\n' \

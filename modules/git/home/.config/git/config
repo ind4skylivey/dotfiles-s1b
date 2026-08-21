@@ -1,0 +1,45 @@
+# Portable Git config. Identity stays in ~/.config/git/local, not here.
+
+[init]
+	defaultBranch = main
+
+[pull]
+	ff = only
+
+[push]
+	default = simple
+	autoSetupRemote = true
+
+[rebase]
+	autoStash = true
+
+[rerere]
+	enabled = true
+
+[diff]
+	algorithm = histogram
+
+[merge]
+	conflictStyle = zdiff3
+
+[core]
+	excludesFile = ~/.config/git/ignore
+	autocrlf = input
+	pager = less -FRX
+
+[fetch]
+	prune = true
+
+[alias]
+	st = status
+	br = branch
+	ci = commit
+	co = checkout
+	last = log -1 HEAD
+	unstage = reset HEAD --
+	# Safer than --force
+	pushf = push --force-with-lease
+
+# Host identity and signing: copy modules/git/local.example to this path.
+[include]
+	path = local
