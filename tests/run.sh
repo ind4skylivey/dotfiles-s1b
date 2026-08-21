@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# tests/run.sh — unit tests for detect, log, CLI, backup, restore, rollback.
+# tests/run.sh — unit tests for detect, log, CLI, backup, restore, rollback, linker.
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -276,6 +276,91 @@ if [[ -f "${link}" && ! -L "${link}" ]]; then
 else
   fail "restore replaced a regular file with a symlink"
 fi
+
+# --- linker ---
+unset DOTFILES_BACKUP_ID DOTFILES_BACKUP_DIR
+export DOTFILES_LINK_HOME="${WORKDIR}/link-home"
+mkdir -p "${DOTFILES_LINK_HOME}"
+export DOTFILES_DRY_RUN=0
+src_rel="config/defaults.toml"
+src_abs="$(_dotfiles_abs_path "${ROOT}/${src_rel}")"
+link_dest=".config/dotfiles/defaults.toml"
+link_abs="${DOTFILES_LINK_HOME}/${link_dest}"
+
+DOTFILES_DRY_RUN=1
+dotfiles_link_config "${src_rel}" "${link_dest}"
+DOTFILES_DRY_RUN=0
+if [[ ! -e "${link_abs}" && ! -L "${link_abs}" ]]; then
+  ok "dry-run link creates no dest"
+else
+  fail "dry-run link created ${link_abs}"
+fi
+
+dotfiles_link_config "${src_rel}" "${link_dest}"
+assert_eq "$(readlink -- "${link_abs}")" "${src_abs}" "link creates absolute symlink"
+dotfiles_link_config "${src_rel}" "${link_dest}"
+assert_eq "$(readlink -- "${link_abs}")" "${src_abs}" "link is idempotent"
+
+# replace a regular file (backup first, do not write through)
+before_hash="$(_dotfiles_sha256_file "${src_abs}")"
+rm -f -- "${link_abs}"
+printf 'old-content\n' >"${link_abs}"
+dotfiles_link_config "${src_rel}" "${link_dest}"
+assert_eq "$(readlink -- "${link_abs}")" "${src_abs}" "replaces regular file with symlink"
+assert_eq "$(_dotfiles_sha256_file "${src_abs}")" "${before_hash}" "replacing dest does not mutate repo source"
+link_backups="$(find "${DOTFILES_BACKUP_ROOT}" -maxdepth 1 -type d -name 'link-*' | wc -l)"
+if [[ "${link_backups}" -ge 1 ]]; then
+  ok "replace created a link-* backup session"
+else
+  fail "replace did not create a backup session"
+fi
+
+# refuse real directory
+dir_dest="${DOTFILES_LINK_HOME}/keep-dir"
+mkdir -p "${dir_dest}/nested"
+set +e
+dotfiles_link_config "${src_rel}" "${dir_dest}"
+st=$?
+set -e
+assert_eq "${st}" "1" "refuse to replace a directory"
+if [[ -d "${dir_dest}" && ! -L "${dir_dest}" && -d "${dir_dest}/nested" ]]; then
+  ok "directory dest left intact"
+else
+  fail "linker removed or replaced a directory"
+fi
+
+# refuse dest inside the repo
+set +e
+dotfiles_link_config "${src_rel}" "${ROOT}/should-not-be-linked"
+st=$?
+set -e
+assert_eq "${st}" "1" "refuse dest inside repository"
+if [[ ! -e "${ROOT}/should-not-be-linked" && ! -L "${ROOT}/should-not-be-linked" ]]; then
+  ok "no symlink created inside repository"
+else
+  fail "linker wrote inside the repository"
+  rm -f -- "${ROOT}/should-not-be-linked"
+fi
+
+# missing source
+set +e
+dotfiles_link_config "no-such-source.toml" "${DOTFILES_LINK_HOME}/missing-src"
+st=$?
+set -e
+assert_eq "${st}" "1" "missing source is an error"
+
+# CLI
+help_link="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --help)"
+assert_contains "${help_link}" "--link" "install --help mentions --link"
+cli_dest="${DOTFILES_LINK_HOME}/from-cli"
+DOTFILES_LINK_HOME="${DOTFILES_LINK_HOME}" bash "${ROOT}/scripts/link.sh" --dry-run "${src_rel}" "${cli_dest}" >/dev/null
+if [[ ! -e "${cli_dest}" && ! -L "${cli_dest}" ]]; then
+  ok "link.sh --dry-run writes nothing"
+else
+  fail "link.sh --dry-run created dest"
+fi
+DOTFILES_LINK_HOME="${DOTFILES_LINK_HOME}" bash "${ROOT}/install.sh" --link "${src_rel}" "${cli_dest}" >/dev/null
+assert_eq "$(readlink -- "${cli_dest}")" "${src_abs}" "install.sh --link creates symlink"
 
 # --- detect-platform.sh --kv ---
 kv="$(
