@@ -1,0 +1,10 @@
+# minimal — portable CLI only. No desktop, AUR, offensive tools, or gaming.
+name = "minimal"
+desktop = false
+aur = false
+security = false
+gaming = false
+themes = false
+
+modules = ["shell", "git"]
+optional = ["editor"]

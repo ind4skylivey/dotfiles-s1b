@@ -1,0 +1,12 @@
+# Example host overlay. Copy to config/hosts/$HOSTNAME.toml (gitignored).
+# Niri output names (Wayland DRM) vs DWM names (X11 AMD) differ.
+
+[niri.outputs]
+# primary = "DP-1"
+# portrait = "DP-2"
+# top = "HDMI-A-1"
+
+[dwm.outputs]
+# primary = "DisplayPort-0"
+# portrait = "DisplayPort-1"
+# top = "HDMI-A-0"

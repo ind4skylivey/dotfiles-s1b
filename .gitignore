@@ -124,3 +124,9 @@ starship.toml.backup
 # Lazy.nvim local plugin cache
 .config/nvim/.nvimlog
 .config/nvim/shada/
+
+# Local / host overlays (never commit secrets or machine paths)
+config/local.toml
+config/hosts/*.toml
+!config/hosts/*.example.toml
+

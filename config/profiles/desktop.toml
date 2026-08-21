@@ -1,0 +1,7 @@
+# desktop — select exactly one compositor.
+name = "desktop"
+# default backend when --desktop is omitted
+desktop = "niri"
+
+# Mutually exclusive: niri | dwm | plasma
+# niri uses Noctalia (not Waybar). dwm uses slstatus/picom/rofi.

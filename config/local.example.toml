@@ -1,0 +1,11 @@
+# Copy to config/local.toml (gitignored). Host-only overrides.
+# Never put tokens, email, or private disk paths in the git tree.
+
+[user]
+# name = "il1v3y"
+
+[paths]
+# ollama_models = "~/Ollama"
+
+[desktop]
+# backend = "niri"   # niri | dwm | plasma
