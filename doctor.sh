@@ -46,6 +46,12 @@ else
   print_status FAIL "detect library missing"
 fi
 
+if [[ -f "${DOTFILES_ROOT}/scripts/lib/link.sh" ]]; then
+  print_status PASS "linker library present"
+else
+  print_status FAIL "linker library missing"
+fi
+
 if [[ "${DOTFILES_DETECT_IS_ROOT}" == "yes" ]]; then
   print_status WARN "running as root — installer should be run as your user"
 else
@@ -111,7 +117,7 @@ if [[ "${DOTFILES_DETECT_SESSION_TYPE}" == "wayland" && "${DOTFILES_DETECT_DESKT
   print_status WARN "Wayland session without niri — --desktop niri is the default when desktop is selected"
 fi
 
-print_status SKIP "symlink audit (linker not implemented)"
+print_status SKIP "module links (no manifests declared yet; linker is ready)"
 print_status SKIP "git identity (git module not migrated)"
 print_status SKIP "font check (desktop/themes not migrated)"
 

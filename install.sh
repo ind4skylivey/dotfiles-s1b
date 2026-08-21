@@ -2,7 +2,7 @@
 # install.sh — CLI dispatcher.
 #
 # Without flags, runs the legacy Arch/stow installer (compatibility).
-# New flags (--dry-run, --help, --doctor) never call the legacy path.
+# New flags (--dry-run, --help, --doctor, --link) never call the legacy path.
 #
 # Dry-run: detect → plan → report. No files, packages, or destructive commands.
 
@@ -29,6 +29,7 @@ Modes:
   --dry-run               Detect platform, print plan, change nothing
   --doctor                Non-destructive health checks
   --backup                show backup root and existing ids
+  --link SRC DEST         idempotent symlink (repo SRC → DEST under home)
   --help                  This help
 
 Declared (not implemented yet — exit 3):
@@ -97,6 +98,9 @@ FLAG_DRY_RUN=0
 FLAG_DOCTOR=0
 FLAG_LEGACY=0
 FLAG_BACKUP=0
+FLAG_LINK=0
+LINK_SRC=""
+LINK_DEST=""
 FLAG_NOTIMPL=()
 
 while [[ $# -gt 0 ]]; do
@@ -125,6 +129,16 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --backup) FLAG_BACKUP=1; shift ;;
+    --link)
+      FLAG_LINK=1
+      LINK_SRC="${2:-}"
+      LINK_DEST="${3:-}"
+      if [[ -z "${LINK_SRC}" || -z "${LINK_DEST}" ]]; then
+        printf '%s\n' "--link needs SRC DEST" >&2
+        exit "${DOTFILES_E_USAGE}"
+      fi
+      shift 3
+      ;;
     --yes|-y|--non-interactive|--uninstall)
       FLAG_NOTIMPL+=("$1")
       shift
@@ -150,6 +164,16 @@ if [[ "${FLAG_DOCTOR}" -eq 1 ]]; then
   run_doctor
 fi
 
+if [[ "${FLAG_LINK}" -eq 1 ]]; then
+  if [[ "${FLAG_DRY_RUN}" -eq 1 ]]; then
+    DOTFILES_DRY_RUN=1
+    export DOTFILES_DRY_RUN
+  fi
+  dotfiles_log_init
+  dotfiles_link_config "${LINK_SRC}" "${LINK_DEST}"
+  exit $?
+fi
+
 if [[ "${FLAG_DRY_RUN}" -eq 1 ]]; then
   # Dry-run is allowed together with --profile (profile is informational).
   if ((${#FLAG_NOTIMPL[@]} > 0)); then
@@ -164,7 +188,7 @@ if [[ "${FLAG_DRY_RUN}" -eq 1 ]]; then
   exit "${DOTFILES_E_OK}"
 fi
 
-if [[ "${FLAG_BACKUP}" -eq 1 ]]; then
+if [[ "${FLAG_BACKUP}" -eq 1 && "${FLAG_LINK}" -eq 0 && "${FLAG_DRY_RUN}" -eq 0 ]]; then
   dotfiles_log_init
   printf 'Backup root: %s\n' "$(dotfiles_backup_root)"
   printf 'Backups are created automatically before file changes.\n'

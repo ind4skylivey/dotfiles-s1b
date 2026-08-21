@@ -1,0 +1,5 @@
+# Example link manifest (not applied automatically).
+# Columns: src (repo-relative) <TAB> dest (relative to $HOME)
+# Modules will add rows during migration. Do not stow the repo root.
+#
+# config/defaults.toml	.config/dotfiles/defaults.toml

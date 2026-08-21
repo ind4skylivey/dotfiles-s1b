@@ -5,7 +5,7 @@ help:
 		'Targets:' \
 		'  make help         this list' \
 		'  make lint         bash -n + ShellCheck (new scripts only)' \
-		'  make test         unit tests (detect, log, dry-run, backup)' \
+		'  make test         unit tests (detect, log, dry-run, backup, link)' \
 		'  make validate     repository validation (no host changes)' \
 		'  make dry-run      ./install.sh --dry-run' \
 		'  make doctor       ./doctor.sh' \
