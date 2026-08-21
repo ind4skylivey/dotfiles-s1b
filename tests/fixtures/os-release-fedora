@@ -1,0 +1,4 @@
+ID=fedora
+ID_LIKE="fedora rhel"
+PRETTY_NAME="Fedora Linux 40"
+VERSION_ID=40

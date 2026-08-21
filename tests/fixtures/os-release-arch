@@ -1,0 +1,4 @@
+ID=arch
+ID_LIKE=arch
+PRETTY_NAME="Arch Linux"
+VERSION_ID=rolling
