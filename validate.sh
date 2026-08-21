@@ -104,6 +104,22 @@ if [[ ! -f "${DOTFILES_ROOT}/docs/modules/waybar.md" ]]; then
   dotfiles_log_error "missing docs/modules/waybar.md"
   FAILED=1
 fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/security.md" ]]; then
+  dotfiles_log_error "missing docs/modules/security.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/gaming.md" ]]; then
+  dotfiles_log_error "missing docs/modules/gaming.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/themes.md" ]]; then
+  dotfiles_log_error "missing docs/modules/themes.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/browser.md" ]]; then
+  dotfiles_log_error "missing docs/modules/browser.md"
+  FAILED=1
+fi
 
 if grep -R -E 'alias[[:space:]]+kali[= ]|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' \
   "${DOTFILES_ROOT}/modules/shell/home" >/dev/null 2>&1; then
@@ -140,9 +156,14 @@ if grep -R -E --binary-files=without-match \
   FAILED=1
 fi
 
-if grep -R -F --binary-files=without-match '"output": "DP-1"' \
-  "${DOTFILES_ROOT}/modules/waybar" >/dev/null 2>&1; then
-  dotfiles_log_error "portable waybar pins a host output"
+if find "${DOTFILES_ROOT}/modules/browser" -name 'prefs.js' 2>/dev/null | grep -q .; then
+  dotfiles_log_error "portable browser module contains prefs.js"
+  FAILED=1
+fi
+
+if grep -R -F --binary-files=without-match --privileged \
+  "${DOTFILES_ROOT}/modules/security" >/dev/null 2>&1; then
+  dotfiles_log_error "security module must not copy dump --privileged kali"
   FAILED=1
 fi
 

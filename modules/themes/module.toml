@@ -1,0 +1,8 @@
+# modules/themes — optional aesthetics. Base system works without this.
+
+name = "themes"
+graphical = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux"]

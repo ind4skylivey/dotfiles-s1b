@@ -21,57 +21,86 @@
 
 ## What is this?
 
-These are my dotfiles - the configuration files that turn a bare Arch Linux install into my personal development environment. It's built for people who live in the terminal: developers, security researchers, writers who want something fast, distraction-free, and keyboard-driven.
+A **declarative, modular, idempotent** configuration platform for Unix/Linux, with Arch/CachyOS as Tier 1. The git tree still contains a single-host dump under `.config/`, `bin/`, and `workflow/`. New installs are **not** that dump: they go through portable modules, a dry-run plan, copy-only backups, and a per-path linker (not GNU Stow).
 
-I'm running **Arch Linux (CachyOS)** with a custom-patched **DWM** for window management and the **Eco-Workflow** system to manage different work contexts.
+Daily Wayland session: **Niri** + Noctalia (config upstream: [NiriPURA](https://github.com/ind4skylivey/NiriPURA.git)). DWM is X11. Waybar is **Plasma only**. Never two compositors.
 
-> **The idea:** Minimal intrusion, maximum reproducibility. Tools should adapt to what you're trying to do, not the other way around.
+Cyberpunk / Catppuccin aesthetics are an **optional** `--profile full` layer. CLI profiles work without a window manager.
+
+Approved architecture: [docs/architecture.md](docs/architecture.md). Audit of the dump: [docs/audit/current-state.md](docs/audit/current-state.md).
 
 ---
 
-## The Eco-Workflow System
+## CLI (writes nothing unless you link)
 
-Instead of launching terminal, editor, file browser separately every time, I launch **contexts** - full workflow presets that spin up the right tools with the right layouts for whatever I'm doing.
-
+```bash
+git clone git@github.com:ind4skylivey/dotfiles-s1b.git
+cd dotfiles-s1b
+./install.sh --help
+./install.sh --dry-run
+./install.sh --dry-run --profile minimal
+./install.sh --dry-run --profile workstation
+./install.sh --dry-run --profile desktop          # Niri (Wayland)
+./install.sh --dry-run --desktop dwm              # X11
+./install.sh --dry-run --desktop plasma           # Waybar
+./install.sh --dry-run --profile security         # opt-in + [warn]
+./install.sh --dry-run --profile gaming
+./install.sh --dry-run --profile full             # themes + userChrome; not security
+./install.sh --doctor
+./validate.sh
+bash tests/run.sh
 ```
-User -> ws-menu (Rofi) -> Selects a context
-                           |
-                           +- Dev      -> Zellij with dev layout
-                           +- Ops      -> Tmux for SSH sessions
-                           +- Write    -> Doom Emacs daemon
-                           +- Red Team -> Tmux + isolated Docker container
-```
 
-### The Six Layers
+`--profile` / `--desktop` without `--dry-run` still exit **3** (plan only; no live `~/.config` links yet).
 
-**1. Orchestration Layer** - Entry points for launching everything:
+`./install.sh` with **no flags** (or `--legacy`) runs the old Arch/stow installer. Do **not** point that at a live home: it can `rm -rf` `~/.config/*`.
 
-| Command | Context | Engine | When I use it |
-|:---:|:---:|:---:|:---|
-| `ws-local` | Development | Zellij | Coding, testing, generic tasks |
-| `ws-remote` | Infrastructure | Tmux | SSH to servers, persistent sessions |
-| `ws-write` | Deep Work | Emacs | Writing, planning, org-mode |
-| `ws-redteam` | Red Team | Docker + Tmux | CTFs, pentesting, isolated research |
-| `ws-menu` | Launcher | Rofi | Visual menu to pick your context |
-| `ws-kill` | Panic button | Bash | Emergency shutdown - kills everything |
+Per-path symlink (after a backup): `./install.sh --link SRC DEST` — see [docs/linker.md](docs/linker.md).
 
-**2. State Layer** - Context awareness via environment variables:
-- `LIVEY_WORKFLOW` - the mode (local, write, redteam, remote)
-- `LIVEY_CONTEXT` - the target (project name, file, host)
-- `LIVEY_WORKFLOW_SESSION` - unique session ID for logging
+---
 
-**3. Execution Layer** - Session engines (Zellij for ephemeral, Tmux for persistent)
+## Profiles
 
-**4. Active Intelligence Layer**:
-- **Materia Shift** - terminal theme changes based on context (Bahamut, Ice, Fire, Wind)
-- **Obsidian Neural Link** - session summaries logged to Obsidian daily notes
-- **Protocolo Fantasma** - auto-cleanup when exiting red team sessions
+| Profile | Plans | Does not plan |
+|---|---|---|
+| `minimal` | portable zsh/fish, git (no identity), small nvim | terminals, mux, desktop, security, gaming, themes |
+| `workstation` | minimal + kitty/alacritty + tmux/zellij | DWM, Niri, security, gaming |
+| `developer` | same portable CLI as workstation | red team, compositors |
+| `desktop` | one backend (`niri` default) | the other compositors; Waybar unless `plasma` |
+| `security` | `[warn]` + Burp/ZAP overlay | dump `kali --privileged` |
+| `gaming` | MangoHud | shell, Plasma steam-launch |
+| `full` | CLI + gaming + GTK theme + Zen `userChrome` | security (must be explicit) |
 
-**5. Control Layer** - `ws-menu` for visual selection, `ws-kill` for emergency
+Git identity: copy `modules/git/local.example` → `~/.config/git/local`. Never commit email or signing keys.
 
-**6. Observability Layer** - `ws-doctor` for diagnostics and health checks
+Browser: live **Zen** (stability/security profile on disk), plus **Helium** and **Qutebrowser** with their own system configs. This repo does **not** replace those. `--profile full` only stages an old `userChrome.css` under `.zen-browser-config/chrome/` (optional theme archive). Never `prefs.js`.
 
-Full details in [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md).
+---
+
+## Desktop backends (mutually exclusive)
+
+| Flag | Session | Bar | Source |
+|---|---|---|---|
+| `--desktop niri` | Wayland (default) | Noctalia + Fuzzel, **no Waybar** | portable KDL from NiriPURA |
+| `--desktop dwm` | X11 | slstatus + picom | `modules/dwm` xinitrc; dump C sources stay in `.config/dwm/` |
+| `--desktop plasma` | KDE Wayland | Waybar | generic bar, not `config-dp1.jsonc` |
+
+Host monitors, OpenRGB, and `/home/…` paths stay in overlays, not the portable Niri module.
+
+---
+
+## Modules
+
+Portable files live under `modules/*/home/`. The dump is **not** copied into those trees.
+
+| Module | Docs |
+|---|---|
+| shell, git, editor | [shell](docs/modules/shell.md), [git](docs/modules/git.md), [editor](docs/modules/editor.md) |
+| terminal, mux | [terminal](docs/modules/terminal.md), [mux](docs/modules/mux.md) |
+| niri, dwm, waybar | [niri](docs/modules/niri.md), [dwm](docs/modules/dwm.md), [waybar](docs/modules/waybar.md) |
+| security, gaming, themes, browser | [security](docs/modules/security.md), [gaming](docs/modules/gaming.md), [themes](docs/modules/themes.md), [browser](docs/modules/browser.md) |
+
+CI: `.github/workflows/validate.yml` (`actions/checkout@v5`, ShellCheck, tests, secret scan of `modules/` and `scripts/` only).
 
 ---
 
@@ -97,298 +126,34 @@ Three monitors with independent wallpaper management and a cyberpunk status bar.
 
 ---
 
-## What's Included
+## Still in the dump (not the default plan)
 
-### Shell & Terminal
-- **Fish** - my interactive shell, configured for comfort
-- **Zsh** - POSIX-compliant, used for scripts and automation
-- **Kitty** - GPU-accelerated terminal, my daily driver
-- **Alacritty** - alternative terminal for when I need something lean
-- **Starship** - fast, customizable prompt with git integration
+`.config/`, `bin/ws-*`, `workflow/`, `.doom.d/`, NvChad, Eco-Workflow guides, and Warp aliases stay in git until they migrate. They are **not** what `--dry-run --profile minimal` links.
 
-### Window Management
-- **DWM** - patched and heavily customized
-- **Picom** - compositing for smooth transparency effects
-- **Rofi** - launcher for everything
-- **Dunst** - notifications that don't get in the way
-
-### Editors
-- **Neovim** - Lua-configured with NvChad, LSP-powered, my main editor
-- **Doom Emacs** - org-mode for writing and planning, Magit for git workflows
-- **Helix** - modal editor with a cyberpunk theme I put together
-- **Micro** - for quick edits when Neovim feels like overkill
-
-### File Browsers
-- **Yazi** - fast, Rust-based file browser that lives in my editor pane
-- **PCManFM-Qt** - lightweight GTK file manager for graphical tasks
-
-### Status Bars
-- **Waybar** - KDE Plasma 6 Wayland integration, multi-monitor ready
-- **slstatus** - DWM status bar component
-
-### Session Managers
-- **Zellij** - layout-driven, disposable sessions for local development
-- **Tmux** - persistent sessions for SSH and long-running work
-
-### System Tools
-- **btop** - modern system monitor
-- **fastfetch** - neofetch alternative
-- **cava** - audio visualizer
-- **dunst** - notification daemon
-
-### Development Tools
-- **LSP** - Language Server Protocol integration via Neovim
-- **Treesitter** - syntax highlighting and code analysis
-- **Git integration** - Magit (Emacs), lazygit, fugitive (Neovim)
-- **Docker** - with security-focused aliases
-
-### Security Tools
-- **Docker** - for isolated pentesting environments
-- **Warp Terminal** - security-optimized config with 40+ aliases
-- **Audit rules** - quick system audit commands
-- **CTF aliases** - `recon`, `stealth-scan`, `burp`, `ghidra`, and more
+Legacy workflow docs: [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md), [workflow/README.md](workflow/README.md). Dump DWM/Waybar/nvim notes remain under `.config/`.
 
 ---
 
-## Personal Projects
+## Personal projects
 
-These tools I built and use daily:
-
-- **[iridex-prism-terminal](https://github.com/ind4skylivey/iridex-prism-terminal)** - custom terminal prompt with Fish personas
-- **[Gleam-Observer](https://github.com/ind4skylivey/Gleam-Observer)** - process monitor for the monitor layout
-- **[matteria-track](https://github.com/ind4skylivey/matteria-track)** - time tracking system
-- **[archynotch](https://github.com/ind4skylivey/archynotch)** - KDE Plasma notifications layer
-
----
-
-## Themes
-
-### Cyberpunk Synthwave
-
-A unified cyberpunk aesthetic across my dev environment - neon magenta, cyan, and deep purple. Covers Kitty Terminal, Zen Browser, Tmux, and Zellij.
-
-**Color palette:**
-```
-Background:    #0d1b2a  (Deep purple-blue)
-Primary:       #FF10F0  (Magenta neon)
-Secondary:     #00d9ff  (Cyan neon)
-Accents:       #8B5CF6  (Bright purple)
-```
-
-Quick install:
-```bash
-# Kitty
-cp .config/kitty/kitty.conf ~/.config/kitty/
-cp .config/kitty/cyberpunk-synthwave.conf ~/.config/kitty/
-
-# Zen Browser
-cp .zen-browser-config/* ~/.zen/YOUR_PROFILE_NAME/
-```
-
-Full setup guide in [CYBERPUNK_SETUP.md](CYBERPUNK_SETUP.md).
-
-### Catppuccin Mocha
-
-The base theme across most tools. Soft, easy on the eyes, works great for long sessions. Catppuccin Mocha with mauve accents.
-
-### Nord
-
-Classic cool-toned theme, available as an alternative. I switch between themes depending on the mood.
-
-### Kanagawa
-
-Japanese-inspired with wave patterns. Used in the Zellij status bar (zjstatus plugin).
+- [iridex-prism-terminal](https://github.com/ind4skylivey/iridex-prism-terminal)
+- [Gleam-Observer](https://github.com/ind4skylivey/Gleam-Observer)
+- [matteria-track](https://github.com/ind4skylivey/matteria-track)
+- [archynotch](https://github.com/ind4skylivey/archynotch)
+- [NiriPURA](https://github.com/ind4skylivey/NiriPURA.git) — live Niri config (sibling repo)
 
 ---
 
-## Special Features
+## Themes (optional)
 
-### Eco-Workflow System
+`--profile full` plans a small GTK overlay and an optional Zen **userChrome** staging file. That is not the live Zen profile (which stays on the machine for stability). Helium and Qutebrowser configs stay on-system. Do not copy dump `prefs.js`.
 
-The 6-layer orchestration system described above. Makes context-switching effortless - one command gets you a fully configured environment for whatever you're doing.
-
-### Materia Shift
-
-The terminal theme changes based on your workflow context:
-- **Bahamut** - Local dev (balanced, powerful)
-- **Ice** - Writing (cold, focused)
-- **Fire** - Red team (alert, danger)
-- **Wind** - Remote (cloud, connection)
-
-### Obsidian Neural Link
-
-When you exit a session, it reads your shell history and appends a summary to your Obsidian daily note. Look back at any day and see what you were working on.
-
-### Protocolo Fantasma
-
-Triggered when exiting `ws-redteam`. Auto-destroys temporary Docker containers, wipes session history, clears clipboard. Clean state, no artifacts left behind.
-
-### Multi-Monitor Support
-
-Waybar configured for 3 monitors with:
-- Independent wallpaper cycling per display
-- 12 system modules (CPU, RAM, temp, network, VPN, etc.)
-- Quick-launch app buttons
-- Virtual desktop indicators
-
----
-
-## Documentation Guides
-
-| Guide | What it covers |
-|:---|:---|
-| [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md) | The complete Eco-Workflow system |
-| [KEYBINDINGS.md](KEYBINDINGS.md) | DWM, Tmux, and shell keybindings |
-| [KITTY_GUIDE.md](KITTY_GUIDE.md) | Kitty terminal - 50+ keybindings and tips |
-| [ZELLIJ_SETUP.md](ZELLIJ_SETUP.md) | Zellij session manager setup |
-| [ZEN_BROWSER_GUIDE.md](ZEN_BROWSER_GUIDE.md) | Zen Browser cyberpunk theme |
-| [CYBERPUNK_SETUP.md](CYBERPUNK_SETUP.md) | Complete cyberpunk aesthetic guide |
-| [README_CYBERPUNK_UPDATE.md](README_CYBERPUNK_UPDATE.md) | Changelog for the cyberpunk update |
-
-### Component-Specific Documentation
-
-## Component-Specific Documentation
-
-Everything you need to understand and customize each part of the setup.
-
-### Editors
-
-| Document | Description |
-|:---------|:------------|
-| [nvim/README.md](.config/nvim/README.md) | Neovim setup with NvChad |
-| [nvim/KEYBINDINGS.md](.config/nvim/KEYBINDINGS.md) | Complete keybindings reference |
-
-### Window Management
-
-| Document | Description |
-|:---------|:------------|
-| [dwm/README.md](.config/dwm/README.md) | DWM window manager setup |
-| [dwm/docs/DWM-GUIDE.md](.config/dwm/docs/DWM-GUIDE.md) | DWM configuration guide |
-
-### Status Bars
-
-| Document | Description |
-|:---------|:------------|
-| [waybar/README.md](.config/waybar/README.md) | Waybar multi-monitor setup |
-| [waybar/MULTI-MONITOR.md](.config/waybar/MULTI-MONITOR.md) | Multi-monitor details |
-
-### Terminals
-
-| Document | Description |
-|:---------|:------------|
-| [kitty/CHEATSHEET.md](.config/kitty/CHEATSHEET.md) | Kitty cheatsheet (50+ keybindings) |
-| [alacritty/CHEATSHEET.md](.config/alacritty/CHEATSHEET.md) | Alacritty cheatsheet |
-| [warp-terminal/WARP_SETUP.md](.config/warp-terminal/WARP_SETUP.md) | Warp security config |
-| [warp-terminal/WORKFLOW-OPTIMIZATION.md](.config/warp-terminal/WORKFLOW-OPTIMIZATION.md) | Warp workflow tips |
-
-### File Browsers
-
-| Document | Description |
-|:---------|:------------|
-| [yazi/](.config/yazi/) | Yazi file browser config |
-
-### Eco-Workflow System
-
-| Document | Description |
-|:---------|:------------|
-| [workflow/README.md](workflow/README.md) | Eco-Workflow philosophy |
-| [workflow/profiles/local.md](workflow/profiles/local.md) | Local development profile |
-| [workflow/profiles/remote.md](workflow/profiles/remote.md) | Remote SSH profile |
-| [workflow/profiles/write.md](workflow/profiles/write.md) | Writing/deep work profile |
-| [workflow/profiles/redteam.md](workflow/profiles/redteam.md) | Security research profile |
-
----
-
-## Quick Install
-
-Want to try it out? Here's the easy way:
-
-```bash
-# One-liner install (Arch Linux)
-bash <(curl -fsSL https://raw.githubusercontent.com/ind4skylivey/dotfiles-s1b/main/bootstrap.sh)
-```
-
-Or clone and run manually:
-```bash
-git clone https://github.com/ind4skylivey/dotfiles-s1b.git ~/dotfiles
-cd ~/dotfiles
-./install.sh
-```
-
-**After install, you need to bootstrap plugins separately:**
-
-| Tool | Command | What it installs |
-|:-----|:---------|:-----------------|
-| Neovim | `:Lazy sync` | All Neovim plugins (LSP, completion, treesitter, etc.) |
-| Tmux | `prefix + I` | TPM plugins (resurrect, continuum, etc.) |
-| Yazi | `ya packa -I` | Yazi file browser plugins |
-| Doom Emacs | `~/.config/emacs/bin/doom sync` | Doom Emacs packages |
-| Fish | `fisher update` | Fish shell plugins |
-
-**Also after install:**
-- Run `./lockscreen-setup.sh` to set up wallpapers
-- Log out and back in to DWM
-- Run `ws-doctor` to check everything's healthy
-
-**What this repo includes vs what gets generated:**
-
-This repo contains configuration files only. Plugins, compiled binaries, and runtime data are generated on your system after running the install commands above. This keeps the repo lightweight and avoids shipping pre-built artifacts.
-
-| Included in repo | Generated after install |
-|:-----------------|:------------------------|
-| Config files (.conf, .lua, .toml, .kdl) | Neovim plugins (lazy/) |
-| Scripts and shell configs | Tmux plugins (tpm/) |
-| DWM source code | Yazi plugins (.local/) |
-| Themes and color schemes | DWM compiled binary |
-| Keybindings and layouts | Doom Emacs packages |
-| Symlinks for shared configs | Fish completions |
-
-**Manual install (without stow):**
-```bash
-# Create symlinks for each config
-ln -sf ~/.config/fish ~/.config/fish
-ln -sf ~/.config/kitty ~/.config/kitty
-# ... and so on for each tool
-```
-
----
-
-## Customization
-
-Make it your own:
-
-1. **Themes** - edit `~/.config/alacritty/alacritty.toml` or `~/.config/kitty/kitty.conf` to swap colors (Nord, Catppuccin, etc. are included)
-2. **Shell** - `chsh -s /bin/fish` for interactive use, or `/bin/zsh` for POSIX compliance
-3. **Window Manager** - modify `~/.config/dwm/config.h` and run `sudo make install` inside the dwm directory
-4. **Workflows** - tweak layouts in `~/dotfiles/workflow/zellij/layouts/` to match your screen and habits
-
----
-
-## Troubleshooting
-
-**Shell plugins missing:**
-- Fish: `fisher update`
-- Zsh: delete `~/.cache/zsh` and restart
-
-**DWM won't compile:**
-- Make sure `base-devel`, `libx11`, `libxft`, `libxinerama` are installed
-- `make clean install` inside the dwm directory
-
-**Tmux plugins not loading:**
-- Press `Prefix + I` (capital I) inside Tmux to fetch plugins
-
-**Doom Emacs sync issues:**
-- Run `~/.config/emacs/bin/doom sync`
-
-**Zellij layout not loading:**
-- Check that `workflow/zellij/layouts/` is in your Zellij layouts directory
+Heavy Kvantum / qt5ct palettes and cyberpunk Kitty includes stay in the dump until you opt in.
 
 ---
 
 ## License
 
-MIT - do whatever you want with it. If you build something cool from it, let me know.
+MIT. See [LICENSE](LICENSE).
 
----
-
-Built with care (and too many hours of configuration). Questions, issues, or just want to chat? [Open an issue](https://github.com/ind4skylivey/dotfiles-s1b/issues).
+Questions: [open an issue](https://github.com/ind4skylivey/dotfiles-s1b/issues).

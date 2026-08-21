@@ -1,0 +1,16 @@
+// Opt-in Niri overlay (--profile security).
+// Uncomment include "./modules/security.kdl" in the portable config.kdl
+// (or add it in a host overlay). Not loaded by default.
+
+workspace "sec"
+
+window-rule {
+    match app-id=r#"^BurpSuite$"#
+    match app-id=r#"^org\.owasp\.ZAP$"#
+    open-on-workspace "sec"
+}
+
+binds {
+    Mod+G { spawn "burpsuite"; }
+    Mod+Shift+Z { spawn "zaproxy"; }
+}

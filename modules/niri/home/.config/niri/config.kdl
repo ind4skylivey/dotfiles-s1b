@@ -66,3 +66,6 @@ hotkey-overlay {
 }
 
 include "./noctalia.kdl"
+
+// Opt-in: --profile security links modules/security.kdl. Uncomment after that link:
+// include "./modules/security.kdl"

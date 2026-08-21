@@ -1,0 +1,4 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/security/home/.config/zsh/security.zsh	.config/zsh/security.zsh
+modules/security/home/.config/fish/security.fish	.config/fish/security.fish
+modules/security/home/.config/niri/modules/security.kdl	.config/niri/modules/security.kdl

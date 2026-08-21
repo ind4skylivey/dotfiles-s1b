@@ -1,0 +1,2 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/gaming/home/.config/MangoHud/MangoHud.conf	.config/MangoHud/MangoHud.conf

@@ -1,0 +1,2 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/browser/home/.zen-browser-config/chrome/userChrome.css	.zen-browser-config/chrome/userChrome.css
