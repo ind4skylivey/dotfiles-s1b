@@ -44,7 +44,10 @@ Cyberpunk aesthetics are an **optional layer**. The base system must work withou
 │   ├── git/                   # portable git defaults (no identity)
 │   ├── editor/                # portable nvim init (not the dump)
 │   ├── terminal/              # portable kitty + alacritty
-│   └── mux/                   # portable tmux + zellij
+│   ├── mux/                   # portable tmux + zellij
+│   ├── niri/                  # portable Niri (Wayland; from NiriPURA)
+│   ├── dwm/                   # portable X11 session wrapper
+│   └── waybar/                # Plasma only
 ├── packages/                  # filled during migration
 ├── home/                      # portable overlay (migration)
 ├── hosts/*.example.toml
@@ -96,11 +99,11 @@ Mutually exclusive backends:
 
 Niri does **not** start Waybar, Dunst, Rofi, or Wofi. Those stay with DWM/Plasma.
 
-When importing NiriPURA (desktop phase, not now):
+When importing NiriPURA (this phase):
 
 - Bring in: portable KDL (`config.kdl`, input, animations, decorations, layer-rules, generic Wayland env).
 - Keep in a host overlay: `monitors.kdl`, `open-on-output "DP-1"`, OpenRGB/Solaar, `/home/il1v3y` paths.
-- `security` profile: Burp/ZAP keybinds and the `sec` workspace.
+- `security` profile: Burp/ZAP keybinds and the `sec` workspace (not in the portable niri module yet).
 
 Do not git-submodule the entire NiriPURA tree (screenshots, plugins, dirty working tree).
 
@@ -145,7 +148,9 @@ Module logic calls `install_package` / `install_optional_package` / `install_aur
 | `./install.sh --help` | new CLI |
 | `./install.sh --dry-run` | detect → plan → report |
 | `./install.sh --dry-run --profile minimal` | same, plus shell/git/editor `[link]` rows |
-| `./install.sh --dry-run --profile workstation` | minimal plus kitty, alacritty, tmux, zellij |
+| `./install.sh --dry-run --profile desktop` | Niri links; skip DWM and Waybar |
+| `./install.sh --dry-run --desktop dwm` | DWM xinitrc; skip Niri and Waybar |
+| `./install.sh --dry-run --desktop plasma` | Waybar only; skip Niri and DWM |
 | `./install.sh --doctor` | non-destructive checks |
 | `./install.sh --link SRC DEST` | idempotent per-path symlink (see [linker.md](linker.md)) |
 | `bin/ws-*` | path unchanged in this phase |

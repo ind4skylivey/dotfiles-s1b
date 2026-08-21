@@ -1,0 +1,7 @@
+// Copy to ~/.config/niri/modules/monitors.kdl (not versioned).
+// Then uncomment include "./modules/monitors.kdl" in config.kdl.
+//
+// output "eDP-1" {
+//     mode "1920x1080@60.000"
+//     scale 1.0
+// }

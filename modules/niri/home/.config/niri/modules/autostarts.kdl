@@ -1,0 +1,9 @@
+// Portable Niri + Noctalia session.
+// waybar, dunst, rofi, and wofi are NOT started here (DWM/Plasma only).
+// Host RGB (OpenRGB/Solaar) stays in a host overlay.
+
+spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+spawn-at-startup "systemctl" "--user" "import-environment" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+
+spawn-sh-at-startup "noctalia"
+spawn-sh-at-startup "swww-daemon"

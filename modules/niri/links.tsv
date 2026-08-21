@@ -1,0 +1,12 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/niri/home/.config/niri/config.kdl	.config/niri/config.kdl
+modules/niri/home/.config/niri/noctalia.kdl	.config/niri/noctalia.kdl
+modules/niri/home/.config/niri/modules/input.kdl	.config/niri/modules/input.kdl
+modules/niri/home/.config/niri/modules/env.kdl	.config/niri/modules/env.kdl
+modules/niri/home/.config/niri/modules/autostarts.kdl	.config/niri/modules/autostarts.kdl
+modules/niri/home/.config/niri/modules/animations.kdl	.config/niri/modules/animations.kdl
+modules/niri/home/.config/niri/modules/decorations.kdl	.config/niri/modules/decorations.kdl
+modules/niri/home/.config/niri/modules/layer-rules.kdl	.config/niri/modules/layer-rules.kdl
+modules/niri/home/.config/niri/modules/keybinds.kdl	.config/niri/modules/keybinds.kdl
+modules/niri/home/.config/niri/modules/workspaces.kdl	.config/niri/modules/workspaces.kdl
+modules/niri/home/.config/niri/modules/window-rules.kdl	.config/niri/modules/window-rules.kdl

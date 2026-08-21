@@ -24,3 +24,6 @@ jobs:
           test -f docs/modules/terminal.md
           test -f docs/modules/mux.md
           test -f docs/modules/editor.md
+          test -f docs/modules/niri.md
+          test -f docs/modules/dwm.md
+          test -f docs/modules/waybar.md

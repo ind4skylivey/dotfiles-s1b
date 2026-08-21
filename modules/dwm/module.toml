@@ -1,0 +1,12 @@
+# modules/dwm — portable X11 DWM session wrapper.
+#
+# Does not compile dwm.c from the dump. Does not start Waybar or Niri.
+# Monitor xrandr scripts stay in the dump until a host overlay exists.
+
+name = "dwm"
+graphical = true
+x11 = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux"]

@@ -32,7 +32,7 @@ Modes:
   --link SRC DEST         idempotent symlink (repo SRC → DEST under home)
   --help                  This help
 
-Declared (not implemented yet — exit 3):
+Declared (not implemented yet — exit 3 unless used with --dry-run):
   --profile NAME          minimal|workstation|developer|security|desktop|gaming|full
   --desktop NAME          niri (default Wayland) | dwm | plasma
   --components LIST       comma-separated modules
@@ -44,10 +44,10 @@ Declared (not implemented yet — exit 3):
   --verbose / -v          debug logging
   --debug                 alias for --verbose
 
-Desktop backends (when implemented):
-  niri     Wayland + Noctalia (recommended)
-  dwm      X11
-  plasma   KDE + Waybar
+Desktop backends (dry-run plans one; never two compositors):
+  niri     Wayland + Noctalia (default when --profile desktop)
+  dwm      X11 + slstatus (no Waybar)
+  plasma   KDE Wayland + Waybar (visual bar only)
 
 Exit codes:
   0  success
@@ -82,9 +82,14 @@ run_dry_run() {
   if [[ -n "${DOTFILES_PROFILE:-}" ]]; then
     printf 'Selected profile: %s\n\n' "${DOTFILES_PROFILE}"
   else
-    printf 'Selected profile: (none — pass --profile minimal or workstation)\n\n'
+    printf 'Selected profile: (none — pass --profile minimal, workstation, or desktop)\n\n'
   fi
-  printf 'Selected desktop default (when implemented): niri\n\n'
+  _desk="$(dotfiles_desktop_backend)"
+  if [[ -n "${_desk}" ]]; then
+    printf 'Selected desktop: %s (mutually exclusive backends)\n\n' "${_desk}"
+  else
+    printf 'Selected desktop: (none — pass --profile desktop or --desktop niri|dwm|plasma)\n\n'
+  fi
   dotfiles_plan_report
   printf '\nNo files were modified. No packages were installed.\n'
 }
@@ -120,7 +125,20 @@ while [[ $# -gt 0 ]]; do
       FLAG_NOTIMPL+=("--profile")
       shift 2 || { printf '%s\n' "--profile needs a value" >&2; exit "${DOTFILES_E_USAGE}"; }
       ;;
-    --desktop|--components|--exclude|--config)
+    --desktop)
+      DOTFILES_DESKTOP="${2:-}"
+      export DOTFILES_DESKTOP
+      case "${DOTFILES_DESKTOP}" in
+        niri|dwm|plasma) ;;
+        *)
+          printf '%s\n' "--desktop must be niri, dwm, or plasma" >&2
+          exit "${DOTFILES_E_USAGE}"
+          ;;
+      esac
+      FLAG_NOTIMPL+=("--desktop")
+      shift 2 || { printf '%s\n' "--desktop needs a value" >&2; exit "${DOTFILES_E_USAGE}"; }
+      ;;
+    --components|--exclude|--config)
       FLAG_NOTIMPL+=("$1")
       if [[ $# -lt 2 ]]; then
         printf '%s needs a value\n' "$1" >&2

@@ -1,0 +1,11 @@
+# modules/waybar — Plasma visual bar only (--desktop plasma).
+#
+# Never planned with --desktop niri (Noctalia) or --desktop dwm (slstatus).
+
+name = "waybar"
+graphical = true
+wayland = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux"]

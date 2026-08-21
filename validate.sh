@@ -92,6 +92,18 @@ if [[ ! -f "${DOTFILES_ROOT}/docs/modules/editor.md" ]]; then
   dotfiles_log_error "missing docs/modules/editor.md"
   FAILED=1
 fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/niri.md" ]]; then
+  dotfiles_log_error "missing docs/modules/niri.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/dwm.md" ]]; then
+  dotfiles_log_error "missing docs/modules/dwm.md"
+  FAILED=1
+fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/waybar.md" ]]; then
+  dotfiles_log_error "missing docs/modules/waybar.md"
+  FAILED=1
+fi
 
 if grep -R -E 'alias[[:space:]]+kali[= ]|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' \
   "${DOTFILES_ROOT}/modules/shell/home" >/dev/null 2>&1; then
@@ -121,9 +133,16 @@ if grep -R -E --binary-files=without-match '/home/il1v3y|/media/il1v3y|/Users/il
   FAILED=1
 fi
 
-if grep -R -F --binary-files=without-match 'default-shell /usr/bin/fish' \
-  "${DOTFILES_ROOT}/modules/mux" >/dev/null 2>&1; then
-  dotfiles_log_error "portable mux must not force Fish"
+if grep -R -E --binary-files=without-match \
+  'burpsuite|zaproxy|open-on-output "DP-1"|spawn-sh-at-startup "waybar"' \
+  "${DOTFILES_ROOT}/modules/niri" >/dev/null 2>&1; then
+  dotfiles_log_error "portable niri contains host monitors, Waybar autostart, or security binds"
+  FAILED=1
+fi
+
+if grep -R -F --binary-files=without-match '"output": "DP-1"' \
+  "${DOTFILES_ROOT}/modules/waybar" >/dev/null 2>&1; then
+  dotfiles_log_error "portable waybar pins a host output"
   FAILED=1
 fi
 

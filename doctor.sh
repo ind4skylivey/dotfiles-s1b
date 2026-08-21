@@ -160,6 +160,24 @@ else
   print_status FAIL "mux module missing"
 fi
 
+if [[ -f "${DOTFILES_ROOT}/modules/niri/module.toml" ]]; then
+  print_status PASS "niri module present"
+else
+  print_status FAIL "niri module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/dwm/module.toml" ]]; then
+  print_status PASS "dwm module present"
+else
+  print_status FAIL "dwm module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/waybar/module.toml" ]]; then
+  print_status PASS "waybar module present"
+else
+  print_status FAIL "waybar module missing"
+fi
+
 _git_local="${HOME}/.config/git/local"
 if [[ -f "${_git_local}" ]] && git config --file "${_git_local}" --get user.email >/dev/null 2>&1; then
   print_status PASS "git identity in HOME/.config/git/local (not in the module)"
@@ -183,6 +201,8 @@ _check_optional_bin kitty
 _check_optional_bin alacritty
 _check_optional_bin tmux
 _check_optional_bin zellij
+_check_optional_bin dwm
+_check_optional_bin waybar
 
 printf '\nResults: %s passed, %s warned, %s failed, %s skipped\n' \
   "${PASSED}" "${WARNED}" "${FAILED}" "${SKIPPED}"

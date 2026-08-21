@@ -1,0 +1,68 @@
+// Portable Niri config imported from NiriPURA (not a git submodule).
+// Host monitors: copy modules/niri/local.monitors.example to
+// ~/.config/niri/modules/monitors.kdl and uncomment the include below.
+// Do not start Waybar, Dunst, Rofi, or Wofi in this session.
+
+include "./modules/input.kdl"
+// include "./modules/monitors.kdl"
+include "./modules/env.kdl"
+include "./modules/autostarts.kdl"
+include "./modules/animations.kdl"
+include "./modules/decorations.kdl"
+include "./modules/layer-rules.kdl"
+include "./modules/keybinds.kdl"
+include "./modules/workspaces.kdl"
+include "./modules/window-rules.kdl"
+
+// NOTE: Layout must stay in root config.kdl.
+layout {
+    gaps 7
+
+    center-focused-column "never"
+    always-center-single-column
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.55; }
+
+    focus-ring {
+        width 4
+        active-color   "#7fc8ff"
+        inactive-color "#505050"
+    }
+
+    border {
+        width 2
+        active-color   "#ffb59f"
+        inactive-color "#1c110e"
+        urgent-color   "#ffb4ab"
+    }
+
+    tab-indicator {
+        active-color   "#ffb59f"
+        inactive-color "#b84622"
+        urgent-color   "#ffb4ab"
+    }
+
+    insert-hint {
+        color "#ffb59f80"
+    }
+
+    struts {
+    }
+}
+
+cursor {
+    xcursor-theme "Bibata-Modern-Classic"
+    xcursor-size 24
+}
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+include "./noctalia.kdl"
