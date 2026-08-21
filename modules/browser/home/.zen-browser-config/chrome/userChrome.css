@@ -1,0 +1,42 @@
+/* Portable Zen/Firefox chrome. Theme only. Never ship prefs.js. */
+
+@-moz-document url-prefix("chrome://") {
+  :root {
+    --cyberpunk-bg: #0d1b2a;
+    --cyberpunk-primary: #FF10F0;
+    --cyberpunk-secondary: #00d9ff;
+  }
+
+  #main-window {
+    background-color: var(--cyberpunk-bg) !important;
+  }
+
+  #nav-bar {
+    background-color: var(--cyberpunk-bg) !important;
+    border-bottom: 1px solid var(--cyberpunk-primary) !important;
+  }
+
+  #urlbar {
+    background-color: var(--cyberpunk-bg) !important;
+    border: 1px solid var(--cyberpunk-secondary) !important;
+    color: var(--cyberpunk-secondary) !important;
+  }
+
+  #urlbar:focus-within {
+    border-color: var(--cyberpunk-primary) !important;
+    box-shadow: 0 0 10px rgba(255, 16, 240, 0.5) !important;
+  }
+
+  .tabbrowser-tab {
+    background-color: #1a1a3e !important;
+    color: var(--cyberpunk-secondary) !important;
+    border: 1px solid var(--cyberpunk-secondary) !important;
+  }
+
+  .tabbrowser-tab[selected="true"] {
+    background-color: var(--cyberpunk-primary) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--cyberpunk-primary) !important;
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.5) !important;
+  }
+}

@@ -458,6 +458,45 @@ else
   fail "expected dump waybar config-dp1.jsonc to still pin DP-1"
 fi
 
+dry_sec="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile security 2>/dev/null)"
+assert_contains "${dry_sec}" "[warn]" "security dry-run prints a warning"
+assert_contains "${dry_sec}" ".config/zsh/security.zsh" "security dry-run plans zsh overlay"
+assert_contains "${dry_sec}" ".config/niri/modules/security.kdl" "security dry-run plans niri overlay"
+if [[ "${dry_sec}" == *"--privileged"* ]]; then
+  fail "security plan must not include dump --privileged kali"
+else
+  ok "security dry-run has no --privileged kali"
+fi
+
+dry_game="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile gaming 2>/dev/null)"
+assert_contains "${dry_game}" "MangoHud.conf" "gaming dry-run plans MangoHud"
+if [[ "${dry_game}" == *".zshrc"* ]]; then
+  fail "gaming profile should not plan shell zshrc"
+else
+  ok "gaming profile does not plan shell"
+fi
+
+dry_full="$(DOTFILES_NO_COLOR=1 bash "${ROOT}/install.sh" --dry-run --profile full 2>/dev/null)"
+assert_contains "${dry_full}" "userChrome.css" "full dry-run plans userChrome"
+assert_contains "${dry_full}" "gtk.css" "full dry-run plans themes"
+assert_contains "${dry_full}" "requires --profile security" "full does not silently include security"
+if [[ "${dry_full}" == *"prefs.js"* ]]; then
+  fail "full plan must not mention prefs.js as a link"
+else
+  ok "full dry-run does not plan prefs.js"
+fi
+
+if [[ -f "${ROOT}/modules/browser/home/.zen-browser-config/prefs.js" ]]; then
+  fail "browser module must not ship prefs.js"
+else
+  ok "browser module has no prefs.js"
+fi
+if grep -qE 'alias[[:space:]]+kali=' "${ROOT}/.zshrc"; then
+  ok "dump zshrc still has kali (not copied into security as privileged)"
+else
+  fail "expected dump .zshrc to still contain kali alias"
+fi
+
 # --- detect-platform.sh --kv ---
 kv="$(
   DOTFILES_OS_RELEASE_FILE="${ROOT}/tests/fixtures/os-release-arch" \

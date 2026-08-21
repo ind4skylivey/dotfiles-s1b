@@ -27,3 +27,7 @@ jobs:
           test -f docs/modules/niri.md
           test -f docs/modules/dwm.md
           test -f docs/modules/waybar.md
+          test -f docs/modules/security.md
+          test -f docs/modules/gaming.md
+          test -f docs/modules/themes.md
+          test -f docs/modules/browser.md

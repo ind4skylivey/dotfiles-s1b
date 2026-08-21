@@ -1,0 +1,8 @@
+# modules/gaming — independent profile. Not RGB, not host Steam scripts.
+
+name = "gaming"
+graphical = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux"]

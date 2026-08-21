@@ -55,3 +55,10 @@ if [[ -f "${_zsh_local}" ]]; then
   source "${_zsh_local}"
 fi
 unset _zsh_local
+
+# Opt-in security overlay (linked only with --profile security).
+_zsh_sec="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh/security.zsh"
+if [[ -f "${_zsh_sec}" ]]; then
+  source "${_zsh_sec}"
+fi
+unset _zsh_sec

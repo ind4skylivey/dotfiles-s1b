@@ -1,0 +1,2 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/themes/home/.config/gtk-3.0/gtk.css	.config/gtk-3.0/gtk.css

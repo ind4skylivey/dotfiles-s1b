@@ -1,0 +1,11 @@
+# modules/security — opt-in lab overlay. Not part of minimal/workstation/developer.
+#
+# Requires --profile security. Dry-run prints a [warn] row.
+# Does not install packages. Does not include dump --privileged kali.
+
+name = "security"
+graphical = false
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux"]

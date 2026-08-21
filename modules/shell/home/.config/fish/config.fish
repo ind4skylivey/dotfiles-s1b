@@ -21,3 +21,9 @@ set -l fish_local $HOME/.config/fish/local.fish
 if test -f $fish_local
     source $fish_local
 end
+
+# Opt-in security overlay (--profile security).
+set -l fish_sec $HOME/.config/fish/security.fish
+if test -f $fish_sec
+    source $fish_sec
+end

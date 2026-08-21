@@ -1,0 +1,8 @@
+# modules/browser — Zen/Firefox chrome theme only. Never prefs.js.
+
+name = "browser"
+graphical = true
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux", "darwin"]

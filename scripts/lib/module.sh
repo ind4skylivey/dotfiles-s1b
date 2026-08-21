@@ -109,7 +109,7 @@ dotfiles_plan_for_profile() {
       dotfiles_plan_named_modules shell git editor terminal mux
       ;;
     full)
-      dotfiles_plan_named_modules shell git editor terminal mux
+      dotfiles_plan_named_modules shell git editor terminal mux gaming themes browser
       ;;
     desktop)
       dotfiles_plan_add skip "shell module" "not in this profile; use --profile minimal"
@@ -119,11 +119,7 @@ dotfiles_plan_for_profile() {
       dotfiles_plan_add skip "mux module" "not in this profile; use --profile workstation"
       ;;
     gaming)
-      dotfiles_plan_add skip "shell module" "not in this profile; use --profile minimal"
-      dotfiles_plan_add skip "git module" "not in this profile; use --profile minimal"
-      dotfiles_plan_add skip "editor module" "not in this profile; use --profile minimal"
-      dotfiles_plan_add skip "terminal module" "not in this profile; use --profile workstation"
-      dotfiles_plan_add skip "mux module" "not in this profile; use --profile workstation"
+      dotfiles_plan_named_modules gaming
       ;;
     "")
       dotfiles_plan_add skip "shell module" "pass --profile minimal to include portable shell links"
@@ -138,10 +134,18 @@ dotfiles_plan_for_profile() {
   esac
 
   if [[ "${DOTFILES_PROFILE:-}" == "security" ]]; then
-    dotfiles_plan_add skip "offensive aliases" "security module not migrated; portable shell has none"
-    dotfiles_plan_add skip "niri Burp/ZAP binds" "security overlay not migrated; portable niri has none"
+    dotfiles_plan_add warn "security profile" "opt-in lab overlay (Burp/ZAP binds); not for shared machines; dump kali privileged aliases stay out"
+    dotfiles_plan_named_modules security
   else
-    dotfiles_plan_add skip "security tools" "requires --profile security (not implemented)"
+    dotfiles_plan_add skip "security tools" "requires --profile security (explicit opt-in)"
+  fi
+
+  if [[ "${DOTFILES_PROFILE:-}" != "gaming" && "${DOTFILES_PROFILE:-}" != "full" ]]; then
+    dotfiles_plan_add skip "gaming" "pass --profile gaming or --profile full"
+  fi
+  if [[ "${DOTFILES_PROFILE:-}" != "full" ]]; then
+    dotfiles_plan_add skip "themes" "optional aesthetics; pass --profile full"
+    dotfiles_plan_add skip "browser userChrome" "theme only; pass --profile full; never prefs.js"
   fi
 
   dotfiles_plan_desktop_backend

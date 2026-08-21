@@ -178,6 +178,36 @@ else
   print_status FAIL "waybar module missing"
 fi
 
+if [[ -f "${DOTFILES_ROOT}/modules/security/module.toml" ]]; then
+  print_status PASS "security module present"
+else
+  print_status FAIL "security module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/gaming/module.toml" ]]; then
+  print_status PASS "gaming module present"
+else
+  print_status FAIL "gaming module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/themes/module.toml" ]]; then
+  print_status PASS "themes module present"
+else
+  print_status FAIL "themes module missing"
+fi
+
+if [[ -f "${DOTFILES_ROOT}/modules/browser/module.toml" ]]; then
+  print_status PASS "browser module present"
+else
+  print_status FAIL "browser module missing"
+fi
+
+if find "${DOTFILES_ROOT}/modules/browser" -name 'prefs.js' | grep -q .; then
+  print_status FAIL "browser module must not contain prefs.js"
+else
+  print_status PASS "browser module has no prefs.js"
+fi
+
 _git_local="${HOME}/.config/git/local"
 if [[ -f "${_git_local}" ]] && git config --file "${_git_local}" --get user.email >/dev/null 2>&1; then
   print_status PASS "git identity in HOME/.config/git/local (not in the module)"
@@ -186,7 +216,7 @@ elif git config --global --get user.email >/dev/null 2>&1; then
 else
   print_status SKIP "no git user.email yet; copy modules/git/local.example"
 fi
-print_status SKIP "font check (desktop/themes not migrated)"
+print_status SKIP "font check (optional; themes module is --profile full)"
 
 _check_optional_bin() {
   local bin="$1"

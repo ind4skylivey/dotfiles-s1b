@@ -47,7 +47,11 @@ Cyberpunk aesthetics are an **optional layer**. The base system must work withou
 │   ├── mux/                   # portable tmux + zellij
 │   ├── niri/                  # portable Niri (Wayland; from NiriPURA)
 │   ├── dwm/                   # portable X11 session wrapper
-│   └── waybar/                # Plasma only
+│   ├── waybar/                # Plasma only
+│   ├── security/              # opt-in lab overlay
+│   ├── gaming/                # MangoHud
+│   ├── themes/                # optional GTK
+│   └── browser/               # userChrome only
 ├── packages/                  # filled during migration
 ├── home/                      # portable overlay (migration)
 ├── hosts/*.example.toml
@@ -103,7 +107,7 @@ When importing NiriPURA (this phase):
 
 - Bring in: portable KDL (`config.kdl`, input, animations, decorations, layer-rules, generic Wayland env).
 - Keep in a host overlay: `monitors.kdl`, `open-on-output "DP-1"`, OpenRGB/Solaar, `/home/il1v3y` paths.
-- `security` profile: Burp/ZAP keybinds and the `sec` workspace (not in the portable niri module yet).
+- `security` profile: Burp/ZAP binds and the `sec` workspace live in `modules/security/` (opt-in).
 
 Do not git-submodule the entire NiriPURA tree (screenshots, plugins, dirty working tree).
 
@@ -150,7 +154,9 @@ Module logic calls `install_package` / `install_optional_package` / `install_aur
 | `./install.sh --dry-run --profile minimal` | same, plus shell/git/editor `[link]` rows |
 | `./install.sh --dry-run --profile desktop` | Niri links; skip DWM and Waybar |
 | `./install.sh --dry-run --desktop dwm` | DWM xinitrc; skip Niri and Waybar |
-| `./install.sh --dry-run --desktop plasma` | Waybar only; skip Niri and DWM |
+| `./install.sh --dry-run --profile security` | `[warn]` + security overlay; no privileged dump aliases |
+| `./install.sh --dry-run --profile gaming` | MangoHud only |
+| `./install.sh --dry-run --profile full` | CLI + gaming + themes + userChrome; security still skipped |
 | `./install.sh --doctor` | non-destructive checks |
 | `./install.sh --link SRC DEST` | idempotent per-path symlink (see [linker.md](linker.md)) |
 | `bin/ws-*` | path unchanged in this phase |
