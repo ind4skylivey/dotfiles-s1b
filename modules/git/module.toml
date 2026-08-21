@@ -1,0 +1,11 @@
+# modules/git — portable Git defaults. Identity stays out of git.
+#
+# user.name / user.email / signingkey belong in ~/.config/git/local
+# (copy from modules/git/local.example).
+
+name = "git"
+graphical = false
+privilege = false
+experimental = false
+skippable = true
+supported = ["linux", "darwin"]

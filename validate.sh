@@ -76,10 +76,20 @@ if [[ ! -f "${DOTFILES_ROOT}/docs/modules/shell.md" ]]; then
   dotfiles_log_error "missing docs/modules/shell.md"
   FAILED=1
 fi
+if [[ ! -f "${DOTFILES_ROOT}/docs/modules/git.md" ]]; then
+  dotfiles_log_error "missing docs/modules/git.md"
+  FAILED=1
+fi
 
 if grep -R -E 'alias[[:space:]]+kali[= ]|/tmp/\.tmp|/home/il1v3y|/media/il1v3y' \
   "${DOTFILES_ROOT}/modules/shell/home" >/dev/null 2>&1; then
   dotfiles_log_error "portable shell module contains forbidden host or offensive strings"
+  FAILED=1
+fi
+
+if grep -R -E '^[[:space:]]*(email|signingkey)[[:space:]]*=' \
+  "${DOTFILES_ROOT}/modules/git/home" >/dev/null 2>&1; then
+  dotfiles_log_error "portable git module contains identity or host strings"
   FAILED=1
 fi
 

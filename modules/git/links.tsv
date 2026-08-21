@@ -1,0 +1,3 @@
+# src (repo-relative)	dest (relative to $HOME)
+modules/git/home/.config/git/config	.config/git/config
+modules/git/home/.config/git/ignore	.config/git/ignore

@@ -1,0 +1,17 @@
+# Portable global Git excludes (not a substitute for per-repo .gitignore).
+
+*~
+*.swp
+*.swo
+.DS_Store
+.env
+.env.*
+!.env.example
+credentials.json
+*.pem
+*.key
+auth.json
+.direnv/
+.venv/
+venv/
+__pycache__/

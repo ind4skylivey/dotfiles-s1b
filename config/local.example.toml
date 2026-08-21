@@ -7,6 +7,7 @@
 # Host-only shell overlay (not the dump). Example:
 # ~/.config/zsh/local.zsh
 # ~/.config/fish/local.fish
+# ~/.config/git/local          # user.name / user.email (see modules/git/local.example)
 
 [paths]
 # ollama_models = "~/Ollama"

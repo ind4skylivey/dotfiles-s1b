@@ -47,12 +47,19 @@ dotfiles_plan_for_profile() {
       else
         dotfiles_plan_add skip "shell" "module missing"
       fi
+      if dotfiles_module_has git; then
+        dotfiles_module_plan git
+      else
+        dotfiles_plan_add skip "git" "module missing"
+      fi
       ;;
     desktop|gaming)
       dotfiles_plan_add skip "shell module" "not in this profile; use --profile minimal"
+      dotfiles_plan_add skip "git module" "not in this profile; use --profile minimal"
       ;;
     "")
       dotfiles_plan_add skip "shell module" "pass --profile minimal to include portable shell links"
+      dotfiles_plan_add skip "git module" "pass --profile minimal to include portable git config"
       ;;
     *)
       dotfiles_plan_add skip "profile ${DOTFILES_PROFILE}" "unknown profile"
@@ -65,7 +72,6 @@ dotfiles_plan_for_profile() {
     dotfiles_plan_add skip "security tools" "requires --profile security (not implemented)"
   fi
 
-  dotfiles_plan_add skip "git module" "not migrated yet"
   dotfiles_plan_add skip "niri" "desktop import pending; live config is NiriPURA"
   dotfiles_plan_add skip "dwm" "desktop module not migrated"
 }
