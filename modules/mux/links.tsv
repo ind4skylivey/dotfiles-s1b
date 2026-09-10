@@ -1,3 +1,8 @@
 # src (repo-relative)	dest (relative to $HOME)
 modules/mux/home/.config/tmux/tmux.conf	.config/tmux/tmux.conf
+modules/mux/home/.config/tmux/scripts/sessionizer.sh	.config/tmux/scripts/sessionizer.sh
+modules/mux/home/.config/tmux/scripts/projects-menu.sh	.config/tmux/scripts/projects-menu.sh
+modules/mux/home/.config/tmux/scripts/sesh-picker.sh	.config/tmux/scripts/sesh-picker.sh
+modules/mux/home/.config/tmux/docs/guide.md	.config/tmux/docs/guide.md
+modules/mux/home/.config/tmux/docs/sesh.md	.config/tmux/docs/sesh.md
 modules/mux/home/.config/zellij/config.kdl	.config/zellij/config.kdl
