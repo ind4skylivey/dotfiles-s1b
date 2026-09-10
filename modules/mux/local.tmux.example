@@ -1,4 +1,8 @@
-# Copy to ~/.config/tmux/local.conf (not versioned).
+# Copy to ~/.config/tmux/local.conf (host overlay, not linked from repo).
 
-# Optional: pin a shell only on this host.
-# set-option -g default-shell /usr/bin/zsh
+# Optional: set-option -g default-shell /path/to/your/shell
+
+# Quick jumps (after tpm; y/Y stay for tmux-yank in copy mode).
+bind M run-shell "#{sessionizer} /path/to/shenanigans/Repos/Bitflow/Proyects/yamaha-backoffice"
+bind L run-shell "#{sessionizer} /path/to/shenanigans/Repos/Bitflow/Proyects/yamaha-backoffice-l12"
+bind C run-shell "#{sessionizer} /path/to/.config"

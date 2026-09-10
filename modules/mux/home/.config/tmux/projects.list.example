@@ -1,0 +1,6 @@
+# Copy to ~/.config/tmux/projects.list and edit paths.
+# name|absolute path
+yamaha-master|/path/to/shenanigans/Repos/Bitflow/Proyects/yamaha-backoffice
+yamaha-l12|/path/to/shenanigans/Repos/Bitflow/Proyects/yamaha-backoffice-l12
+bitflow-proyects|/path/to/shenanigans/Repos/Bitflow/Proyects
+config|/path/to/.config
