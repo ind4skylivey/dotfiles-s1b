@@ -1,0 +1,107 @@
+# ==========================================
+# 🛡️ SECURITY & SECRETS (CRITICAL)
+# ==========================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.csr
+*.der
+id_rsa
+id_ed25519
+secrets.yaml
+credentials.json
+service-account*.json
+.htpasswd
+.netrc
+
+# ==========================================
+# 🤖 AI AGENTS & LLM CONFIGS (2026 Standards)
+# ==========================================
+.cursor/
+.clinerules
+.windsurfrules
+.aider.*
+bolt.json
+lovable.json
+v0.json
+.supermaven/
+.codeiumignore
+.goosehints
+
+# ==========================================
+# 💻 OPERATING SYSTEMS
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ==========================================
+# 🛠️ IDEs & EDITORS
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
+# 📦 LANGUAGES & DEPENDENCIES
+# ==========================================
+node_modules/
+jspm_packages/
+vendor/
+.venv/
+venv/
+env/
+lib/
+__pycache__/
+*.pyc
+bin/
+obj/
+target/
+.gradle/
+build/
+dist/
+out/
+
+# ==========================================
+# ☁️ INFRASTRUCTURE & DOCKER
+# ==========================================
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.auto.tfvars
+.docker/config.json
+docker-compose.override.yml
+
+# ==========================================
+# 📊 LOGS & TEMPORARIES
+# ==========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+tmp/
+temp/
