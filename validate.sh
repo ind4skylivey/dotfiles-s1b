@@ -38,6 +38,7 @@ SCRIPTS=(
   "${DOTFILES_ROOT}/scripts/lib/load.sh"
   "${DOTFILES_ROOT}/scripts/backup.sh"
   "${DOTFILES_ROOT}/scripts/link.sh"
+  "${DOTFILES_ROOT}/scripts/jev-pr-label.sh"
   "${DOTFILES_ROOT}/restore.sh"
 )
 
@@ -53,6 +54,7 @@ if dotfiles_have_cmd shellcheck; then
     "${DOTFILES_ROOT}/scripts/detect-platform.sh" \
     "${DOTFILES_ROOT}/scripts/backup.sh" \
     "${DOTFILES_ROOT}/scripts/link.sh" \
+    "${DOTFILES_ROOT}/scripts/jev-pr-label.sh" \
     "${DOTFILES_ROOT}/restore.sh" \
     "${DOTFILES_ROOT}/scripts/lib/"*.sh; then
     dotfiles_log_info "shellcheck ok"

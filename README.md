@@ -100,7 +100,7 @@ Portable files live under `modules/*/home/`. The dump is **not** copied into tho
 | niri, dwm, waybar | [niri](docs/modules/niri.md), [dwm](docs/modules/dwm.md), [waybar](docs/modules/waybar.md) |
 | security, gaming, themes, browser | [security](docs/modules/security.md), [gaming](docs/modules/gaming.md), [themes](docs/modules/themes.md), [browser](docs/modules/browser.md) |
 
-CI: `.github/workflows/validate.yml` (`actions/checkout@v5`, ShellCheck, tests, secret scan of `modules/` and `scripts/` only).
+CI: `.github/workflows/validate.yml` (`actions/checkout@v5`, ShellCheck, tests, secret scan of `modules/` and `scripts/` only). Advisory PR labels: `.github/workflows/jev-pr-label.yml` (see [docs/jev-pr-label.md](docs/jev-pr-label.md)).
 
 ---
 
