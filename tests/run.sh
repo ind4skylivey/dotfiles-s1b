@@ -510,6 +510,21 @@ kv="$(
 )"
 assert_contains "${kv}" "DISTRO=arch" "detect-platform --kv"
 
+# --- jev PR labeler (deterministic size; no API) ---
+assert_eq "$(bash "${ROOT}/scripts/jev-pr-label.sh" --size 3 2 1)" "jev:size-xs" "jev size xs for tiny diff"
+assert_eq "$(bash "${ROOT}/scripts/jev-pr-label.sh" --size 40 20 4)" "jev:size-s" "jev size s for modest lines"
+assert_eq "$(bash "${ROOT}/scripts/jev-pr-label.sh" --size 10 5 12)" "jev:size-m" "jev size m when files bump"
+assert_eq "$(bash "${ROOT}/scripts/jev-pr-label.sh" --size 200 150 2)" "jev:size-l" "jev size l for large line count"
+assert_eq "$(bash "${ROOT}/scripts/jev-pr-label.sh" --size 0 0 0)" "jev:size-xs" "jev size xs for empty diff"
+
+set +e
+missing_key_out="$(TYPESAFE_API_KEY= bash "${ROOT}/scripts/jev-pr-label.sh" 2>&1)"
+missing_key_st=$?
+set -e
+assert_eq "${missing_key_st}" "0" "missing TYPESAFE_API_KEY exits 0"
+assert_contains "${missing_key_out}" "TYPESAFE_API_KEY is not set" "missing key warns"
+assert_contains "${missing_key_out}" "soft-fail" "missing key is soft-fail"
+
 printf '\n%s passed, %s failed\n' "${PASS}" "${FAIL}"
 if ((FAIL > 0)); then
   exit 1
