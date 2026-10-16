@@ -572,6 +572,16 @@
 
 (defvar +lv/ctxbar--saved nil)
 
+;; Zen mode (writeroom) hides the tab bar and doesn't bring it back.
+(defun +lv/ctxbar--reshow (&rest _)
+  "Make the tab bar visible again on every frame when the bar is on."
+  (when (and (bound-and-true-p +lv/ctxbar-mode)
+             (not (bound-and-true-p writeroom-mode)))
+    (dolist (f (frame-list))
+      (set-frame-parameter f 'tab-bar-lines 1))))
+
+(add-hook 'writeroom-mode-hook #'+lv/ctxbar--reshow)
+
 (define-minor-mode +lv/ctxbar-mode
   "Show context-aware key hints in the tab bar (zellij-style)."
   :global t
@@ -583,7 +593,9 @@
         (add-hook 'window-selection-change-functions #'+lv/ctxbar-update)
         (add-hook 'after-change-major-mode-hook #'+lv/ctxbar-update)
         (+lv/ctxbar-update)
-        (tab-bar-mode 1))
+        (setq tab-bar-show t)
+        (tab-bar-mode 1)
+        (+lv/ctxbar--reshow))
     (remove-hook 'window-buffer-change-functions #'+lv/ctxbar-update)
     (remove-hook 'window-selection-change-functions #'+lv/ctxbar-update)
     (remove-hook 'after-change-major-mode-hook #'+lv/ctxbar-update)
