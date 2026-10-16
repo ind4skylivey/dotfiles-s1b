@@ -44,6 +44,12 @@
 ;; Doom's packages are pinned to a specific commit and updated from release to
 ;; release. The `unpin!' macro allows you to unpin single packages...
 ;(unpin! pinned-package)
+
+;; lsp-mode: Doom's pin (c74a723, 9.0.1) ships a bug that breaks all LSP
+;; loading (void-function nil from lsp-ts-query.el #'nil placeholder).
+;; Pin to upstream stable release 10.0.0 which contains the fix (#5008).
+;; Remove this line once Doom bumps its own lsp-mode pin past 10.0.0.
+(package! lsp-mode :pin "913a6c07f163205cb568bc68d7dfe677dbc358ab")
 ;; ...or multiple packages
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
