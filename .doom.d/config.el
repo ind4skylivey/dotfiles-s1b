@@ -364,4 +364,18 @@
                            (concat dir path-separator path)
                          dir))))))
 
+;; ===== IDE extras: peek, multiple cursors, treemacs, forge (2026-10-16) =====
+(after! lsp-ui
+  (setq lsp-ui-peek-always-show t      ; open the peek window even with one result
+        lsp-ui-peek-list-width 50))
+
+(after! treemacs
+  (setq treemacs-width 32)
+  (treemacs-follow-mode 1))
+
+;; Forge reads the GitHub token through auth-source (~/.authinfo.gpg,
+;; machine api.github.com, login USER^forge).  No token lives in this repo.
+(after! forge
+  (setq forge-owned-accounts '(("ind4skylivey"))))
+
 (load! "keyhelp")
