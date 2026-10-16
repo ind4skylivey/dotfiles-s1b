@@ -89,3 +89,11 @@
 (package! eee
   :recipe (:host github :repo "eval-exec/eee.el"
            :files (:defaults "*.el" "*.sh")))
+
+;; Agent Shell - LLM integration via ACP protocol
+(package! shell-maker
+  :recipe (:host github :repo "xenodium/shell-maker"))
+(package! acp
+  :recipe (:host github :repo "xenodium/acp.el"))
+(package! agent-shell
+  :recipe (:host github :repo "xenodium/agent-shell"))

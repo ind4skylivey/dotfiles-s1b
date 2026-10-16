@@ -1,0 +1,3 @@
+agent-shell
+:package (shell-maker acp agent-shell)
+:config config.el
