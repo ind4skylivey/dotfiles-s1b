@@ -103,3 +103,9 @@
   :recipe (:host github :repo "xenodium/acp.el"))
 (package! agent-shell
   :recipe (:host github :repo "xenodium/agent-shell"))
+
+;; Linux system file modes
+(package! systemd)
+(package! ssh-config-mode)
+(package! nginx-mode)
+(package! git-modes)
