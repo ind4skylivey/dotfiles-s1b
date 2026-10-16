@@ -63,3 +63,6 @@ FIXES.md
 *.tfstate
 .docker/config.json
 docker-compose.override.yml
+# Doom: downloaded debug adapter bundles (vendor binaries)
+.doom.d/debug-adapters/
+.doom.d/odd/

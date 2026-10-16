@@ -75,7 +75,7 @@
 (package! evil-tutor)
 (package! exwm)
 (package! imenu-list)
-(package! ivy-posframe)
+;; (package! ivy-posframe) ; removed 2026-10-16: replaced ivy by vertico
 (package! mw-thesaurus)
 (package! org-auto-tangle)
 (package! org-web-tools)

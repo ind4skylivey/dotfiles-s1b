@@ -175,9 +175,6 @@
 (after! flycheck
   (setq flycheck-checkers (append flycheck-checkers '(python-flake8))))
 
-(after! ivy-posframe
-  (ivy-posframe-mode 1))
-
 (after! dired
   (setq dired-listing-switches "-alh --group-directories-first"
         dired-kill-when-opening-new-dired-buffer t))  ; Don't create multiple dired buffers
@@ -230,10 +227,13 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'+lsp-go-install-save-hooks)
 
-;; More responsive company completion
-(after! company
-  (setq company-idle-delay 0.2
-        company-minimum-prefix-length 2))
+;; Corfu (replaces Company): automatic, responsive popup
+(after! corfu
+  (setq corfu-auto t
+        corfu-auto-delay 0.15
+        corfu-auto-prefix 2
+        corfu-preview-current nil
+        corfu-preselect 'prompt))
 
 ;; ===== Nix binaries on exec-path (2026-10-16) =====
 ;; Emacs (daemon) doesn't inherit ~/.nix-profile/bin from the shell, so
@@ -247,3 +247,121 @@
         (setenv "PATH" (if (and path (not (string-empty-p path)))
                            (concat dir path-separator path)
                          dir))))))
+
+;; 4MB while LSP is active (Doom sets 1MB in +lsp-optimization-mode; this raises it)
+(add-hook! '+lsp-optimization-mode-hook
+  (defun +lv/lsp-bigger-ipc-h ()
+    (when +lsp-optimization-mode
+      (setq-default read-process-output-max (* 4 1024 1024)))))
+(after! lsp-mode
+  (setq lsp-idle-delay 0.3
+        lsp-log-io nil
+        lsp-inlay-hint-enable t
+        lsp-headerline-breadcrumb-enable t
+        lsp-headerline-breadcrumb-segments '(project file symbols)
+        lsp-lens-enable t
+        lsp-enable-file-watchers t
+        lsp-file-watch-threshold 5000)
+  (dolist (d '("[/\\\\]target\\'" "[/\\\\]node_modules\\'" "[/\\\\]vendor\\'"
+               "[/\\\\]\\.direnv\\'" "[/\\\\]result\\'" "[/\\\\]dist\\'"
+               "[/\\\\]zig-out\\'" "[/\\\\]\\.zig-cache\\'"
+               "[/\\\\]src-tauri[/\\\\]target\\'"))
+    (add-to-list 'lsp-file-watch-ignored-directories d)))
+(after! lsp-rust
+  (setq lsp-rust-analyzer-cargo-watch-command "clippy"
+        lsp-rust-analyzer-proc-macro-enable t
+        lsp-rust-analyzer-display-parameter-hints t
+        lsp-rust-analyzer-display-chaining-hints t
+        lsp-rust-analyzer-display-closure-return-type-hints t))
+(after! lsp-ui
+  (setq lsp-ui-peek-always-show t))
+
+(setq treesit-auto-install-grammar 'always)
+;; Go: organize imports in go-ts-mode too
+(add-hook 'go-ts-mode-hook #'+lsp-go-install-save-hooks)
+
+(defun +lv/cargo-bin (&optional subdir)
+  "Path to the project's target/debug/<crate> (or SUBDIR, e.g. \"src-tauri\")."
+  (let* ((root (file-name-concat (dape-cwd) (or subdir "")))
+         (toml (file-name-concat root "Cargo.toml"))
+         (name (or (and (file-exists-p toml)
+                        (with-temp-buffer
+                          (insert-file-contents toml)
+                          (and (re-search-forward "^name *= *\"\\([^\"]+\\)\"" nil t)
+                               (match-string 1))))
+                   (file-name-nondirectory (directory-file-name root)))))
+    (file-name-concat root "target" "debug" name)))
+
+(after! dape
+  (add-to-list 'dape-configs
+               `(rust-lldb
+                 modes (rust-mode rust-ts-mode rustic-mode)
+                 ensure dape-ensure-command
+                 command "lldb-dap"
+                 compile "cargo build"
+                 :type "lldb-dap" :request "launch"
+                 :cwd dape-cwd
+                 :program ,(lambda () (+lv/cargo-bin))))
+  (add-to-list 'dape-configs
+               `(tauri-lldb
+                 modes (rust-mode rust-ts-mode rustic-mode typescript-mode typescript-ts-mode web-mode vue-mode)
+                 ensure dape-ensure-command
+                 command "lldb-dap"
+                 compile "cargo build --manifest-path src-tauri/Cargo.toml"
+                 :type "lldb-dap" :request "launch"
+                 :cwd ,(lambda () (file-name-concat (dape-cwd) "src-tauri"))
+                 :program ,(lambda () (+lv/cargo-bin "src-tauri"))))
+  (add-to-list 'dape-configs
+               `(zig-lldb
+                 modes (zig-mode zig-ts-mode)
+                 ensure dape-ensure-command
+                 command "lldb-dap"
+                 compile "zig build"
+                 :type "lldb-dap" :request "launch"
+                 :cwd dape-cwd
+                 :program ,(lambda () (car (file-expand-wildcards
+                                             (file-name-concat (dape-cwd) "zig-out" "bin" "*")))))))
+
+(after! apheleia
+  ;; Python: ruff (imports + formatting) instead of black
+  (dolist (m '(python-mode python-ts-mode))
+    (setf (alist-get m apheleia-mode-alist) '(ruff-isort ruff)))
+  ;; Go: gofumpt (as requested by lsp-go-use-gofumpt)
+  (dolist (m '(go-mode go-ts-mode))
+    (setf (alist-get m apheleia-mode-alist) 'gofumpt))
+  ;; Nix: nixfmt (RFC style)
+  (dolist (m '(nix-mode nix-ts-mode))
+    (setf (alist-get m apheleia-mode-alist) 'nixfmt))
+  ;; TOML: taplo
+  (setf (alist-get 'taplo apheleia-formatters) '("taplo" "format" "-"))
+  (dolist (m '(conf-toml-mode toml-ts-mode))
+    (setf (alist-get m apheleia-mode-alist) 'taplo))
+  ;; PHP/Laravel: project Pint (vendor/bin/pint) if present
+  (setf (alist-get 'pint apheleia-formatters)
+        '("vendor/bin/pint" "--quiet" inplace)))
+(defun +lv/php-use-pint-h ()
+  (when (and buffer-file-name (locate-dominating-file buffer-file-name "vendor/bin/pint"))
+    (setq-local default-directory (locate-dominating-file buffer-file-name "vendor/bin/pint"))
+    (setq-local apheleia-formatter 'pint)))
+(add-hook! (php-mode php-ts-mode) #'+lv/php-use-pint-h)
+
+(add-hook! (conf-toml-mode toml-ts-mode) #'lsp-deferred)     ; taplo
+;; Only if the server exists (otherwise lsp-mode asks to install and blocks the daemon)
+(add-hook! (markdown-mode gfm-mode markdown-ts-mode)
+  (defun +lv/markdown-lsp-h () (when (executable-find "marksman") (lsp-deferred))))
+(add-hook! 'sql-mode-hook
+  (defun +lv/sql-lsp-h () (when (executable-find "sqls") (lsp-deferred))))
+
+(dolist (dir (list (expand-file-name "~/go/bin")
+                   (expand-file-name "~/.cargo/bin")
+                   (expand-file-name "~/.local/bin")
+                   (expand-file-name "~/.config/composer/vendor/bin")))
+  (when (file-directory-p dir)
+    (add-to-list 'exec-path dir)
+    (let ((path (getenv "PATH")))
+      (unless (member dir (split-string (or path "") path-separator t))
+        (setenv "PATH" (if (and path (not (string-empty-p path)))
+                           (concat dir path-separator path)
+                         dir))))))
+
+(load! "keyhelp")
