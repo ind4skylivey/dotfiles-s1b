@@ -223,15 +223,14 @@
 (after! lsp-mode
   (setq lsp-rust-server 'rust-analyzer))
 
-;; Go: gofumpt + imports organizados al guardar
+;; Go: gofumpt + organize imports on save
 (after! lsp-mode
   (setq lsp-go-use-gofumpt t))
-(add-hook 'go-mode-hook #'lsp-deferred)
-(defun lsp-go-install-save-hooks ()
+(defun +lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+(add-hook 'go-mode-hook #'+lsp-go-install-save-hooks)
 
-;; Company más responsivo
+;; More responsive company completion
 (after! company
   (setq company-idle-delay 0.2
         company-minimum-prefix-length 2))
@@ -243,5 +242,8 @@
                    "/nix/var/nix/profiles/default/bin"))
   (when (file-directory-p dir)
     (add-to-list 'exec-path dir)
-    (unless (member dir (split-string (or (getenv "PATH") "") path-separator))
-      (setenv "PATH" (concat dir path-separator (getenv "PATH"))))))
+    (let ((path (getenv "PATH")))
+      (unless (member dir (split-string (or path "") path-separator t))
+        (setenv "PATH" (if (and path (not (string-empty-p path)))
+                           (concat dir path-separator path)
+                         dir))))))
