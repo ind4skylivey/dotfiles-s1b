@@ -216,3 +216,32 @@
 ;; Treemacs file explorer
 ;; (after! treemacs
 ;;   (setq treemacs-width 35))
+
+;; ===== LSP code editor setup (2026-10-16) =====
+
+;; Rust: rust-analyzer as the LSP server
+(after! lsp-mode
+  (setq lsp-rust-server 'rust-analyzer))
+
+;; Go: gofumpt + imports organizados al guardar
+(after! lsp-mode
+  (setq lsp-go-use-gofumpt t))
+(add-hook 'go-mode-hook #'lsp-deferred)
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Company más responsivo
+(after! company
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 2))
+
+;; ===== Nix binaries on exec-path (2026-10-16) =====
+;; Emacs (daemon) doesn't inherit ~/.nix-profile/bin from the shell, so
+;; lsp-mode couldn't find `nil'. Add Nix profile bins idempotently.
+(dolist (dir (list (expand-file-name "~/.nix-profile/bin")
+                   "/nix/var/nix/profiles/default/bin"))
+  (when (file-directory-p dir)
+    (add-to-list 'exec-path dir)
+    (unless (member dir (split-string (or (getenv "PATH") "") path-separator))
+      (setenv "PATH" (concat dir path-separator (getenv "PATH"))))))
