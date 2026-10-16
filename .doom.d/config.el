@@ -100,6 +100,61 @@
 (map! :leader
       :desc "Yazi (vterm)" "o y" #'+yazi-vterm-here)
 
+;; ===== gh-use auto-switch for eshell (2026-10-16) =====
+(defvar +gh-profile-enabled t "Non-nil: auto-run gh-use on directory change.")
+(defvar +gh-profile-repos-base "/media/il1v3y/HD2/HDfiles/shenanigans/Repos/")
+(defvar +gh-profile-state-file
+  (expand-file-name "~/.local/state/gh-profile/current"))
+(defvar +gh-profile--proc nil)
+
+(defun +gh-profile-detect (dir)
+  "Same mapping as ~/.local/bin/gh-profile-detect. Returns \"personal\", \"bitflow\" or nil."
+  (let ((d (file-name-as-directory (file-truename (expand-file-name dir)))))
+    (cond ((or (string-prefix-p (concat +gh-profile-repos-base "Personal/") d)
+               (string-prefix-p (concat +gh-profile-repos-base "S1BGr0up/") d))
+           "personal")
+          ((string-prefix-p (concat +gh-profile-repos-base "Bitflow/") d) "bitflow"))))
+
+(defun +gh-profile-current ()
+  (if (file-readable-p +gh-profile-state-file)
+      (string-trim (with-temp-buffer
+                     (insert-file-contents +gh-profile-state-file) (buffer-string)))
+    "none"))
+
+(defun +gh-profile-maybe-switch (&optional dir)
+  "Run gh-use asynchronously if DIR maps to a profile different from the current one."
+  (let* ((dir (or dir default-directory))
+         (profile (and +gh-profile-enabled
+                       (not (getenv "GH_PROFILE_DISABLED"))
+                       (not (file-remote-p dir))
+                       (+gh-profile-detect dir))))
+    (when (and profile
+               (locate-dominating-file dir ".git")          ; only inside a git repo
+               (not (equal profile (+gh-profile-current)))
+               (not (process-live-p +gh-profile--proc))
+               (executable-find "gh-use"))
+      (let ((default-directory dir))
+        (setq +gh-profile--proc
+              (make-process
+               :name "gh-use" :buffer " *gh-use*" :noquery t
+               :command (list "gh-use" profile)
+               :sentinel (lambda (p _e)
+                           (when (memq (process-status p) '(exit signal))
+                             (message "[gh] %s %s" (car (last (process-command p)))  ; no closure: config.el is dynamic-binding
+                                      (if (zerop (process-exit-status p))
+                                          "activado"
+                                        "FALLÓ (ver buffer *gh-use*)"))))))))))
+
+(after! eshell
+  (add-hook 'eshell-directory-change-hook #'+gh-profile-maybe-switch)
+  (add-hook 'eshell-mode-hook #'+gh-profile-maybe-switch))
+
+;; vterm usa /bin/fish, así que ya hereda el hook de fish: no hace falta nada.
+
+(defun +gh-profile-status ()
+  (interactive)
+  (message "[gh] perfil: %s" (+gh-profile-current)))
+
 ;; Disable exit confirmation
 (setq confirm-kill-emacs nil)
 
