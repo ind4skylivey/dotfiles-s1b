@@ -568,6 +568,9 @@
           (force-mode-line-update t))))))
 
 (defun +lv/ctxbar--format ()
+  ;; Window change hooks run after redisplay, so refresh here too;
+  ;; otherwise the bar shows the previous buffer's hints.
+  (+lv/ctxbar-update)
   `((lv-ctxbar menu-item ,+lv/ctxbar--text ignore)))
 
 (defvar +lv/ctxbar--saved nil)
