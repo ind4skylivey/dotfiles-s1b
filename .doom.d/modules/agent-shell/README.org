@@ -1,0 +1,105 @@
+# agent-shell Module for Doom Emacs
+
+This module integrates LLM agents via the Agent Client Protocol (ACP) into Doom Emacs.
+
+## Installation
+
+### Step 1: Sync Doom
+After adding this module, run:
+
+```bash
+doom sync
+```
+
+Then restart Emacs.
+
+### Step 2: Install Agent CLI (Choose One)
+
+You need at least one ACP-compatible agent CLI installed:
+
+#### Cursor (Already Installed! ✓)
+You have Cursor CLI installed at ~/.local/bin/agent
+- Test: `agent acp` should work
+- Command in agent-shell: `M-x agent-shell-opencode`
+
+#### Mistral Vibe
+```bash
+uv tool install mistral-vibe
+```
+
+#### Claude Agent (Anthropic)
+```bash
+npm install -g @agentclientprotocol/claude-agent-acp
+```
+
+#### Google Gemini
+```bash
+# Install gemini-cli with ACP support
+# Check: gemini --experimental-acp
+```
+
+#### OpenAI Codex
+```bash
+npm install -g @agentclientprotocol/codex-acp
+```
+
+### Step 3: Authentication
+
+Edit `/home/il1v3y/.doom.d/modules/agent-shell/config.el` and uncomment the authentication method for your provider.
+
+Examples:
+
+**For Cursor:**
+```elisp
+(setq agent-shell-opencode-authentication
+      (agent-shell-opencode-make-authentication :login t))
+```
+
+**For Claude:**
+```elisp
+(setq agent-shell-anthropic-authentication
+      (agent-shell-anthropic-make-authentication :login t))
+```
+
+**For Mistral:**
+```elisp
+(setq agent-shell-mistral-authentication
+      (agent-shell-mistral-make-authentication :login t))
+```
+
+## Usage
+
+After configuration:
+
+- `SPC a s` - Start generic agent-shell
+- `SPC a c` - Start Claude agent
+- `SPC a m` - Start Mistral agent  
+- `SPC a g` - Start Google agent
+- `SPC a o` - Start OpenAI agent
+
+**In agent-shell buffer:**
+- `SPC p` - Send prompt
+- `SPC s` - Send input
+- `SPC c` - Interrupt
+- `SPC C` - Clear buffer
+- `SPC k` - Kill buffer
+
+## Key Features
+
+- Native Emacs shell integration
+- Multiple LLM providers support
+- Image paste support (wl-paste/xclip already available!)
+- UI mode with syntax highlighting
+- Session management
+
+## Troubleshooting
+
+If you get "No ACP agent found":
+1. Verify the agent CLI is in your PATH: `which agent` (for Cursor)
+2. Ensure the agent supports ACP protocol
+3. Check the agent works from terminal first
+
+## Documentation
+
+- Official: https://github.com/xenodium/agent-shell
+- ACP Protocol: https://agentclientprotocol.com/
