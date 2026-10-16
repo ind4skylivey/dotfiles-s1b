@@ -45,7 +45,7 @@ npm install -g @agentclientprotocol/codex-acp
 
 ### Step 3: Authentication
 
-Edit `/home/il1v3y/.doom.d/modules/agent-shell/config.el` and uncomment the authentication method for your provider.
+Edit `~/.doom.d/modules/agent-shell/config.el` and uncomment the authentication method for your provider.
 
 Examples:
 

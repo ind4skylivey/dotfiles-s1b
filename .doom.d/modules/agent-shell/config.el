@@ -18,15 +18,14 @@
       :desc "Clear buffer" "C" #'agent-shell-clear-buffer
       :desc "Kill buffer" "k" #'kill-this-buffer)
 
-;; Global keybinding to start agent-shell
+;; Global keybindings to start agent-shell
 (map! :leader
-      :desc "Start agent-shell" "a s" #'agent-shell)
+      :desc "Start agent-shell" "a s" #'agent-shell
       :desc "Start Claude" "a c" #'agent-shell-anthropic
       :desc "Start Mistral" "a m" #'agent-shell-mistral
       :desc "Start Google" "a g" #'agent-shell-google
       :desc "Start OpenAI" "a o" #'agent-shell-openai)
 
-<<autentication-config>>
 ;; Authentication configuration for various providers
 ;; Uncomment the one you want to use
 
@@ -44,8 +43,8 @@
 ;;       (agent-shell-anthropic-make-authentication :login t))
 
 ;; ===== Mistral Vibe =====
- (setq agent-shell-mistral-authentication
-       (agent-shell-mistral-make-authentication :login t))
+;; (setq agent-shell-mistral-authentication
+;;       (agent-shell-mistral-make-authentication :login t))
 
 ;; ===== Google Gemini =====
 ;; (setq agent-shell-google-authentication
