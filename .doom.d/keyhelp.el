@@ -552,7 +552,8 @@
    (lambda (chunk)
      (if (string-match "\\`\\(.*?\\) \\([^ ]+\\)\\'" chunk)
          (concat (propertize (match-string 1 chunk) 'face 'font-lock-keyword-face)
-                 " " (match-string 2 chunk))
+                 " " (propertize (match-string 2 chunk) 'face
+                                 '(:foreground "#e0def4")))
        chunk))
    (split-string hint "  " t) "  "))
 
