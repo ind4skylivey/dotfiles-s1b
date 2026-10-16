@@ -179,8 +179,8 @@
    ["Browse"
     ("-" "dired here (SPC o -)" dired-jump)
     ("d" "dired (SPC f d)" +default/dired)
-    ("t" "neotree (SPC o p)" +neotree/open)
-    ("T" "neotree this file (SPC o P)" +neotree/find-this-file)
+    ("t" "treemacs (SPC o p)" +treemacs/toggle)
+    ("T" "treemacs this file (SPC o P)" treemacs-find-file)
     ("p" "private config file (SPC f p)" doom/find-file-in-private-config)
     ("P" "private config dir (SPC f P)" doom/open-private-config)]])
 
@@ -338,8 +338,11 @@
    ["Browse"
     ("-" "dired here (SPC o -)" dired-jump)
     ("d" "dired (SPC f d)" +default/dired)
-    ("p" "neotree (SPC o p)" +neotree/open)
-    ("P" "neotree this file (SPC o P)" +neotree/find-this-file)]])
+    ("p" "treemacs (SPC o p)" +treemacs/toggle)
+    ("P" "treemacs this file (SPC o P)" treemacs-find-file)
+    ("n" "neotree" +neotree/open)]
+   ["Which terminal?"
+    ("?" "terminals tip" (lambda () (interactive) (message "vterm: heavy/interactive jobs. eshell: short commands. SPC p c: builds/tests. kitty: long-running servers/logs. Restarting emacs.service kills vterm/eshell jobs")))]])
 
 ;;; Toggles (SPC t)
 
@@ -473,6 +476,128 @@
     ("R" "restart (SPC q R)" doom/restart)
     ("d" "restart server (SPC q d)" +default/restart-server)]])
 
+;;; IDE extras (peek, multiple cursors, treemacs, forge)
+
+(transient-define-prefix +lv/keyhelp-ide ()
+  "Menu for lsp-ui peek, evil-mc, evil-multiedit, treemacs and forge."
+  [["Peek (lsp-ui)"
+    ("d" "peek definitions (g d)" lsp-ui-peek-find-definitions)
+    ("r" "peek references (g D)" lsp-ui-peek-find-references)
+    ("i" "peek implementations" lsp-ui-peek-find-implementation)
+    ("s" "peek workspace symbol" lsp-ui-peek-find-workspace-symbol)
+    ("k" "doc glance" lsp-ui-doc-glance)]
+   ["Multiple cursors (evil-mc, g z)"
+    ("m" "cursors on all matches (g z m)" evil-mc-make-all-cursors)
+    ("n" "cursor + next match (g z d)" evil-mc-make-and-goto-next-match :transient t)
+    ("N" "cursor + prev match (g z D)" evil-mc-make-and-goto-prev-match :transient t)
+    ("j" "skip, next match (g z s)" evil-mc-skip-and-goto-next-match :transient t)
+    ("z" "cursor here (g z z)" +multiple-cursors/evil-mc-toggle-cursor-here)
+    ("u" "undo last cursor (g z u)" +multiple-cursors/evil-mc-undo-cursor :transient t)
+    ("q" "remove all cursors (g z q)" evil-mc-undo-all-cursors)
+    ("t" "pause/resume cursors (g z t)" +multiple-cursors/evil-mc-toggle-cursors)]
+   ["Multiedit"
+    ("a" "match all (R in visual)" evil-multiedit-match-all)
+    ("e" "match + next (M-d in visual)" evil-multiedit-match-and-next :transient t)
+    ("E" "match + prev (M-D in visual)" evil-multiedit-match-and-prev :transient t)
+    ("x" "toggle / restrict region" evil-multiedit-toggle-or-restrict-region)
+    ("X" "abort" evil-multiedit-abort)]
+   ["Treemacs / Forge"
+    ("T" "toggle treemacs (SPC o p)" +treemacs/toggle)
+    ("f" "treemacs: this file (SPC o P)" treemacs-find-file)
+    ("w" "select treemacs window" treemacs-select-window)
+    ("p" "forge: list PRs" forge-list-pullreqs)
+    ("I" "forge: list issues" forge-list-issues)
+    ("c" "forge: create PR" forge-create-pullreq)
+    ("C" "forge: create issue" forge-create-issue)
+    ("F" "forge: pull topics" forge-pull)]])
+
+;;; Contextual key bar (zellij-style)
+;;
+;; One line in the tab bar showing the most useful keys for the major mode
+;; of the selected window.  The text is cached and only recomputed from
+;; window/buffer change hooks, so redisplay just reads a variable.
+
+(defvar +lv/ctxbar-hints
+  '(((magit-status-mode magit-mode)
+     . "s stage  u unstage  c c commit  P p push  F p pull  b b branch  l l log  TAB fold  ? help  q quit")
+    ((dired-mode)
+     . "RET open  - up  C copy  R rename  D delete  + mkdir  m mark  u unmark  i edit-names  ( details  q quit")
+    ((rustic-mode rust-mode rust-ts-mode)
+     . "gd def  gD refs  K doc  SPC c a action  SPC c r rename  SPC c f format  SPC p c build  SPC d d debug  SPC ? I peek/cursors")
+    ((go-mode go-ts-mode)
+     . "gd def  gD refs  K doc  SPC c a action  SPC c r rename  SPC c f format  SPC p T test  SPC d d debug")
+    ((typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode web-mode vue-mode)
+     . "gd def  gD refs  K doc  SPC c a action  SPC c r rename  SPC c f format  SPC c x errors  SPC p R run")
+    ((org-mode)
+     . "TAB fold  M-RET item  t todo  SPC m s subtree  SPC m l link  SPC m d date  SPC m e export  SPC n r f roam")
+    ((vterm-mode)
+     . "C-c C-t copy-mode  SPC o t popup  SPC o T here  C-c C-c interrupt  servers: kitty")
+    ((eshell-mode)
+     . "C-c C-c interrupt  M-r history  SPC o e popup  heavy-output: vterm")
+    ((prog-mode)
+     . "gd def  K doc  SPC c a action  SPC c r rename  SPC s i symbols  g z m cursors  SPC ? I extras"))
+  "Alist of (MODES . HINT) used by `+lv/ctxbar-mode', first match wins.")
+
+(defvar +lv/ctxbar--text "")
+
+(defun +lv/ctxbar--hint (buffer)
+  (with-current-buffer buffer
+    (or (cl-loop for (modes . hint) in +lv/ctxbar-hints
+                 when (cl-some #'derived-mode-p modes) return hint)
+        "SPC ? key-helper  SPC . find-file  SPC , buffers  SPC t k hide-bar")))
+
+(defun +lv/ctxbar--propertize (hint)
+  "Highlight the key part of each double-space separated HINT chunk."
+  (mapconcat
+   (lambda (chunk)
+     (if (string-match "\\`\\(.*?\\) \\([^ ]+\\)\\'" chunk)
+         (concat (propertize (match-string 1 chunk) 'face 'font-lock-keyword-face)
+                 " " (match-string 2 chunk))
+       chunk))
+   (split-string hint "  " t) "  "))
+
+(defun +lv/ctxbar-update (&rest _)
+  "Recompute the bar text for the selected window, only when it changes."
+  (let ((buf (window-buffer (selected-window))))
+    (unless (or (minibufferp buf)
+                (string-prefix-p " " (buffer-name buf)))
+      (let ((text (concat " " (+lv/ctxbar--propertize (+lv/ctxbar--hint buf)))))
+        (unless (equal text +lv/ctxbar--text)
+          (setq +lv/ctxbar--text text)
+          (force-mode-line-update t))))))
+
+(defun +lv/ctxbar--format ()
+  `((lv-ctxbar menu-item ,+lv/ctxbar--text ignore)))
+
+(defvar +lv/ctxbar--saved nil)
+
+(define-minor-mode +lv/ctxbar-mode
+  "Show context-aware key hints in the tab bar (zellij-style)."
+  :global t
+  (if +lv/ctxbar-mode
+      (progn
+        (setq +lv/ctxbar--saved (list tab-bar-format (bound-and-true-p tab-bar-mode)))
+        (setq tab-bar-format '(+lv/ctxbar--format))
+        (add-hook 'window-buffer-change-functions #'+lv/ctxbar-update)
+        (add-hook 'window-selection-change-functions #'+lv/ctxbar-update)
+        (add-hook 'after-change-major-mode-hook #'+lv/ctxbar-update)
+        (+lv/ctxbar-update)
+        (tab-bar-mode 1))
+    (remove-hook 'window-buffer-change-functions #'+lv/ctxbar-update)
+    (remove-hook 'window-selection-change-functions #'+lv/ctxbar-update)
+    (remove-hook 'after-change-major-mode-hook #'+lv/ctxbar-update)
+    (when +lv/ctxbar--saved
+      (setq tab-bar-format (car +lv/ctxbar--saved))
+      (unless (cadr +lv/ctxbar--saved) (tab-bar-mode -1)))))
+
+(defun +lv/ctxbar-toggle ()
+  "Toggle the contextual key bar."
+  (interactive)
+  (+lv/ctxbar-mode 'toggle)
+  (message "Context key bar %s" (if +lv/ctxbar-mode "on" "off")))
+
+(add-hook 'doom-first-buffer-hook #'+lv/ctxbar-mode)
+
 ;;; Hub (SPC ?)
 
 (transient-define-prefix +lv/keyhelp ()
@@ -494,7 +619,9 @@
     ("i" "Insert (SPC i) ..." +lv/keyhelp-insert)
     ("e" "Evil essentials ..." +lv/keyhelp-evil)
     ("h" "Help / Doom (SPC h) ..." +lv/keyhelp-help)
-    ("Q" "Quit / session (SPC q) ..." +lv/keyhelp-session)]
+    ("Q" "Quit / session (SPC q) ..." +lv/keyhelp-session)
+    ("I" "IDE extras: peek, cursors, treemacs, forge ..." +lv/keyhelp-ide)
+    ("?" "context key bar on/off (SPC t k)" +lv/ctxbar-toggle)]
    ["Copy/Paste"
     ("v" "visual (v)" evil-visual-char)
     ("y" "yank (y)" evil-yank)
@@ -516,4 +643,6 @@
 (map! :leader
       :desc "Key helper" "?" #'+lv/keyhelp
       (:prefix "h"
-       :desc "Open Emacs guide" "G" #'+lv/open-emacs-guide))
+       :desc "Open Emacs guide" "G" #'+lv/open-emacs-guide)
+      (:prefix "t"
+       :desc "Context key bar" "k" #'+lv/ctxbar-toggle))
