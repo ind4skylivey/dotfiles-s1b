@@ -579,3 +579,9 @@ Same as the Nix block: the daemon doesn't inherit the shell PATH.
                            (concat dir path-separator path)
                          dir))))))
 #+end_src
+
+* Key Helper
+Zellij/tmux-style key menu (=SPC ?=) and the personal guide (=SPC h G=). See =keyhelp.el=.
+#+begin_src emacs-lisp
+(load! "keyhelp")
+#+end_src

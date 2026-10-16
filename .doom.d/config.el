@@ -363,3 +363,5 @@
         (setenv "PATH" (if (and path (not (string-empty-p path)))
                            (concat dir path-separator path)
                          dir))))))
+
+(load! "keyhelp")
