@@ -657,6 +657,28 @@ Modules enabled in init.el: =(lsp +peek)=, =multiple-cursors= (evil-mc + evil-mu
   (setq forge-owned-accounts '(("ind4skylivey"))))
 #+end_src
 
+** Linux system files
+Shell (zsh included), TOML, systemd units, SSH config, nginx and git dotfiles open with their own modes. CSV/XML come from =:lang data= in init.el.
+#+begin_src emacs-lisp
+;; ===== Linux system files (2026-10-16) =====
+;; bash-language-server also covers zsh dotfiles (.zshrc, .zshenv).
+(after! lsp-bash
+  (setq lsp-bash-allowed-shells '(sh bash zsh)))
+
+;; TOML gets LSP through taplo.
+(add-hook 'conf-toml-mode-hook #'lsp-deferred)
+(add-hook 'toml-ts-mode-hook #'lsp-deferred)
+
+;; Files with no language server open quietly instead of warning.
+(after! lsp-mode
+  (setq lsp-warn-no-matched-clients nil))
+
+(use-package! systemd :defer t)          ; .service, .timer, .socket, .network
+(use-package! ssh-config-mode :defer t)  ; ~/.ssh/config, known_hosts
+(use-package! nginx-mode :defer t)       ; nginx.conf, sites-*/
+(use-package! git-modes :defer t)        ; .gitconfig, .gitignore, .gitattributes
+#+end_src
+
 * Key Helper
 Zellij/tmux-style key menu (=SPC ?=) and the personal guide (=SPC h G=). See =keyhelp.el=.
 #+begin_src emacs-lisp

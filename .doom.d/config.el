@@ -433,4 +433,22 @@
 (after! forge
   (setq forge-owned-accounts '(("ind4skylivey"))))
 
+;; ===== Linux system files (2026-10-16) =====
+;; bash-language-server also covers zsh dotfiles (.zshrc, .zshenv).
+(after! lsp-bash
+  (setq lsp-bash-allowed-shells '(sh bash zsh)))
+
+;; TOML gets LSP through taplo.
+(add-hook 'conf-toml-mode-hook #'lsp-deferred)
+(add-hook 'toml-ts-mode-hook #'lsp-deferred)
+
+;; Files with no language server open quietly instead of warning.
+(after! lsp-mode
+  (setq lsp-warn-no-matched-clients nil))
+
+(use-package! systemd :defer t)          ; .service, .timer, .socket, .network
+(use-package! ssh-config-mode :defer t)  ; ~/.ssh/config, known_hosts
+(use-package! nginx-mode :defer t)       ; nginx.conf, sites-*/
+(use-package! git-modes :defer t)        ; .gitconfig, .gitignore, .gitattributes
+
 (load! "keyhelp")
