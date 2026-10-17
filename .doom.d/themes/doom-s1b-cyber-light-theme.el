@@ -61,7 +61,7 @@
    (strings        fg-alt)
    (variables      violet)
    (numbers        orange)
-   (region         '("#f7a6e0" "#ffbbee" "brightblack"))
+   (region         '("#6a0dad" "#6600aa" "brightblack"))
    (error          red)
    (warning        orange)
    (success        green)
@@ -83,10 +83,12 @@
    ((line-number-current-line &override) :foreground magenta :weight 'bold)
    (cursor :background "#ff00c8")
    (hl-line :background "#c6a2fb" :extend t)
-   (region :background region :foreground nil :extend t)
+   (region :background region :foreground "#f5eaff" :extend t)
    (vertical-border :foreground base3)
    (mode-line :background modeline-bg :foreground modeline-fg
               :box `(:line-width 2 :color ,magenta) :underline `(:color "#ff00c8" :position t))
+   (mode-line-active :background modeline-bg :foreground modeline-fg
+                     :box `(:line-width 2 :color ,magenta) :underline `(:color "#ff00c8" :position t))
    (mode-line-inactive :background modeline-bg-inactive :foreground modeline-fg-alt
                        :box `(:line-width 1 :color ,base3))
    (mode-line-emphasis :foreground violet :weight 'bold)
@@ -208,7 +210,7 @@
    (doom-modeline-lsp-success :foreground green)
    (doom-modeline-project-root-dir :foreground cyan :weight 'bold)
    ;;;; completion / which-key
-   (vertico-current :background "#f7a6e0" :foreground base8 :weight 'bold :extend t)
+   (vertico-current :background "#6a0dad" :foreground "#f5eaff" :weight 'bold :extend t)
    (orderless-match-face-0 :foreground magenta :weight 'bold)
    (orderless-match-face-1 :foreground blue :weight 'bold)
    (orderless-match-face-2 :foreground green :weight 'bold)
