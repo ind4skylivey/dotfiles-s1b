@@ -83,7 +83,7 @@
    ((line-number-current-line &override) :foreground magenta :weight 'bold)
    (cursor :background "#ff00c8")
    (hl-line :background "#c6a2fb" :extend t)
-   (region :background region :foreground "#f5eaff" :extend t)
+   (region :background region :foreground "#ffffff" :distant-foreground "#ffffff" :extend t)
    (vertical-border :foreground base3)
    (mode-line :background modeline-bg :foreground modeline-fg
               :box `(:line-width 2 :color ,magenta) :underline `(:color "#ff00c8" :position t))
@@ -142,6 +142,7 @@
    (+lv/ctxbar-desc-face :foreground base7 :weight 'semi-bold)
    ;;;; solaire: keep every buffer on the same purple bg (never white)
    (solaire-default-face :background bg)
+   (solaire-region-face :background region :foreground "#ffffff" :distant-foreground "#ffffff" :extend t)
    (solaire-fringe-face :background bg)
    (solaire-hl-line-face :background "#c6a2fb" :extend t)
    (solaire-org-hide-face :foreground bg)
