@@ -40,7 +40,7 @@
 
 (defun +lv/apply-evil-cursors (light)
   (if light
-      (setq evil-normal-state-cursor '(box "#d1007a")
+      (setq evil-normal-state-cursor '(box "#ff00c8")
             evil-insert-state-cursor '(bar "#7a2cff")
             evil-visual-state-cursor '(hollow "#b35c00"))
     (setq evil-normal-state-cursor '(box "#24e5ff")
