@@ -260,6 +260,7 @@ Automatically tangle org files when saving. This is essential for literate confi
 ** Agenda & Capture
 Weekly planning, Bitflow tickets and a monthly note, all living in =~/org= (outside this repo).
 Files: =inbox.org=, =weekly.org=, =bitflow.org=, =monthly.org=. Capture with =SPC X=, agenda with =SPC o A=.
+All of it (agenda, the three templates, pandoc export) is listed in =SPC ? n=.
 
 #+begin_src emacs-lisp
 (after! org
@@ -295,7 +296,7 @@ Placeholder for additional org-mode settings.
 #+end_src
 
 ** RSS (elfeed + elfeed-org)
-Feeds live in =elfeed.org= next to this file (=~/.doom.d/elfeed.org=), so they are versioned with the dotfiles. Open with =M-x =rss=.
+Feeds live in =elfeed.org= next to this file (=~/.doom.d/elfeed.org=), so they are versioned with the dotfiles. Open with =M-x =rss= (Doom gives :app rss no leader key; =SPC o f= is make-frame). RSS keys live in =SPC ? R=.
 
 #+begin_src emacs-lisp
 (setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir)))
