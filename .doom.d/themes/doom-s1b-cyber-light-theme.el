@@ -1,5 +1,8 @@
 ;;; doom-s1b-cyber-light-theme.el --- Cyberpunk light theme with pastel purple -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
+;; Light sibling of doom-outrun-electric: same accent roles (keywords magenta,
+;; functions cyan, types/yellow, strings periwinkle, variables violet), every
+;; accent >= 4.5:1 on both bg and bg-alt.
 ;; Light companion for doom-outrun-electric: pastel purple paper, ink-violet
 ;; text and neon accents darkened enough to stay readable on a light bg.
 ;;
@@ -16,7 +19,7 @@
   ((bg         '("#e9dcf7" "#eeddff" "white"        ))
    (fg         '("#2a1b3d" "#2a1b3d" "black"        ))
    (bg-alt     '("#dccbf0" "#ddccee" "white"        ))
-   (fg-alt     '("#5b4a73" "#5b4a73" "brightblack"  ))
+   (fg-alt     '("#4a3fa8" "#4a3fa8" "brightblack"  ))
 
    (base0      '("#f3eafc" "#f3eafc" "white"        ))
    (base1      '("#e2d3f4" "#e2d3f4" "brightblack"  ))
@@ -28,35 +31,35 @@
    (base7      '("#35264b" "#35264b" "brightblack"  ))
    (base8      '("#1a0f28" "black"   "black"        ))
 
-   (grey       base4)
-   (red        '("#c4002f" "#c4002f" "red"          ))
-   (orange     '("#b35c00" "#b35c00" "brightred"    ))
-   (green      '("#1f7a3a" "#1f7a3a" "green"        ))
-   (teal       '("#007f8c" "#007f8c" "brightgreen"  ))
-   (yellow     '("#8a6a00" "#8a6a00" "yellow"       ))
-   (blue       '("#2b55d6" "#2b55d6" "brightblue"   ))
-   (dark-blue  '("#1d3a9e" "#1d3a9e" "blue"         ))
-   (magenta    '("#d1007a" "#d1007a" "magenta"      ))
-   (violet     '("#7a2cff" "#7a2cff" "brightmagenta"))
-   (pink       '("#c2185b" "#c2185b" "brightmagenta"))
-   (cyan       '("#007f8c" "#007f8c" "brightcyan"   ))
+   (grey       '("#55577a" "#55577a" "gray"         ))
+   (red        '("#ae0029" "#ae0029" "red"          ))
+   (orange     '("#983214" "#983214" "brightred"    ))
+   (green      '("#326100" "#326100" "green"        ))
+   (teal       '("#6a2fd0" "#6a2fd0" "brightgreen"  ))
+   (yellow     '("#7a4f00" "#7a4f00" "yellow"       ))
+   (blue       '("#0055b0" "#0055b0" "brightblue"   ))
+   (dark-blue  '("#2a5a86" "#2a5a86" "blue"         ))
+   (magenta    '("#a6007f" "#a6007f" "magenta"      ))
+   (violet     '("#7d16c6" "#7d16c6" "brightmagenta"))
+   (pink       '("#a8005f" "#a8005f" "brightmagenta"))
+   (cyan       '("#00627a" "#00627a" "brightcyan"   ))
    (dark-cyan  '("#005f69" "#005f69" "cyan"         ))
 
    ;; face categories
-   (highlight      violet)
+   (highlight      blue)
    (vertical-bar   base3)
    (selection      base2)
-   (builtin        violet)
-   (comments       base5)
-   (doc-comments   (doom-darken base5 0.1))
-   (constants      orange)
-   (functions      magenta)
-   (keywords       violet)
-   (methods        teal)
-   (operators      dark-cyan)
-   (type           teal)
-   (strings        green)
-   (variables      dark-blue)
+   (builtin        blue)
+   (comments       grey)
+   (doc-comments   teal)
+   (constants      pink)
+   (functions      cyan)
+   (keywords       magenta)
+   (methods        cyan)
+   (operators      magenta)
+   (type           yellow)
+   (strings        fg-alt)
+   (variables      violet)
    (numbers        orange)
    (region         '("#c9afef" "#ccaaee" "brightblack"))
    (error          red)
