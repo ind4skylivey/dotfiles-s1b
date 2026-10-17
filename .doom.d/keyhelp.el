@@ -355,7 +355,8 @@
     ("c" "fill column" display-fill-column-indicator-mode)
     ("h" "highlight line" hl-line-mode)
     ("W" "whitespace" whitespace-mode)
-    ("T" "theme (SPC h t)" consult-theme)]
+    ("T" "theme (SPC h t)" consult-theme)
+    ("L" "light/dark theme (SPC t L)" +lv/toggle-light-dark)]
    ["Focus"
     ("b" "big font (SPC t b)" doom-big-font-mode)
     ("z" "zen (SPC t z)" +zen/toggle)
@@ -540,6 +541,11 @@
 
 (defvar +lv/ctxbar--text "")
 
+(defface +lv/ctxbar-desc-face '((t :inherit default))
+  "Face for the key/command part of the context bar hints.
+Inherits `default' so it stays readable on light and dark themes."
+  :group 'faces)
+
 (defun +lv/ctxbar--hint (buffer)
   (with-current-buffer buffer
     (or (cl-loop for (modes . hint) in +lv/ctxbar-hints
@@ -553,7 +559,7 @@
      (if (string-match "\\`\\(.*?\\) \\([^ ]+\\)\\'" chunk)
          (concat (propertize (match-string 1 chunk) 'face 'font-lock-keyword-face)
                  " " (propertize (match-string 2 chunk) 'face
-                                 '(:foreground "#e0def4")))
+                                 '+lv/ctxbar-desc-face))
        chunk))
    (split-string hint "  " t) "  "))
 

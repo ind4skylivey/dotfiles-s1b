@@ -1,7 +1,13 @@
 ;; (setq user-full-name "il1v3y"
 ;;       user-mail-address "your-email@example.com")
 
-(setq doom-font (font-spec :family "JetBrains Mono" :size 15))
+(setq doom-font (font-spec :family "VictorMono Nerd Font" :size 16 :weight 'medium))
+
+;; Operator Mono style italics, both themes (no colors here)
+(custom-set-faces!
+ '(font-lock-comment-face :slant italic)
+ '(font-lock-doc-face :slant italic)
+ '(font-lock-keyword-face :slant italic :weight bold))
 
 (custom-theme-set-faces!
  'doom-one
@@ -30,18 +36,107 @@
       doom-modeline-persp-name t
       doom-modeline-buffer-file-name-style 'truncate-with-project)
 
-(setq evil-normal-state-cursor '(box "#24e5ff")
-      evil-insert-state-cursor '(bar "#ff2afc")
-      evil-visual-state-cursor '(hollow "#ff9e64"))
+;; Light/dark auto switch. Noctalia's toggle writes
+;; org.gnome.desktop.interface color-scheme, which xdg-desktop-portal
+;; exposes as org.freedesktop.appearance color-scheme (0 none, 1 dark,
+;; 2 light) and announces via the SettingChanged dbus signal.
+;; Fallback when the portal is unreachable: ask gsettings once.
+(defvar +lv/dark-theme 'doom-outrun-electric)
+(defvar +lv/light-theme 'doom-s1b-cyber-light)
 
-(custom-set-faces!
- '(cursor :background "#24e5ff")
- '(mode-line :background "#0a0f14" :foreground "#e6f6ff" :box (:line-width 1 :color "#ff2afc"))
- '(mode-line-inactive :background "#0a0f14" :foreground "#5a6782" :box (:line-width 1 :color "#1f2233"))
- '(line-number :foreground "#3a4361")
- '(line-number-current-line :foreground "#ff9e64" :weight bold)
- '(region :background "#1f2233")
- '(vertical-border :foreground "#1f2233"))
+(defun +lv/apply-evil-cursors (light)
+  (if light
+      (setq evil-normal-state-cursor '(box "#ff00c8")
+            evil-insert-state-cursor '(bar "#7a2cff")
+            evil-visual-state-cursor '(hollow "#b35c00"))
+    (setq evil-normal-state-cursor '(box "#ff2fd6")
+          evil-insert-state-cursor '(bar "#ff2afc")
+          evil-visual-state-cursor '(hollow "#ff9e64"))))
+
+(defun +lv/system-prefers-light-p ()
+  "Non-nil when the desktop color scheme is light."
+  (let ((v (ignore-errors
+             (require 'dbus)
+             (dbus-call-method :session "org.freedesktop.portal.Desktop"
+                               "/org/freedesktop/portal/desktop"
+                               "org.freedesktop.portal.Settings" "ReadOne"
+                               "org.freedesktop.appearance" "color-scheme"))))
+    (while (consp v) (setq v (car v)))
+    (if (integerp v)
+        (= v 2)
+      (string-match-p "light"
+                      (or (ignore-errors
+                            (shell-command-to-string
+                             "gsettings get org.gnome.desktop.interface color-scheme"))
+                          "")))))
+
+(defun +lv/load-light-dark (light)
+  (let ((theme (if light +lv/light-theme +lv/dark-theme)))
+    (+lv/apply-evil-cursors light)
+    (unless (and (memq theme custom-enabled-themes)
+                 (eq theme doom-theme))
+      (setq doom-theme theme)
+      (mapc #'disable-theme custom-enabled-themes)
+      (load-theme theme t))))
+
+(defun +lv/sync-system-theme (&rest _)
+  "Apply the light or dark theme matching the system color scheme."
+  (interactive)
+  (+lv/load-light-dark (+lv/system-prefers-light-p)))
+
+(defun +lv/toggle-light-dark ()
+  "Manually flip between the light and dark themes."
+  (interactive)
+  (+lv/load-light-dark (not (eq doom-theme +lv/light-theme))))
+
+(defun +lv/portal-setting-changed (ns key value)
+  (when (and (equal ns "org.freedesktop.appearance")
+             (equal key "color-scheme"))
+    (while (consp value) (setq value (car value)))
+    (+lv/load-light-dark (eql value 2))))
+
+(when (and (featurep 'dbusbind) (require 'dbus nil t))
+  (ignore-errors
+    (dbus-register-signal :session nil
+                          "/org/freedesktop/portal/desktop"
+                          "org.freedesktop.portal.Settings" "SettingChanged"
+                          #'+lv/portal-setting-changed)))
+
+(setq doom-theme (if (+lv/system-prefers-light-p) +lv/light-theme +lv/dark-theme))
+(+lv/apply-evil-cursors (eq doom-theme +lv/light-theme))
+
+(map! :leader
+      (:prefix "t"
+       :desc "Light/dark theme" "L" #'+lv/toggle-light-dark))
+
+(custom-theme-set-faces! 'doom-outrun-electric
+ '(default :background "#341c5e")
+ '(fringe :background "#341c5e")
+ '(solaire-default-face :background "#26154a")
+ '(hl-line :background "#44227a")
+ '(solaire-hl-line-face :background "#44227a")
+ '(cursor :background "#ff2fd6")
+ '(mode-line :background "#1a0b3a" :foreground "#f5eaff" :box (:line-width 1 :color "#ff1744"))
+ '(mode-line-active :background "#1a0b3a" :foreground "#f5eaff" :box (:line-width 1 :color "#ff1744"))
+ '(mode-line-inactive :background "#26154a" :foreground "#8a72b8" :box (:line-width 1 :color "#4a2c80"))
+ '(line-number :background "#341c5e" :foreground "#7a5cb8")
+ '(line-number-current-line :background "#4a2585" :foreground "#ff1744" :weight bold)
+ '(region :background "#7b2fd6" :foreground "#ffffff" :distant-foreground "#ffffff")
+ '(show-paren-match :background "#00f0ff" :foreground "#1a0b3a" :weight bold)
+ '(vertical-border :foreground "#ff1744")
+ '(minibuffer-prompt :foreground "#ff1744" :weight bold)
+ '(error :foreground "#ff1744" :weight bold)
+ '(font-lock-warning-face :foreground "#ff1744" :weight bold)
+ '(isearch :background "#ff1744" :foreground "#ffffff" :weight bold)
+ '(lazy-highlight :background "#5c1030" :foreground "#ff8fa3")
+ '(evil-ex-substitute-matches :background "#5c1030" :foreground "#ff8fa3" :strike-through t)
+ '(evil-ex-substitute-replacement :foreground "#ff1744" :weight bold :underline t)
+ '(doom-modeline-bar :background "#ff1744")
+ '(doom-modeline-evil-normal-state :foreground "#ff1744" :weight bold)
+ '(org-level-1 :foreground "#ff1744" :weight bold :height 1.2)
+ '(outline-1 :foreground "#ff1744" :weight bold)
+ '(magit-section-heading :foreground "#ff1744" :weight bold)
+ '(flycheck-error :underline (:style wave :color "#ff1744")))
 
 (setq display-line-numbers-type t)
 
@@ -253,6 +348,9 @@
 ;;   (setq lsp-php-server-command '("intelephense" "--stdio")))
 
 ;; Projectile for project management
+;; Never treat the home directory as a project (it hangs indexing ~)
+(after! projectile
+  (add-to-list 'projectile-ignored-projects "~/"))
 ;; (after! projectile
 ;;   (setq projectile-project-search-path '("~/projects/")))
 
