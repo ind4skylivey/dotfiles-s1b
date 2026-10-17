@@ -73,7 +73,8 @@
     ("d" "diff this file" magit-diff-buffer-file)
     ("S" "stage file" magit-stage-buffer-file)
     ("U" "unstage file" magit-unstage-buffer-file)
-    ("t" "time machine (SPC g t)" git-timemachine-toggle)]
+    ("t" "time machine (SPC g t)" git-timemachine-toggle)
+    ("x" "range-diff (SPC g x)" +lv/git-range-diff)]
    ["Hunks (gutter)"
     ("]" "next hunk (SPC g ])" +vc-gutter/next-hunk)
     ("[" "previous hunk (SPC g [)" +vc-gutter/previous-hunk)
@@ -520,7 +521,7 @@
 
 (defvar +lv/ctxbar-hints
   '(((magit-status-mode magit-mode)
-     . "s stage  u unstage  c c commit  P p push  F p pull  b b branch  l l log  TAB fold  ? help  q quit")
+     . "s stage  u unstage  c c commit  P p push  F p pull  b b branch  l l log  TAB fold  SPC g x range-diff  ? help  q quit")
     ((dired-mode)
      . "RET open  - up  C copy  R rename  D delete  + mkdir  m mark  u unmark  i edit-names  ( details  q quit")
     ((rustic-mode rust-mode rust-ts-mode)

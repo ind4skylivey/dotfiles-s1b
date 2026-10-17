@@ -159,13 +159,23 @@
 (after! org
   (setq org-auto-tangle t))
 
-;; Org Agenda configuration
-;; (setq org-agenda-files '("~/org/"))
-
-;; Org Capture templates
-;; (setq org-capture-templates
-;;       '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
-;;          "* TODO %?\n  %i\n  %a")))
+(after! org
+  (setq org-agenda-files (list org-directory)
+        org-agenda-span 'week
+        org-agenda-start-on-weekday 1
+        org-log-done 'time)
+  (setq org-capture-templates
+        '(("w" "Weekly task" entry
+           (file+olp+datetree "weekly.org")
+           "* TODO %?\nSCHEDULED: %t\n%U"
+           :tree-type week)
+          ("b" "Bitflow ticket" entry
+           (file+headline "bitflow.org" "Tickets")
+           "* TODO %^{Ticket ID|BIT-} %^{Title}\n:PROPERTIES:\n:TICKET: %\\1\n:END:\nSCHEDULED: %^t\n%U\n%?")
+          ("m" "Monthly note" entry
+           (file+olp+datetree "monthly.org")
+           "* %<%B %Y> notes\n%U\n%?"
+           :tree-type month))))
 
 ;; Org Babel languages
 ;; (org-babel-do-load-languages
@@ -174,6 +184,10 @@
 ;;    (python . t)
 ;;    (rust . t)
 ;;    (shell . t)))
+
+(setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir)))
+(after! elfeed-org
+  (setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir))))
 
 (setq-default vterm-shell "/bin/fish")
 (setq-default explicit-shell-file-name "/bin/fish")
@@ -548,5 +562,32 @@
 (use-package! ssh-config-mode :defer t)  ; ~/.ssh/config, known_hosts
 (use-package! nginx-mode :defer t)       ; nginx.conf, sites-*/
 (use-package! git-modes :defer t)        ; .gitconfig, .gitignore, .gitattributes
+
+(defun +lv/git-range-diff (old new)
+  "Show `git range-diff OLD NEW' in a read-only diff-mode buffer.
+OLD and NEW are revision ranges such as origin/main..@{u} and origin/main..HEAD."
+  (interactive
+   (list (read-string "Old range: " "origin/main..@{u}" nil "origin/main..@{u}")
+         (read-string "New range: " "origin/main..HEAD" nil "origin/main..HEAD")))
+  (let* ((root (or (and (fboundp 'magit-toplevel) (magit-toplevel))
+                   (locate-dominating-file default-directory ".git")
+                   (user-error "Not inside a git repository")))
+         (default-directory root)
+         (buf (get-buffer-create "*git range-diff*"))
+         status)
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (setq status (process-file "git" nil t nil "--no-pager" "range-diff" "--no-color" old new))
+        (diff-mode)
+        (setq default-directory root)
+        (view-mode 1)
+        (goto-char (point-min))))
+    (pop-to-buffer buf)
+    (unless (eq status 0)
+      (message "git range-diff exited with %s (see buffer)" status))))
+
+(map! :leader
+      :desc "Range-diff (two ranges)" "g x" #'+lv/git-range-diff)
 
 (load! "keyhelp")

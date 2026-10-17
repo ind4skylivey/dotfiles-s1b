@@ -151,9 +151,10 @@
        ;;ocaml             ; an objective camel
        (org
         +journal             ; enable org journal
-        +roam2               ; create a personal wiki 
+        +roam                ; create a personal wiki (+roam2 is a deprecated alias)
         +pretty              ; replace asterisks with pretty org bullets
-        +publish)            ; create static websites with org
+        +publish             ; create static websites with org
+        +pandoc)             ; export via pandoc (ox-pandoc)
        (php +lsp +tree-sitter)       ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
@@ -187,7 +188,7 @@
        emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
-       rss        ; emacs as an RSS reader
+       (rss +org)        ; emacs as an RSS reader, feeds in elfeed.org
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
