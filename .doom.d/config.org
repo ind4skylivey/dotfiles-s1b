@@ -90,11 +90,80 @@ There are two ways to load a theme. Both assume the theme is installed and avail
       doom-modeline-persp-name t
       doom-modeline-buffer-file-name-style 'truncate-with-project)
 
-(setq evil-normal-state-cursor '(box "#24e5ff")
-      evil-insert-state-cursor '(bar "#ff2afc")
-      evil-visual-state-cursor '(hollow "#ff9e64"))
+;; Light/dark auto switch. Noctalia's toggle writes
+;; org.gnome.desktop.interface color-scheme, which xdg-desktop-portal
+;; exposes as org.freedesktop.appearance color-scheme (0 none, 1 dark,
+;; 2 light) and announces via the SettingChanged dbus signal.
+;; Fallback when the portal is unreachable: ask gsettings once.
+(defvar +lv/dark-theme 'doom-outrun-electric)
+(defvar +lv/light-theme 'doom-s1b-cyber-light)
 
-(custom-set-faces!
+(defun +lv/apply-evil-cursors (light)
+  (if light
+      (setq evil-normal-state-cursor '(box "#d1007a")
+            evil-insert-state-cursor '(bar "#7a2cff")
+            evil-visual-state-cursor '(hollow "#b35c00"))
+    (setq evil-normal-state-cursor '(box "#24e5ff")
+          evil-insert-state-cursor '(bar "#ff2afc")
+          evil-visual-state-cursor '(hollow "#ff9e64"))))
+
+(defun +lv/system-prefers-light-p ()
+  "Non-nil when the desktop color scheme is light."
+  (let ((v (ignore-errors
+             (require 'dbus)
+             (dbus-call-method :session "org.freedesktop.portal.Desktop"
+                               "/org/freedesktop/portal/desktop"
+                               "org.freedesktop.portal.Settings" "ReadOne"
+                               "org.freedesktop.appearance" "color-scheme"))))
+    (while (consp v) (setq v (car v)))
+    (if (integerp v)
+        (= v 2)
+      (string-match-p "light"
+                      (or (ignore-errors
+                            (shell-command-to-string
+                             "gsettings get org.gnome.desktop.interface color-scheme"))
+                          "")))))
+
+(defun +lv/load-light-dark (light)
+  (let ((theme (if light +lv/light-theme +lv/dark-theme)))
+    (+lv/apply-evil-cursors light)
+    (unless (and (memq theme custom-enabled-themes)
+                 (eq theme doom-theme))
+      (setq doom-theme theme)
+      (mapc #'disable-theme custom-enabled-themes)
+      (load-theme theme t))))
+
+(defun +lv/sync-system-theme (&rest _)
+  "Apply the light or dark theme matching the system color scheme."
+  (interactive)
+  (+lv/load-light-dark (+lv/system-prefers-light-p)))
+
+(defun +lv/toggle-light-dark ()
+  "Manually flip between the light and dark themes."
+  (interactive)
+  (+lv/load-light-dark (not (eq doom-theme +lv/light-theme))))
+
+(defun +lv/portal-setting-changed (ns key value)
+  (when (and (equal ns "org.freedesktop.appearance")
+             (equal key "color-scheme"))
+    (while (consp value) (setq value (car value)))
+    (+lv/load-light-dark (eql value 2))))
+
+(when (and (featurep 'dbusbind) (require 'dbus nil t))
+  (ignore-errors
+    (dbus-register-signal :session nil
+                          "/org/freedesktop/portal/desktop"
+                          "org.freedesktop.portal.Settings" "SettingChanged"
+                          #'+lv/portal-setting-changed)))
+
+(setq doom-theme (if (+lv/system-prefers-light-p) +lv/light-theme +lv/dark-theme))
+(+lv/apply-evil-cursors (eq doom-theme +lv/light-theme))
+
+(map! :leader
+      (:prefix "t"
+       :desc "Light/dark theme" "L" #'+lv/toggle-light-dark))
+
+(custom-theme-set-faces! 'doom-outrun-electric
  '(cursor :background "#24e5ff")
  '(mode-line :background "#0a0f14" :foreground "#e6f6ff" :box (:line-width 1 :color "#ff2afc"))
  '(mode-line-inactive :background "#0a0f14" :foreground "#5a6782" :box (:line-width 1 :color "#1f2233"))
