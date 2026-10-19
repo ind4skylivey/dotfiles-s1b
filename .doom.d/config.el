@@ -263,6 +263,26 @@
 (after! persp-mode
   (setq persp-auto-resume-time -1))
 
+;; New workspaces open straight into their own eshell
+;; (SPC TAB n = automatic name, SPC TAB N = asks for a name)
+(defun livey/workspace-new-eshell ()
+  "Create a new workspace and open a fresh eshell in it."
+  (interactive)
+  (+workspace/new)
+  (let ((default-directory (expand-file-name "~/")))
+    (eshell t)))
+
+(defun livey/workspace-new-named-eshell (name)
+  "Create a new workspace called NAME and open a fresh eshell in it."
+  (interactive "sWorkspace name: ")
+  (+workspace/new name)
+  (let ((default-directory (expand-file-name "~/")))
+    (eshell t)))
+
+(map! :leader
+      :desc "New workspace (eshell)"       "TAB n" #'livey/workspace-new-eshell
+      :desc "New named workspace (eshell)" "TAB N" #'livey/workspace-new-named-eshell)
+
 ;; Don't split windows on emacsclient startup
 (add-hook 'server-after-make-frame-hook
           (lambda ()
