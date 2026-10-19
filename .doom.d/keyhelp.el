@@ -161,8 +161,8 @@
     ("]" "next (SPC TAB ])" +workspace/switch-right)
     ("`" "last used (SPC TAB `)" +workspace/other)]
    ["Edit"
-    ("n" "new (SPC TAB n)" +workspace/new)
-    ("N" "new named (SPC TAB N)" +workspace/new-named)
+    ("n" "new + eshell (SPC TAB n)" livey/workspace-new-eshell)
+    ("N" "new named + eshell (SPC TAB N)" livey/workspace-new-named-eshell)
     ("r" "rename (SPC TAB r)" +workspace/rename)
     ("d" "kill (SPC TAB d)" +workspace/kill)
     ("<" "move left" +workspace/swap-left)
