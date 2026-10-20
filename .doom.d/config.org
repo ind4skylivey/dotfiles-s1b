@@ -212,6 +212,8 @@ eshell aliases (=sec-help=), dashboard SEC entries and a modeline task timer
 =doom-outrun-electric=; the overrides above win wherever both touch the same face.
 #+begin_src emacs-lisp
 (load! "s1b-neon")
+;; Icons use the installed Symbols Nerd Font (the Mono variant is not packaged here).
+(setq nerd-icons-font-family "Symbols Nerd Font")
 #+end_src
 
 * LINE NUMBERS

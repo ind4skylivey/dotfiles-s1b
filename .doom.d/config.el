@@ -142,6 +142,8 @@
  '(flycheck-error :underline (:style wave :color "#ff1744")))
 
 (load! "s1b-neon")
+;; Icons use the installed Symbols Nerd Font (the Mono variant is not packaged here).
+(setq nerd-icons-font-family "Symbols Nerd Font")
 
 (setq display-line-numbers-type t)
 
