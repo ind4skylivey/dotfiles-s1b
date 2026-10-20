@@ -392,6 +392,11 @@
     ("p" "treemacs (SPC o p)" +treemacs/toggle)
     ("P" "treemacs this file (SPC o P)" treemacs-find-file)
     ("n" "neotree" +neotree/open)]
+   ["Task timer / SEC"
+    ("z" "start task timer (SPC o z)" livey/task-start)
+    ("Z" "stop task timer (SPC o Z)" livey/task-stop)
+    ("S" "SEC lab dired (dashboard)" livey/sec-open-root)
+    ("h" "SEC eshell aliases (sec-help)" (lambda () (interactive) (message "eshell: %s" (string-trim (eshell/sec-help)))))]
    ["Which terminal?"
     ("?" "terminals tip" (lambda () (interactive) (message "vterm: heavy/interactive jobs. eshell: short commands. SPC p c: builds/tests. kitty: long-running servers/logs. Restarting emacs.service kills vterm/eshell jobs")))]])
 
@@ -613,7 +618,7 @@
     ((vterm-mode)
      . "C-c C-t copy-mode  SPC o t popup  SPC o T here  C-c C-c interrupt  servers: kitty")
     ((eshell-mode)
-     . "C-c C-c interrupt  M-r history  SPC o e popup  heavy-output: vterm")
+     . "C-c C-c interrupt  M-r history  SPC o e popup  sec-help SEC aliases  heavy-output: vterm")
     ((prog-mode)
      . "gd def  K doc  SPC c a action  SPC c r rename  SPC s i symbols  g z m cursors  SPC ? I extras"))
   "Alist of (MODES . HINT) used by `+lv/ctxbar-mode', first match wins.")

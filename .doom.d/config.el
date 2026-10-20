@@ -49,9 +49,12 @@
       (setq evil-normal-state-cursor '(box "#ff00c8")
             evil-insert-state-cursor '(bar "#7a2cff")
             evil-visual-state-cursor '(hollow "#b35c00"))
-    (setq evil-normal-state-cursor '(box "#ff2fd6")
-          evil-insert-state-cursor '(bar "#ff2afc")
-          evil-visual-state-cursor '(hollow "#ff9e64"))))
+    ;; S1B neon cursors (2026-10-19)
+    (setq evil-normal-state-cursor '(box "#ff2e63")
+          evil-insert-state-cursor '(bar "#39ff14")
+          evil-visual-state-cursor '(hollow "#00f0ff")
+          evil-replace-state-cursor '(hbar "#ff9f1c")
+          evil-emacs-state-cursor '(box "#d98cff"))))
 
 (defun +lv/system-prefers-light-p ()
   "Non-nil when the desktop color scheme is light."
@@ -110,9 +113,9 @@
        :desc "Light/dark theme" "L" #'+lv/toggle-light-dark))
 
 (custom-theme-set-faces! 'doom-outrun-electric
- '(default :background "#341c5e")
+ '(default :background "#341c5e" :foreground "#c9b6ff")
  '(fringe :background "#341c5e")
- '(solaire-default-face :background "#26154a")
+ '(solaire-default-face :background "#26154a" :foreground "#c9b6ff") ; neon fg: solaire would otherwise keep the theme fg
  '(hl-line :background "#44227a")
  '(solaire-hl-line-face :background "#44227a")
  '(cursor :background "#ff2fd6")
@@ -137,6 +140,8 @@
  '(outline-1 :foreground "#ff1744" :weight bold)
  '(magit-section-heading :foreground "#ff1744" :weight bold)
  '(flycheck-error :underline (:style wave :color "#ff1744")))
+
+(load! "s1b-neon")
 
 (setq display-line-numbers-type t)
 
