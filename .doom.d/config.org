@@ -8,6 +8,7 @@
 - [[#fonts][FONTS]]
   - [[#org-mode-font-scaling][Org Mode Font Scaling]]
 - [[#theme][THEME]]
+  - [[#s1b-neon-layer][S1B neon layer]]
 - [[#line-numbers][LINE NUMBERS]]
 - [[#keybindings][KEYBINDINGS]]
   - [[#future-keybindings][Future Keybindings]]
@@ -15,7 +16,9 @@
   - [[#org-modern][Org Modern]]
   - [[#hl-todo][HL-TODO]]
   - [[#org-auto-tangle][Org Auto-Tangle]]
+  - [[#agenda--capture][Agenda & Capture]]
   - [[#future-org-configuration][Future Org Configuration]]
+  - [[#rss-elfeed--elfeed-org][RSS (elfeed + elfeed-org)]]
 - [[#shell-configuration][SHELL CONFIGURATION]]
 - [[#general-settings][GENERAL SETTINGS]]
   - [[#future-general-settings][Future General Settings]]
@@ -109,9 +112,12 @@ There are two ways to load a theme. Both assume the theme is installed and avail
       (setq evil-normal-state-cursor '(box "#ff00c8")
             evil-insert-state-cursor '(bar "#7a2cff")
             evil-visual-state-cursor '(hollow "#b35c00"))
-    (setq evil-normal-state-cursor '(box "#ff2fd6")
-          evil-insert-state-cursor '(bar "#ff2afc")
-          evil-visual-state-cursor '(hollow "#ff9e64"))))
+    ;; S1B neon cursors (2026-10-19)
+    (setq evil-normal-state-cursor '(box "#ff2e63")
+          evil-insert-state-cursor '(bar "#39ff14")
+          evil-visual-state-cursor '(hollow "#00f0ff")
+          evil-replace-state-cursor '(hbar "#ff9f1c")
+          evil-emacs-state-cursor '(box "#d98cff"))))
 
 (defun +lv/system-prefers-light-p ()
   "Non-nil when the desktop color scheme is light."
@@ -170,9 +176,9 @@ There are two ways to load a theme. Both assume the theme is installed and avail
        :desc "Light/dark theme" "L" #'+lv/toggle-light-dark))
 
 (custom-theme-set-faces! 'doom-outrun-electric
- '(default :background "#341c5e")
+ '(default :background "#341c5e" :foreground "#c9b6ff")
  '(fringe :background "#341c5e")
- '(solaire-default-face :background "#26154a")
+ '(solaire-default-face :background "#26154a" :foreground "#c9b6ff") ; neon fg: solaire would otherwise keep the theme fg
  '(hl-line :background "#44227a")
  '(solaire-hl-line-face :background "#44227a")
  '(cursor :background "#ff2fd6")
@@ -197,6 +203,17 @@ There are two ways to load a theme. Both assume the theme is installed and avail
  '(outline-1 :foreground "#ff1744" :weight bold)
  '(magit-section-heading :foreground "#ff1744" :weight bold)
  '(flycheck-error :underline (:style wave :color "#ff1744")))
+#+end_src
+
+** S1B neon layer
+Neon palette, two-line eshell prompt (=└─ ☠ λ=), S1B GR0UP dashboard banner, SEC lab
+eshell aliases (=sec-help=), dashboard SEC entries and a modeline task timer
+(=SPC o z= start / =SPC o Z= stop). Lives in =s1b-neon.el=. Its faces only apply to
+=doom-outrun-electric=; the overrides above win wherever both touch the same face.
+#+begin_src emacs-lisp
+(load! "s1b-neon")
+;; Icons use the installed Symbols Nerd Font (the Mono variant is not packaged here).
+(setq nerd-icons-font-family "Symbols Nerd Font")
 #+end_src
 
 * LINE NUMBERS
@@ -255,18 +272,35 @@ Automatically tangle org files when saving. This is essential for literate confi
   (setq org-auto-tangle t))
 #+end_src
 
-** Future Org Configuration
-Placeholder for additional org-mode settings like agenda, capture templates, etc.
+** Agenda & Capture
+Weekly planning, Bitflow tickets and a monthly note, all living in =~/org= (outside this repo).
+Files: =inbox.org=, =weekly.org=, =bitflow.org=, =monthly.org=. Capture with =SPC X=, agenda with =SPC o A=.
+All of it (agenda, the three templates, pandoc export) is listed in =SPC ? n=.
 
 #+begin_src emacs-lisp
-;; Org Agenda configuration
-;; (setq org-agenda-files '("~/org/"))
+(after! org
+  (setq org-agenda-files (list org-directory)
+        org-agenda-span 'week
+        org-agenda-start-on-weekday 1
+        org-log-done 'time)
+  (setq org-capture-templates
+        '(("w" "Weekly task" entry
+           (file+olp+datetree "weekly.org")
+           "* TODO %?\nSCHEDULED: %t\n%U"
+           :tree-type week)
+          ("b" "Bitflow ticket" entry
+           (file+headline "bitflow.org" "Tickets")
+           "* TODO %^{Ticket ID|BIT-} %^{Title}\n:PROPERTIES:\n:TICKET: %\\1\n:END:\nSCHEDULED: %^t\n%U\n%?")
+          ("m" "Monthly note" entry
+           (file+olp+datetree "monthly.org")
+           "* %<%B %Y> notes\n%U\n%?"
+           :tree-type month))))
+#+end_src
 
-;; Org Capture templates
-;; (setq org-capture-templates
-;;       '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
-;;          "* TODO %?\n  %i\n  %a")))
+** Future Org Configuration
+Placeholder for additional org-mode settings.
 
+#+begin_src emacs-lisp
 ;; Org Babel languages
 ;; (org-babel-do-load-languages
 ;;  'org-babel-load-languages
@@ -274,6 +308,15 @@ Placeholder for additional org-mode settings like agenda, capture templates, etc
 ;;    (python . t)
 ;;    (rust . t)
 ;;    (shell . t)))
+#+end_src
+
+** RSS (elfeed + elfeed-org)
+Feeds live in =elfeed.org= next to this file (=~/.doom.d/elfeed.org=), so they are versioned with the dotfiles. Open with =M-x =rss= (Doom gives :app rss no leader key; =SPC o f= is make-frame). RSS keys live in =SPC ? R=.
+
+#+begin_src emacs-lisp
+(setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir)))
+(after! elfeed-org
+  (setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir))))
 #+end_src
 
 * SHELL CONFIGURATION
@@ -795,6 +838,38 @@ Shell (zsh included), TOML, systemd units, SSH config, nginx and git dotfiles op
 (use-package! ssh-config-mode :defer t)  ; ~/.ssh/config, known_hosts
 (use-package! nginx-mode :defer t)       ; nginx.conf, sites-*/
 (use-package! git-modes :defer t)        ; .gitconfig, .gitignore, .gitattributes
+#+end_src
+
+** Git range-diff
+Compare two versions of a branch (e.g. a PR before and after a rebase / force-push) with =git range-diff=. =SPC g x=, also in =SPC ? g=.
+
+#+begin_src emacs-lisp
+(defun +lv/git-range-diff (old new)
+  "Show `git range-diff OLD NEW' in a read-only diff-mode buffer.
+OLD and NEW are revision ranges such as origin/main..@{u} and origin/main..HEAD."
+  (interactive
+   (list (read-string "Old range: " "origin/main..@{u}" nil "origin/main..@{u}")
+         (read-string "New range: " "origin/main..HEAD" nil "origin/main..HEAD")))
+  (let* ((root (or (and (fboundp 'magit-toplevel) (magit-toplevel))
+                   (locate-dominating-file default-directory ".git")
+                   (user-error "Not inside a git repository")))
+         (default-directory root)
+         (buf (get-buffer-create "*git range-diff*"))
+         status)
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (setq status (process-file "git" nil t nil "--no-pager" "range-diff" "--no-color" old new))
+        (diff-mode)
+        (setq default-directory root)
+        (view-mode 1)
+        (goto-char (point-min))))
+    (pop-to-buffer buf)
+    (unless (eq status 0)
+      (message "git range-diff exited with %s (see buffer)" status))))
+
+(map! :leader
+      :desc "Range-diff (two ranges)" "g x" #'+lv/git-range-diff)
 #+end_src
 
 * Key Helper

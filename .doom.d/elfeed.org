@@ -1,0 +1,17 @@
+#+TITLE: Elfeed feeds
+# Read by elfeed-org (rmh-elfeed-org-files points here). Tags after the URL
+# become elfeed tags; the :elfeed: tag on the root heading is required.
+
+* Feeds :elfeed:
+** Emacs :emacs:
+*** https://planet.emacslife.com/atom.xml
+*** https://sachachua.com/blog/feed/
+** Rust :rust:
+*** https://this-week-in-rust.org/atom.xml
+*** https://blog.rust-lang.org/feed.xml
+** Linux :linux:
+*** https://lwn.net/headlines/rss
+*** https://archlinux.org/feeds/news/ :arch:
+** Security :sec:
+*** https://krebsonsecurity.com/feed/
+*** https://www.cisa.gov/cybersecurity-advisories/all.xml :cisa:

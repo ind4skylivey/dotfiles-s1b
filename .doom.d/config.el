@@ -49,9 +49,12 @@
       (setq evil-normal-state-cursor '(box "#ff00c8")
             evil-insert-state-cursor '(bar "#7a2cff")
             evil-visual-state-cursor '(hollow "#b35c00"))
-    (setq evil-normal-state-cursor '(box "#ff2fd6")
-          evil-insert-state-cursor '(bar "#ff2afc")
-          evil-visual-state-cursor '(hollow "#ff9e64"))))
+    ;; S1B neon cursors (2026-10-19)
+    (setq evil-normal-state-cursor '(box "#ff2e63")
+          evil-insert-state-cursor '(bar "#39ff14")
+          evil-visual-state-cursor '(hollow "#00f0ff")
+          evil-replace-state-cursor '(hbar "#ff9f1c")
+          evil-emacs-state-cursor '(box "#d98cff"))))
 
 (defun +lv/system-prefers-light-p ()
   "Non-nil when the desktop color scheme is light."
@@ -110,9 +113,9 @@
        :desc "Light/dark theme" "L" #'+lv/toggle-light-dark))
 
 (custom-theme-set-faces! 'doom-outrun-electric
- '(default :background "#341c5e")
+ '(default :background "#341c5e" :foreground "#c9b6ff")
  '(fringe :background "#341c5e")
- '(solaire-default-face :background "#26154a")
+ '(solaire-default-face :background "#26154a" :foreground "#c9b6ff") ; neon fg: solaire would otherwise keep the theme fg
  '(hl-line :background "#44227a")
  '(solaire-hl-line-face :background "#44227a")
  '(cursor :background "#ff2fd6")
@@ -138,6 +141,10 @@
  '(magit-section-heading :foreground "#ff1744" :weight bold)
  '(flycheck-error :underline (:style wave :color "#ff1744")))
 
+(load! "s1b-neon")
+;; Icons use the installed Symbols Nerd Font (the Mono variant is not packaged here).
+(setq nerd-icons-font-family "Symbols Nerd Font")
+
 (setq display-line-numbers-type t)
 
 (map! :leader
@@ -159,13 +166,23 @@
 (after! org
   (setq org-auto-tangle t))
 
-;; Org Agenda configuration
-;; (setq org-agenda-files '("~/org/"))
-
-;; Org Capture templates
-;; (setq org-capture-templates
-;;       '(("t" "Todo" entry (file+headline "~/org/tasks.org" "Tasks")
-;;          "* TODO %?\n  %i\n  %a")))
+(after! org
+  (setq org-agenda-files (list org-directory)
+        org-agenda-span 'week
+        org-agenda-start-on-weekday 1
+        org-log-done 'time)
+  (setq org-capture-templates
+        '(("w" "Weekly task" entry
+           (file+olp+datetree "weekly.org")
+           "* TODO %?\nSCHEDULED: %t\n%U"
+           :tree-type week)
+          ("b" "Bitflow ticket" entry
+           (file+headline "bitflow.org" "Tickets")
+           "* TODO %^{Ticket ID|BIT-} %^{Title}\n:PROPERTIES:\n:TICKET: %\\1\n:END:\nSCHEDULED: %^t\n%U\n%?")
+          ("m" "Monthly note" entry
+           (file+olp+datetree "monthly.org")
+           "* %<%B %Y> notes\n%U\n%?"
+           :tree-type month))))
 
 ;; Org Babel languages
 ;; (org-babel-do-load-languages
@@ -174,6 +191,10 @@
 ;;    (python . t)
 ;;    (rust . t)
 ;;    (shell . t)))
+
+(setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir)))
+(after! elfeed-org
+  (setq rmh-elfeed-org-files (list (expand-file-name "elfeed.org" doom-user-dir))))
 
 (setq-default vterm-shell "/bin/fish")
 (setq-default explicit-shell-file-name "/bin/fish")
@@ -568,5 +589,32 @@
 (use-package! ssh-config-mode :defer t)  ; ~/.ssh/config, known_hosts
 (use-package! nginx-mode :defer t)       ; nginx.conf, sites-*/
 (use-package! git-modes :defer t)        ; .gitconfig, .gitignore, .gitattributes
+
+(defun +lv/git-range-diff (old new)
+  "Show `git range-diff OLD NEW' in a read-only diff-mode buffer.
+OLD and NEW are revision ranges such as origin/main..@{u} and origin/main..HEAD."
+  (interactive
+   (list (read-string "Old range: " "origin/main..@{u}" nil "origin/main..@{u}")
+         (read-string "New range: " "origin/main..HEAD" nil "origin/main..HEAD")))
+  (let* ((root (or (and (fboundp 'magit-toplevel) (magit-toplevel))
+                   (locate-dominating-file default-directory ".git")
+                   (user-error "Not inside a git repository")))
+         (default-directory root)
+         (buf (get-buffer-create "*git range-diff*"))
+         status)
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (setq status (process-file "git" nil t nil "--no-pager" "range-diff" "--no-color" old new))
+        (diff-mode)
+        (setq default-directory root)
+        (view-mode 1)
+        (goto-char (point-min))))
+    (pop-to-buffer buf)
+    (unless (eq status 0)
+      (message "git range-diff exited with %s (see buffer)" status))))
+
+(map! :leader
+      :desc "Range-diff (two ranges)" "g x" #'+lv/git-range-diff)
 
 (load! "keyhelp")

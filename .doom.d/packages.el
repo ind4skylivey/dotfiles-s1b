@@ -83,6 +83,7 @@
 (package! peep-dired)
 (package! password-store)
 (package! rainbow-mode)
+(package! rainbow-delimiters) ; s1b-neon.el
 (package! resize-window)
 (package! tldr)
 (package! wc-mode)

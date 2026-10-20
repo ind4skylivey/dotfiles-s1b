@@ -108,9 +108,9 @@ CI: `.github/workflows/validate.yml` (`actions/checkout@v5`, ShellCheck, tests, 
 
 ### Doom Emacs
 
-![Doom Emacs](.github/screenshots/emacs.png)
+![Doom Emacs S1B neon dashboard](.github/screenshots/emacs-s1b-neon-dashboard.png)
 
-Seamless editor + file browser integration with Catppuccin theme.
+The S1B neon layer on top of `doom-outrun-electric`: a custom S1B GR0UP dashboard banner, quick links to the SEC lab, a red-team accented modeline and VictorMono with cursive italics.
 
 ### Tmux + Zellij
 

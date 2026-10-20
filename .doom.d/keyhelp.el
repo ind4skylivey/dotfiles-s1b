@@ -23,6 +23,48 @@
   (interactive)
   (find-file +lv/emacs-guide-file))
 
+;;; Org / Agenda / RSS helpers
+
+(defun +lv/org-capture-weekly ()
+  "Capture template w: TODO in ~/org/weekly.org, filed under this week."
+  (interactive)
+  (org-capture nil "w"))
+
+(defun +lv/org-capture-bitflow ()
+  "Capture template b: Bitflow ticket in ~/org/bitflow.org (asks ID, title, date)."
+  (interactive)
+  (org-capture nil "b"))
+
+(defun +lv/org-capture-monthly ()
+  "Capture template m: note in ~/org/monthly.org, filed under this month."
+  (interactive)
+  (org-capture nil "m"))
+
+(defun +lv/org-agenda-week ()
+  "Open the weekly agenda (Monday first) for the files in ~/org."
+  (interactive)
+  (org-agenda nil "a"))
+
+(defun +lv/org-pandoc-export ()
+  "Export the current Org buffer with pandoc (ox-pandoc), asking the format."
+  (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Open an Org buffer first"))
+  (require 'ox-pandoc)
+  (let* ((formats '(("docx" . org-pandoc-export-to-docx)
+                    ("markdown (GitHub)" . org-pandoc-export-to-gfm)
+                    ("odt" . org-pandoc-export-to-odt)
+                    ("html5" . org-pandoc-export-to-html5)
+                    ("pdf (needs LaTeX)" . org-pandoc-export-to-latex-pdf)
+                    ("epub3" . org-pandoc-export-to-epub3)))
+         (choice (completing-read "Pandoc export to: " formats nil t)))
+    (call-interactively (cdr (assoc choice formats)))))
+
+(defun +lv/open-elfeed-feeds ()
+  "Open the elfeed-org feed list (~/.doom.d/elfeed.org)."
+  (interactive)
+  (find-file (car rmh-elfeed-org-files)))
+
 ;;; Search (SPC s)
 
 (transient-define-prefix +lv/keyhelp-search ()
@@ -73,7 +115,8 @@
     ("d" "diff this file" magit-diff-buffer-file)
     ("S" "stage file" magit-stage-buffer-file)
     ("U" "unstage file" magit-unstage-buffer-file)
-    ("t" "time machine (SPC g t)" git-timemachine-toggle)]
+    ("t" "time machine (SPC g t)" git-timemachine-toggle)
+    ("x" "range-diff (SPC g x)" +lv/git-range-diff)]
    ["Hunks (gutter)"
     ("]" "next hunk (SPC g ])" +vc-gutter/next-hunk)
     ("[" "previous hunk (SPC g [)" +vc-gutter/previous-hunk)
@@ -287,17 +330,25 @@
 
 (transient-define-prefix +lv/keyhelp-notes ()
   "Org, Org-roam and journal menu."
-  [["Org"
-    ("a" "agenda (SPC o A)" org-agenda)
-    ("c" "capture (SPC X)" org-capture)
+  [["Org / Agenda"
+    ("a" "agenda menu (SPC o A / SPC o a a)" org-agenda)
+    ("A" "this week, from Monday (SPC o A a)" +lv/org-agenda-week)
+    ("c" "capture menu (SPC X)" org-capture)
     ("t" "todo list (SPC n t)" org-todo-list)
     ("m" "tags view (SPC n m)" org-tags-view)
     ("v" "search view (SPC n v)" org-search-view)
-    ("l" "store link (SPC n l)" org-store-link)]
-   ["Notes"
+    ("l" "store link (SPC n l)" org-store-link)
+    ("?" "agenda keys tip" (lambda () (interactive) (message "Agenda: t todo/DONE, H/L move date -1/+1 day, SPC m d s schedule, [ ] prev/next week, . today, g r redo, RET open, C capture")))]
+   ["Capture templates (SPC X)"
+    ("w" "w weekly task -> weekly.org" +lv/org-capture-weekly)
+    ("k" "b Bitflow ticket: BIT- id, title, date" +lv/org-capture-bitflow)
+    ("M" "m monthly note -> monthly.org" +lv/org-capture-monthly)]
+   ["Notes / export"
     ("f" "find in notes (SPC n f)" +default/find-in-notes)
     ("F" "browse notes (SPC n F)" +default/browse-notes)
-    ("s" "search notes (SPC n s)" +default/org-notes-search)]
+    ("s" "search notes (SPC n s)" +default/org-notes-search)
+    ("e" "export menu (SPC m e, p = pandoc)" org-export-dispatch)
+    ("p" "export with pandoc (docx, md, odt...)" +lv/org-pandoc-export)]
    ["Clock"
     ("i" "clock in" org-clock-in)
     ("o" "clock out" org-clock-out)
@@ -334,13 +385,18 @@
     ("r" "REPL (SPC o r)" +eval/open-repl-other-window)
     ("R" "REPL here (SPC o R)" +eval/open-repl-same-window)
     ("a" "org agenda (SPC o A)" org-agenda)
-    ("f" "RSS (elfeed)" =rss)]
+    ("f" "RSS / elfeed (M-x =rss)" =rss)]
    ["Browse"
     ("-" "dired here (SPC o -)" dired-jump)
     ("d" "dired (SPC f d)" +default/dired)
     ("p" "treemacs (SPC o p)" +treemacs/toggle)
     ("P" "treemacs this file (SPC o P)" treemacs-find-file)
     ("n" "neotree" +neotree/open)]
+   ["Task timer / SEC"
+    ("z" "start task timer (SPC o z)" livey/task-start)
+    ("Z" "stop task timer (SPC o Z)" livey/task-stop)
+    ("S" "SEC lab dired (dashboard)" livey/sec-open-root)
+    ("h" "SEC eshell aliases (sec-help)" (lambda () (interactive) (message "eshell: %s" (string-trim (eshell/sec-help)))))]
    ["Which terminal?"
     ("?" "terminals tip" (lambda () (interactive) (message "vterm: heavy/interactive jobs. eshell: short commands. SPC p c: builds/tests. kitty: long-running servers/logs. Restarting emacs.service kills vterm/eshell jobs")))]])
 
@@ -477,6 +533,28 @@
     ("R" "restart (SPC q R)" doom/restart)
     ("d" "restart server (SPC q d)" +default/restart-server)]])
 
+;;; RSS (elfeed + elfeed-org)
+;;
+;; Doom's :app rss has no leader key; `=rss' opens elfeed in its own
+;; workspace.  The list keys below only show inside the elfeed list.
+
+(transient-define-prefix +lv/keyhelp-rss ()
+  "RSS menu (elfeed, feeds in ~/.doom.d/elfeed.org)."
+  [["RSS"
+    ("f" "open RSS (M-x =rss)" =rss)
+    ("u" "fetch all feeds (g R in list)" elfeed-update)
+    ("e" "edit feeds (elfeed.org)" +lv/open-elfeed-feeds)
+    ("?" "list keys tip" (lambda () (interactive) (message "elfeed list: RET read, S-RET/g o browser, u mark read, U mark unread, s filter, c clear filter, g R fetch, r redraw, + / - tag, q quit")))]
+   ["In the elfeed list"
+    :if-mode elfeed-search-mode
+    ("RET" "read entry (RET)" elfeed-search-show-entry)
+    ("b" "open in browser (S-RET / g o)" elfeed-search-browse-url)
+    ("r" "mark read (u)" elfeed-search-untag-all-unread)
+    ("U" "mark unread (U)" elfeed-search-tag-all-unread)
+    ("s" "live filter (s)" elfeed-search-live-filter)
+    ("c" "clear filter (c)" elfeed-search-clear-filter)
+    ("g" "fetch feeds (g R)" elfeed-search-fetch)]])
+
 ;;; IDE extras (peek, multiple cursors, treemacs, forge)
 
 (transient-define-prefix +lv/keyhelp-ide ()
@@ -520,7 +598,7 @@
 
 (defvar +lv/ctxbar-hints
   '(((magit-status-mode magit-mode)
-     . "s stage  u unstage  c c commit  P p push  F p pull  b b branch  l l log  TAB fold  ? help  q quit")
+     . "s stage  u unstage  c c commit  P p push  F p pull  b b branch  l l log  TAB fold  SPC g x range-diff  ? help  q quit")
     ((dired-mode)
      . "RET open  - up  C copy  R rename  D delete  + mkdir  m mark  u unmark  i edit-names  ( details  q quit")
     ((rustic-mode rust-mode rust-ts-mode)
@@ -531,10 +609,16 @@
      . "gd def  gD refs  K doc  SPC c a action  SPC c r rename  SPC c f format  SPC c x errors  SPC p R run")
     ((org-mode)
      . "TAB fold  M-RET item  t todo  SPC m s subtree  SPC m l link  SPC m d date  SPC m e export  SPC n r f roam")
+    ((org-agenda-mode)
+     . "t todo/DONE  H/L move-date  SPC m d s schedule  [ ] week  . today  g r redo  RET open  C capture  q quit")
+    ((elfeed-search-mode)
+     . "RET read  S-RET browser  u read  U unread  s filter  c clear  g R fetch  + tag  q quit  SPC ? R rss")
+    ((elfeed-show-mode)
+     . "S-RET browser  C-j next  C-k prev  g c copy-link  + tag  q close")
     ((vterm-mode)
      . "C-c C-t copy-mode  SPC o t popup  SPC o T here  C-c C-c interrupt  servers: kitty")
     ((eshell-mode)
-     . "C-c C-c interrupt  M-r history  SPC o e popup  heavy-output: vterm")
+     . "C-c C-c interrupt  M-r history  SPC o e popup  sec-help SEC aliases  heavy-output: vterm")
     ((prog-mode)
      . "gd def  K doc  SPC c a action  SPC c r rename  SPC s i symbols  g z m cursors  SPC ? I extras"))
   "Alist of (MODES . HINT) used by `+lv/ctxbar-mode', first match wins.")
@@ -643,6 +727,7 @@ Inherits `default' so it stays readable on light and dark themes."
     ("h" "Help / Doom (SPC h) ..." +lv/keyhelp-help)
     ("Q" "Quit / session (SPC q) ..." +lv/keyhelp-session)
     ("I" "IDE extras: peek, cursors, treemacs, forge ..." +lv/keyhelp-ide)
+    ("R" "RSS / elfeed ..." +lv/keyhelp-rss)
     ("?" "context key bar on/off (SPC t k)" +lv/ctxbar-toggle)]
    ["Copy/Paste"
     ("v" "visual (v)" evil-visual-char)
@@ -659,7 +744,11 @@ Inherits `default' so it stays readable on light and dark themes."
     ("SPC" "project file (SPC SPC)" projectile-find-file)
     ("r" "recent file (SPC f r)" consult-recent-file)
     ("-" "dired (SPC o -)" dired-jump)
-    ("G" "Emacs guide (SPC h G)" +lv/open-emacs-guide)]]
+    ("G" "Emacs guide (SPC h G)" +lv/open-emacs-guide)]
+   ["Org"
+    ("X" "capture (SPC X)" org-capture)
+    ("A" "agenda this week (SPC o A)" +lv/org-agenda-week)
+    ("E" "export (SPC m e)" org-export-dispatch)]]
   [("q" "quit" transient-quit-one)])
 
 (map! :leader
