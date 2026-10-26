@@ -18,9 +18,8 @@ user_pref("browser.ml.chat.enabled", false);
 user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.tabs.groups.smart.enabled", false);
 user_pref("extensions.ml.enabled", false);
-// DoH — LOCAL CHOICE (not a portable default; switch provider or remove)
-user_pref("network.trr.mode", 2); // DoH + system DNS fallback
-user_pref("network.trr.uri", "https://cloudflare-dns.com/dns-query"); // LOCAL: your DoH endpoint or remove
+// DoH — mode 2 (DoH + system DNS fallback). URI is local/opt-in and not set in-repo.
+user_pref("network.trr.mode", 2);
 
 // --- chrome / userChrome ---
 user_pref("devtools.chrome.enabled", true);
