@@ -64,6 +64,7 @@ name = "dotfiles-s1b"
 path = "/media/il1v3y/HD2/HDfiles/shenanigans/dotfiles-s1b"
 icon = "*"
 
+# sesh expands leading ~ (verified via `sesh list -c --json`)
 [[session]]
 name = "tmux-config"
 path = "~/.config/tmux"
