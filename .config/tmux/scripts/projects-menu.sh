@@ -2,6 +2,8 @@
 # Fzf menu: proyectos fijos + browse bajo shenanigans/Repos.
 
 set -euo pipefail
+# Drop keys that leaked from the tmux bind into the first fzf frame.
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --bind=start:clear-query"
 
 CONFIG_DIR="${HOME}/.config/tmux"
 PROJECTS_FILE="${CONFIG_DIR}/projects.list"
