@@ -18,8 +18,9 @@ user_pref("browser.ml.chat.enabled", false);
 user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.tabs.groups.smart.enabled", false);
 user_pref("extensions.ml.enabled", false);
+// DoH — LOCAL CHOICE (not a portable default; switch provider or remove)
 user_pref("network.trr.mode", 2); // DoH + system DNS fallback
-user_pref("network.trr.uri", "https://cloudflare-dns.com/dns-query");
+user_pref("network.trr.uri", "https://cloudflare-dns.com/dns-query"); // LOCAL: your DoH endpoint or remove
 
 // --- chrome / userChrome ---
 user_pref("devtools.chrome.enabled", true);
@@ -27,7 +28,7 @@ user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
 // --- cold-start (2026-10-26) ---
 user_pref("browser.sessionstore.restore_on_demand", true);
-user_pref("browser.sessionstore.max_concurrent_tabs", 3);
+user_pref("browser.sessionstore.max_concurrent_tab_restorations", 3);
 user_pref("zen.workspaces.continue-where-left-off", false);
 
 // --- compact style (2026-10-26) ---

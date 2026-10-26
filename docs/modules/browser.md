@@ -6,7 +6,7 @@ Optional **theme + prefs template** for `--profile full`. It does **not** auto-o
 
 | Browser | Role | Config in this repo |
 |---|---|---|
-| **Zen** | daily | Canonical **`user.js`** + **`userChrome.css`** under `modules/browser/home/.zen-browser-config/`. Copy into `~/.zen/<profile>/` when you want them live. |
+| **Zen** | daily | Canonical **`user.js`** + **`userChrome.css`** live only under `modules/browser/home/.zen-browser-config/` (repo-root `.zen-browser-config/` is a staging placeholder — see its README). Copy into `~/.zen/<profile>/` when you want them live. |
 | **Helium** | separate | On-system only. Not migrated. |
 | **Qutebrowser** | separate | On-system only. Not migrated. |
 
@@ -18,7 +18,8 @@ Optional **theme + prefs template** for `--profile full`. It does **not** auto-o
 That path is a **staging copy**. Apply into the live profile:
 
 ```fish
-set -l P ~/.zen/7h4wrogl.Default\ \(release\)
+# Replace PROFILE_NAME with YOUR profile dir under ~/.zen/ (see ls ~/.zen/)
+set -l P ~/.zen/PROFILE_NAME
 cp ~/.zen-browser-config/user.js $P/user.js
 mkdir -p $P/chrome
 cp ~/.zen-browser-config/chrome/userChrome.css $P/chrome/userChrome.css

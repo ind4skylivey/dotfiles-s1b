@@ -38,9 +38,11 @@ ls -la ~/.zen/*/
 
 ```bash
 # Prefer user.js (safe, no session PII). Replace PROFILE_NAME with your folder.
-cp .zen-browser-config/user.js ~/.zen/PROFILE_NAME/user.js
+# Canonical source in-repo: modules/browser/home/.zen-browser-config/
+# After install.sh, the same files are staged at ~/.zen-browser-config/
+cp modules/browser/home/.zen-browser-config/user.js ~/.zen/PROFILE_NAME/user.js
 mkdir -p ~/.zen/PROFILE_NAME/chrome
-cp .zen-browser-config/chrome/userChrome.css ~/.zen/PROFILE_NAME/chrome/
+cp modules/browser/home/.zen-browser-config/chrome/userChrome.css ~/.zen/PROFILE_NAME/chrome/
 ```
 
 Note: the chrome folder needs to be lowercase.
@@ -229,7 +231,7 @@ sudo pacman -S --needed libva-utils
 LIBVA_DRIVER_NAME=radeonsi vainfo
 ```
 
-Expect H264 / HEVC / VP9 / AV1 (`VAEntrypointVLD`). Canonical prefs live in `.zen-browser-config/user.js`:
+Expect H264 / HEVC / VP9 / AV1 (`VAEntrypointVLD`). Canonical prefs live in `modules/browser/home/.zen-browser-config/user.js`:
 
 - `media.ffmpeg.vaapi.enabled`
 - `media.hardware-video-decoding.enabled` (+ `force-enabled`)
