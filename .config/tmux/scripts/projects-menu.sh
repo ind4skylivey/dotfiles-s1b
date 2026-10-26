@@ -27,8 +27,8 @@ pick_from_repos() {
     | fzf --reverse --header "Browse Repos (depth 3)  |  Enter: abrir"
 }
 
-action="$(printf '%s\n%s\n' "[lista] Proyectos fijos" "[browse] Explorar Repos/")" \
-  | fzf --reverse --header "Project picker")
+action="$(printf '%s\n%s\n' "[lista] Proyectos fijos" "[browse] Explorar Repos/" \
+  | fzf --reverse --header "Project picker")"
 
 case "$action" in
   "[lista]"*) selected="$(pick_from_list)" || exit 0 ;;
