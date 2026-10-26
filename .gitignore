@@ -66,3 +66,7 @@ docker-compose.override.yml
 # Doom: downloaded debug adapter bundles (vendor binaries)
 .doom.d/debug-adapters/
 .doom.d/odd/
+
+# Zen: never track live prefs dumps (PII / machine paths)
+.zen-browser-config/prefs.js
+**/.zen-browser-config/prefs.js

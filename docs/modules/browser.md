@@ -1,26 +1,35 @@
 # Browser module
 
-Optional **theme archive** for `--profile full`. It does **not** own the live browsers on this machine.
+Optional **theme + prefs template** for `--profile full`. It does **not** auto-overwrite the live Zen profile.
 
 ## Live browsers (system, not this module)
 
 | Browser | Role | Config in this repo |
 |---|---|---|
-| **Zen** | daily, stability/security profile | **No.** Live config stays in the Zen profile on disk. Do not link dump `prefs.js` or overwrite that profile. |
-| **Helium** | separate | On-system only (DWM/Niri can spawn it). Not migrated. |
+| **Zen** | daily | Canonical **`user.js`** + **`userChrome.css`** live only under `modules/browser/home/.zen-browser-config/` (repo-root `.zen-browser-config/` is a staging placeholder — see its README). Copy into `~/.zen/<profile>/` when you want them live. |
+| **Helium** | separate | On-system only. Not migrated. |
 | **Qutebrowser** | separate | On-system only. Not migrated. |
 
-## What this module plans
+## What this module stages (`~/.zen-browser-config/`)
 
-Staging copy of **`userChrome.css`** (cyberpunk chrome only) at `~/.zen-browser-config/chrome/userChrome.css`.
+- `chrome/userChrome.css` — cyberpunk/glass + Compact Mode pack (2026-10-26)
+- `user.js` — hardening, cold-start, Compact prefs, **VAAPI** for AMD (RX 6700 XT)
 
-That path is **not** a Zen profile. Apply it only if you want that old theme on a throwaway profile. The current stable Zen setup must not be replaced by this file.
+That path is a **staging copy**. Apply into the live profile:
+
+```fish
+# Replace PROFILE_NAME with YOUR profile dir under ~/.zen/ (see ls ~/.zen/)
+set -l P ~/.zen/PROFILE_NAME
+cp ~/.zen-browser-config/user.js $P/user.js
+mkdir -p $P/chrome
+cp ~/.zen-browser-config/chrome/userChrome.css $P/chrome/userChrome.css
+```
 
 ## Never
 
-- `prefs.js` (C-01: account PII; also not how the live Zen profile is maintained)
+- Commit or install a dump of **`prefs.js`** (session/account PII)
+- Blindly overwrite `~/.zen/<profile>/` from `install.sh`
 - Helium / Qutebrowser user dirs
-- Copying dump chrome into `~/.zen/<profile>/` as part of install
 
 ```bash
 ./install.sh --dry-run --profile full
