@@ -17,7 +17,9 @@ if [[ ! -d "$selected" ]]; then
 fi
 
 selected="$(cd "$selected" && pwd)"
-selected_name="$(basename "$selected" | tr '.-' '__')"
+# tmux treats ":" as session:window — keep names [A-Za-z0-9_] only
+selected_name="$(basename "$selected")"
+selected_name="$(printf '%s' "$selected_name" | tr -c '[:alnum:]_' '_')"
 
 if ! tmux has-session -t="$selected_name" 2>/dev/null; then
   tmux new-session -ds "$selected_name" -c "$selected"

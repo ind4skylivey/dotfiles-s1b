@@ -13,7 +13,7 @@ if ! command -v fzf-tmux >/dev/null 2>&1; then
   exit 1
 fi
 
-sesh connect "$(
+selection="$(
   sesh list --icons 2>/dev/null | fzf-tmux -p 80%,70% \
     --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
     --header '  ^a all  ^t tmux  ^g configs  ^x zoxide  ^d kill  ^f find' \
@@ -26,4 +26,11 @@ sesh connect "$(
     --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
     --preview-window 'right:55%' \
     --preview 'sesh preview {}' 2>/dev/null
-)"
+)" || true
+
+# Esc / empty selection must not call sesh connect ""
+if [[ -z "${selection}" ]]; then
+  exit 0
+fi
+
+sesh connect "$selection"
