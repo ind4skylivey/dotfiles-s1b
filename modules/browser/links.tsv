@@ -1,2 +1,4 @@
 # src (repo-relative)	dest (relative to $HOME)
+# Staging only — does NOT overwrite ~/.zen/<profile>/. Apply user.js/userChrome into the live profile by hand (see ZEN_BROWSER_GUIDE.md).
 modules/browser/home/.zen-browser-config/chrome/userChrome.css	.zen-browser-config/chrome/userChrome.css
+modules/browser/home/.zen-browser-config/user.js	.zen-browser-config/user.js

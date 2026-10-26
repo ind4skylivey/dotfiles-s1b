@@ -37,9 +37,10 @@ ls -la ~/.zen/*/
 ### 2. Copy the Config Files
 
 ```bash
-# Replace PROFILE_NAME with your actual folder
-cp prefs.js ~/.zen/PROFILE_NAME/
-cp userChrome.css ~/.zen/PROFILE_NAME/chrome/
+# Prefer user.js (safe, no session PII). Replace PROFILE_NAME with your folder.
+cp .zen-browser-config/user.js ~/.zen/PROFILE_NAME/user.js
+mkdir -p ~/.zen/PROFILE_NAME/chrome
+cp .zen-browser-config/chrome/userChrome.css ~/.zen/PROFILE_NAME/chrome/
 ```
 
 Note: the chrome folder needs to be lowercase.
@@ -216,3 +217,22 @@ Having the same colors in Kitty and Zen means less visual context-switching. I c
 ---
 
 It's a simple setup, but it makes the browser feel like part of the same environment as the terminal. Takes about 5 minutes to install and I think it's worth it.
+
+---
+
+## VAAPI (AMD) — 2026-10-26
+
+On S1BGr0uP (RX 6700 XT) hardware decode is confirmed with:
+
+```fish
+sudo pacman -S --needed libva-utils
+LIBVA_DRIVER_NAME=radeonsi vainfo
+```
+
+Expect H264 / HEVC / VP9 / AV1 (`VAEntrypointVLD`). Canonical prefs live in `.zen-browser-config/user.js`:
+
+- `media.ffmpeg.vaapi.enabled`
+- `media.hardware-video-decoding.enabled` (+ `force-enabled`)
+- `media.rdd-ffmpeg.enabled`
+
+Compact Mode pack (hide toolbar + tabbar, Essentials clip, expanded labels OK) is in the same `userChrome.css`. After copying, fully restart Zen and check `about:support` → Media.

@@ -1,42 +1,449 @@
-/* Portable Zen/Firefox chrome. Theme only. Never ship prefs.js. */
+@import "/home/il1v3y/.cache/noctalia/zen-browser/zen-userChrome.css";
 
-@-moz-document url-prefix("chrome://") {
+/* ===================================================================
+   Cyberpunk HUD Theme - AUTO SWITCH Light/Dark
+   Detecta automaticamente el modo del sistema
+   =================================================================== */
+
+/* ===== VARIABLES PARA LIGHT MODE (CYBERPUNK GLASS) ===== */
+:root {
+  /* Fondos con efecto glass */
+  --bg: rgba(255, 255, 255, 0.95);
+  --bg-dark: rgba(247, 250, 252, 0.90);
+  --bg-darker: rgba(240, 240, 240, 0.85);
+  
+  /* Colores CYBERPUNK + GLASS */
+  --purple: #9333ea;        /* Púrpura eléctrico */
+  --purple-dim: #d8b4fe;    /* Púrpura claro vibrante */
+  --purple-light: rgba(224, 231, 255, 0.80);  /* Púrpura muy claro + transparencia */
+  
+  --cyan: #00d4d4;         /* Cian neón */
+  --cyan-dim: rgba(167, 243, 208, 0.80);      /* Cian atenuado + transparencia */
+  
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --text-light: #94a3b8;
+  
+  /* Efectos glow más intensos */
+  --glow-purple: rgba(147, 51, 234, 0.40);
+  --glow-cyan: rgba(0, 212, 212, 0.40);
+  
+  /* Bordes con efecto neón */
+  --border-color: rgba(203, 213, 225, 0.60);
+  --border-color-dark: rgba(148, 163, 184, 0.60);
+  
+  /* Efecto glass */
+  --glass-blur: blur(12px);
+  --glass-bg: rgba(255, 255, 255, 0.70);
+}
+
+/* ===== VARIABLES PARA DARK MODE (cyberpunk HUD original) ===== */
+@media (prefers-color-scheme: dark) {
   :root {
-    --cyberpunk-bg: #0d1b2a;
-    --cyberpunk-primary: #FF10F0;
-    --cyberpunk-secondary: #00d9ff;
+    --bg: #110022;
+    --bg-dark: #0d001a;
+    
+    --purple: #bd00ff;
+    --purple-dim: #5c0099;
+    
+    --cyan: #00ffff;
+    
+    --text: #e0e0e0;
+    
+    --glow-purple: rgba(189, 0, 255, 0.4);
+    --glow-cyan: rgba(0, 255, 255, 0.3);
+    
+    --border-color: var(--purple-dim);
+    --border-color-dark: var(--purple-dim);
+    
+    --glass-bg: rgba(17, 0, 34, 0.70);
   }
+}
 
-  #main-window {
-    background-color: var(--cyberpunk-bg) !important;
-  }
+/* ===================================================================
+   ESTILOS COMUNES (funcionan para ambos modos)
+   =================================================================== */
 
-  #nav-bar {
-    background-color: var(--cyberpunk-bg) !important;
-    border-bottom: 1px solid var(--cyberpunk-primary) !important;
-  }
+#main-window {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+}
 
-  #urlbar {
-    background-color: var(--cyberpunk-bg) !important;
-    border: 1px solid var(--cyberpunk-secondary) !important;
-    color: var(--cyberpunk-secondary) !important;
-  }
+#nav-bar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-bottom: 2px solid var(--purple) !important;
+  box-shadow: 0 2px 8px var(--glow-purple) !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin: 4px 8px 0 8px !important;
+}
 
-  #urlbar:focus-within {
-    border-color: var(--cyberpunk-primary) !important;
-    box-shadow: 0 0 10px rgba(255, 16, 240, 0.5) !important;
-  }
+#urlbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border: 2px solid var(--purple-dim) !important;
+  color: var(--cyan) !important;
+  border-radius: 20px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: inset 0 2px 4px rgba(0, 212, 212, 0.1) !important;
+}
 
-  .tabbrowser-tab {
-    background-color: #1a1a3e !important;
-    color: var(--cyberpunk-secondary) !important;
-    border: 1px solid var(--cyberpunk-secondary) !important;
-  }
+#urlbar:focus-within {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 16px var(--glow-cyan), 0 0 6px var(--glow-cyan) inset !important;
+  transform: scale(1.01) !important;
+}
 
-  .tabbrowser-tab[selected="true"] {
-    background-color: var(--cyberpunk-primary) !important;
-    color: #ffffff !important;
-    border: 1px solid var(--cyberpunk-primary) !important;
-    box-shadow: 0 0 10px rgba(0, 217, 255, 0.5) !important;
-  }
+#urlbar:hover {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 8px var(--glow-purple) !important;
+}
+
+#urlbar-input {
+  color: var(--text) !important;
+}
+
+.urlbarView-row[selected] {
+  background-color: var(--purple-light, #7b00b3) !important;
+  color: var(--text) !important;
+}
+
+.tabbrowser-tab {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  color: var(--text-secondary, var(--text)) !important;
+  border: 2px solid transparent !important;
+  border-radius: 8px 8px 0 0 !important;
+  transition: all 0.2s ease !important;
+  margin: 0 2px !important;
+  box-shadow: 0 2px 4px rgba(147, 51, 234, 0.1) !important;
+}
+
+.tabbrowser-tab:hover {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 12px var(--glow-purple) !important;
+  background: rgba(236, 232, 255, 0.85) !important;
+  color: var(--text) !important;
+  transform: translateY(-1px) !important;
+}
+
+.tabbrowser-tab[selected="true"] {
+  background: linear-gradient(135deg, var(--purple) 0%, #7b00b3 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid var(--purple) !important;
+  box-shadow: 0 0 20px var(--glow-purple), 0 0 8px var(--glow-purple) inset !important;
+  transform: translateY(-2px) !important;
+}
+
+.tabbrowser-tab[selected="true"]:hover {
+  box-shadow: 0 0 20px var(--glow-purple), 0 0 6px var(--glow-purple) inset !important;
+}
+
+.tabs-newtab-button {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  color: var(--text-secondary, var(--text)) !important;
+  border: 2px solid var(--purple-dim) !important;
+  border-radius: 8px 8px 0 0 !important;
+  margin: 0 2px !important;
+  transition: all 0.2s ease !important;
+}
+
+.tabs-newtab-button:hover {
+  background-color: var(--bg) !important;
+  color: var(--purple) !important;
+  border-color: var(--purple-dim) !important;
+}
+
+#TabsToolbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-bottom: 2px solid var(--purple-dim) !important;
+  border-radius: 0 0 12px 12px !important;
+  box-shadow: 0 4px 12px var(--glow-purple) !important;
+  margin: 0 8px !important;
+}
+
+.scrollbar-arrow {
+  background-color: var(--bg-dark) !important;
+}
+
+scrollbar[orient="vertical"] {
+  background-color: var(--bg-darker, var(--bg-dark)) !important;
+  border-left: 1px solid var(--border-color, var(--purple-dim)) !important;
+}
+
+scrollbar[orient="vertical"] thumb {
+  background-color: var(--purple-dim) !important;
+  border-radius: 2px !important;
+}
+
+scrollbar[orient="vertical"] thumb:hover {
+  background-color: var(--purple) !important;
+  box-shadow: 0 0 6px var(--glow-purple) !important;
+}
+
+#browser-bottombox {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-top: 2px solid var(--purple-dim) !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin: 0 8px !important;
+  box-shadow: 0 -2px 8px var(--glow-purple) !important;
+}
+
+#back-button,
+#forward-button,
+#home-button,
+#reload-button,
+#stop-button {
+  color: var(--text-secondary, var(--text)) !important;
+}
+
+#back-button[disabled],
+#forward-button[disabled] {
+  opacity: 0.4 !important;
+}
+
+#back-button:hover:not([disabled]),
+#forward-button:hover:not([disabled]),
+#home-button:hover,
+#reload-button:hover,
+#stop-button:hover {
+  color: var(--purple) !important;
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 8px var(--glow-purple) !important;
+  transform: scale(1.05) !important;
+}
+
+#status-bar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  color: var(--text-secondary, var(--text)) !important;
+  border-top: 2px solid var(--purple-dim) !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin: 0 8px !important;
+}
+
+menu,
+menupopup {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  color: var(--text) !important;
+  border: 2px solid var(--purple-dim) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px var(--glow-purple) !important;
+  padding: 4px !important;
+}
+
+menuitem,
+menu:hover,
+menupopup > menuitem {
+  background-color: transparent !important;
+  color: var(--text) !important;
+}
+
+menuitem:hover,
+menuitem[selected="true"] {
+  background: linear-gradient(135deg, var(--purple-light), var(--cyan-dim)) !important;
+  color: var(--text) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px var(--glow-purple) !important;
+}
+
+findbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border: 2px solid var(--purple-dim) !important;
+  color: var(--text) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px var(--glow-cyan) !important;
+}
+
+#FindToolbar {
+  background-color: transparent !important;
+}
+
+#sidebar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-right: 2px solid var(--purple-dim) !important;
+  border-radius: 0 12px 12px 0 !important;
+  box-shadow: -4px 0 12px var(--glow-purple) !important;
+}
+
+#sidebar-header {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-bottom: 2px solid var(--purple-dim) !important;
+  color: var(--purple) !important;
+  font-weight: 600 !important;
+  border-radius: 0 12px 0 0 !important;
+  padding: 8px !important;
+}
+
+.tree-row:hover {
+  background: linear-gradient(135deg, var(--purple-light), var(--cyan-dim)) !important;
+  border-radius: 6px !important;
+}
+
+.tree-row[selected="true"] {
+  background: linear-gradient(135deg, var(--purple), #7b00b3) !important;
+  color: white !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px var(--glow-purple) !important;
+}
+
+browser[type="content"] > html {
+  background: var(--glass-bg) !important;
+}
+
+.top-site-outer {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border: 2px solid var(--purple-dim) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px var(--glow-purple) !important;
+  transition: all 0.2s ease !important;
+}
+
+.top-site-outer:hover {
+  border-color: var(--purple) !important;
+  box-shadow: 0 0 16px var(--glow-purple) !important;
+  transform: translateY(-4px) !important;
+  background: rgba(236, 232, 255, 0.60) !important;
+}
+
+.top-site-inner {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-radius: 8px !important;
+}
+
+#browser {
+  background: var(--glass-bg) !important;
+}
+
+#toolbox {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-top: 2px solid var(--purple-dim) !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin: 0 8px !important;
+  box-shadow: 0 -4px 12px var(--glow-purple) !important;
+}
+
+#toolbox-splitter {
+  border-top: 2px solid var(--purple-dim) !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, transparent, var(--purple-dim), transparent) !important;
+}
+
+/* ===== COMPATIBILIDAD CON TEMAS DE ZEN ===== */
+:root {
+  --zen-primary-color: var(--purple) !important;
+  --zen-secondary-color: var(--cyan) !important;
+}
+
+/* ===== COMPACT MODE PACK — 2026-10-26 S1B Sysadmin (v2) =====
+   hide-tabbar + hide-toolbar = chrome fuera en Compact (hover al borde).
+   Labels: solo iconos en rail colapsado; en expandido texto normal (sin aplastar).
+   SuperPins ON + legacy-layout=false; Essentials clip contra overflow:visible. */
+
+/* Glass when Compact */
+:is(:root, #main-window, #navigator-toolbox, #browser)[zen-compact-mode="true"] #navigator-toolbox,
+#navigator-toolbox[zen-compact-mode="true"] {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+}
+
+:is(:root, #main-window, #navigator-toolbox)[zen-compact-mode="true"] #urlbar,
+#navigator-toolbox[zen-compact-mode="true"] #urlbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border-color: var(--purple-dim) !important;
+  border-radius: 20px !important;
+}
+
+/* Essentials: beat SuperPins overflow:visible */
+.zen-essentials-container,
+#zen-essentials,
+#zen-essentials-container,
+#navigator-toolbox .zen-essentials-container,
+#tabbrowser-tabs .zen-essentials-container {
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 30 !important;
+  isolation: isolate !important;
+  contain: layout paint !important;
+}
+
+#zen-tabs-wrapper,
+#tabbrowser-tabs #zen-tabs-wrapper {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* EXPANDED: force normal labels (undo any leftover clip/scale) */
+#navigator-toolbox[zen-sidebar-expanded="true"] #tabbrowser-tabs .tabbrowser-tab .tab-label-container,
+#navigator-toolbox[zen-sidebar-expanded="true"] #tabbrowser-tabs .tabbrowser-tab .tab-label,
+:root[zen-sidebar-expanded="true"] #tabbrowser-tabs .tabbrowser-tab .tab-label-container,
+:root[zen-sidebar-expanded="true"] #tabbrowser-tabs .tabbrowser-tab .tab-label {
+  display: flex !important;
+  position: static !important;
+  max-width: none !important;
+  width: auto !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* COLLAPSED rail: icon-only + hide New Tab chrome */
+#navigator-toolbox:not([zen-sidebar-expanded="true"]) #tabs-newtab-button,
+#navigator-toolbox:not([zen-sidebar-expanded="true"]) .tabs-newtab-button,
+#navigator-toolbox:not([zen-sidebar-expanded="true"]) #tabs-newtab-button-vertical,
+#navigator-toolbox:not([zen-sidebar-expanded="true"]) #vertical-tabs-newtab-button,
+:is(:root, #main-window, #browser)[zen-compact-mode="true"] #tabs-newtab-button,
+:is(:root, #main-window, #browser)[zen-compact-mode="true"] .tabs-newtab-button,
+:is(:root, #main-window, #browser)[zen-compact-mode="true"] #tabs-newtab-button-vertical,
+:is(:root, #main-window, #browser)[zen-compact-mode="true"] #vertical-tabs-newtab-button {
+  display: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+
+#navigator-toolbox:not([zen-sidebar-expanded="true"])
+  #tabbrowser-tabs
+  .tabbrowser-tab:not([zen-essential="true"])
+  .tab-label-container,
+#navigator-toolbox:not([zen-sidebar-expanded="true"])
+  #tabbrowser-tabs
+  .tabbrowser-tab:not([zen-essential="true"])
+  .tab-label {
+  display: none !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: static !important;
+}
+
+#navigator-toolbox:not([zen-sidebar-expanded="true"])
+  #tabbrowser-tabs
+  .tabbrowser-tab:not([zen-essential="true"]) {
+  max-width: 100% !important;
+}
+
+.zen-essentials-container ~ #zen-tabs-wrapper,
+#zen-essentials ~ #zen-tabs-wrapper {
+  margin-top: 6px !important;
+}
+
+.tabbrowser-tab[zen-essential="true"] .tab-background {
+  border-radius: 10px !important;
 }
