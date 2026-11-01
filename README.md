@@ -21,9 +21,9 @@
 
 ## What is this?
 
-A **declarative, modular, idempotent** configuration platform for Unix/Linux, with Arch/CachyOS as Tier 1. The git tree still contains a single-host dump under `.config/`, `bin/`, and `workflow/`. New installs are **not** that dump: they go through portable modules, a dry-run plan, copy-only backups, and a per-path linker (not GNU Stow).
+A plain archive of my Unix/Linux config copies, with Arch/CachyOS as Tier 1. Nothing here is linked or installed automatically: files under `.config/`, `bin/`, `workflow/` and `modules/*/home/` are copied by hand where needed.
 
-Cyberpunk / Catppuccin aesthetics are an **optional** `--profile full` layer. CLI profiles work without a window manager.
+Cyberpunk / Catppuccin aesthetics are optional. CLI configs work without a window manager.
 
 Approved architecture: [docs/architecture.md](docs/architecture.md). Audit of the dump: [docs/audit/current-state.md](docs/audit/current-state.md).
 
@@ -31,7 +31,7 @@ Approved architecture: [docs/architecture.md](docs/architecture.md). Audit of th
 
 Git identity: copy `modules/git/local.example` → `~/.config/git/local`. Never commit email or signing keys.
 
-Browser: live **Zen** (stability/security profile on disk), plus **Helium** and **Qutebrowser** with their own system configs. This repo does **not** replace those. `--profile full` only stages an old `userChrome.css` under `.zen-browser-config/chrome/` (optional theme archive). Never `prefs.js`.
+Browser: live **Zen** (stability/security profile on disk), plus **Helium** and **Qutebrowser** with their own system configs. This repo does **not** replace those. An old `userChrome.css` is kept under `.zen-browser-config/chrome/` as an optional theme archive. Never `prefs.js`.
 
 ---
 
@@ -74,7 +74,7 @@ Three monitors with independent wallpaper management and a cyberpunk status bar.
 
 ## Still in the dump (not the default plan)
 
-`.config/`, `bin/ws-*`, `workflow/`, `.doom.d/`, NvChad, Eco-Workflow guides, and Warp aliases stay in git until they migrate. They are **not** what `--dry-run --profile minimal` links.
+`.config/`, `bin/ws-*`, `workflow/`, `.doom.d/`, NvChad, Eco-Workflow guides, and Warp aliases stay in git until they migrate.
 
 Legacy workflow docs: [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md), [workflow/README.md](workflow/README.md). Dump DWM/Waybar/nvim notes remain under `.config/`.
 
@@ -92,7 +92,7 @@ Legacy workflow docs: [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md), [workflow/
 
 ## Themes (optional)
 
-`--profile full` plans a small GTK overlay and an optional Zen **userChrome** staging file. That is not the live Zen profile (which stays on the machine for stability). Helium and Qutebrowser configs stay on-system. Do not copy dump `prefs.js`.
+The optional Zen **userChrome** file here is not the live Zen profile (which stays on the machine for stability). Helium and Qutebrowser configs stay on-system. Do not copy dump `prefs.js`.
 
 Heavy Kvantum / qt5ct palettes and cyberpunk Kitty includes stay in the dump until you opt in.
 
