@@ -1,3 +1,6 @@
+# Requires access to /dev/uinput and the keyboard device:
+#   sudo usermod -aG input $USER
+#   udev rule: KERNEL=="uinput", GROUP="input", MODE="0660"
 [Unit]
 Description=kanata remapeo teclado RK R75
 
