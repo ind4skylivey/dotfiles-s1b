@@ -44,7 +44,7 @@ The Eco-Workflow system includes these layouts in `workflow/zellij/layouts/`:
 
 Zellij config lives in `~/.config/zellij/config.kdl`. The Eco-Workflow system doesn't override your personal config — it just provides layout files.
 
-If you want to try the cyberpunk theme from the dotfiles, there's an integration guide at `.config/kitty/tmux-zellij-integration.conf`.
+If you want to try the cyberpunk theme from the dotfiles, there's an integration guide at `modules/kitty/home/.config/kitty/tmux-zellij-integration.conf`.
 
 ## Status Bar
 

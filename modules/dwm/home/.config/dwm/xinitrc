@@ -1,6 +1,6 @@
 #!/bin/sh
 # Portable DWM (X11) session. Does not start Niri, Waybar, or a second compositor.
-# Dump C sources stay under repo .config/dwm/ until you build them on this host.
+# Dump C sources stay under repo modules/dwm/home/.config/dwm/ until you build them on this host.
 
 picom &
 slstatus &

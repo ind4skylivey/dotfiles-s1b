@@ -115,7 +115,7 @@ set -ga terminal-overrides ",xterm-kitty:RGB"
 set -s allow-passthrough on
 ```
 
-See `.config/kitty/tmux-zellij-integration.conf` for detailed recommendations.
+See `modules/kitty/home/.config/kitty/tmux-zellij-integration.conf` for detailed recommendations.
 
 ### 4. Zellij Integration (OPTIONAL)
 
@@ -184,7 +184,7 @@ Read **ZEN_BROWSER_GUIDE.md** for:
 - CSS modifications
 
 ### Tmux & Zellij
-See `.config/kitty/tmux-zellij-integration.conf` for:
+See `modules/kitty/home/.config/kitty/tmux-zellij-integration.conf` for:
 - Tmux configuration
 - Zellij setup
 - Color scheme integration
@@ -300,7 +300,7 @@ map ctrl+alt+y launch --type=overlay fish -c "your-command"
 ## 🔗 Related Configurations
 
 This setup pairs well with:
-- **Shell**: Fish Shell (see `.config/fish/config.fish`)
+- **Shell**: Fish Shell (see `modules/fish/home/.config/fish/config.fish`)
 - **Editor**: Neovim (dark theme recommended)
 - **Multiplexer**: Tmux or Zellij
 - **Wallpaper**: Dark background matching `#0d1b2a`

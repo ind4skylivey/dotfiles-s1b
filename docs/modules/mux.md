@@ -9,14 +9,14 @@ Portable **tmux** and **zellij** for `workstation` / `developer` / `full`. New f
 - Zellij layouts from `workflow/` or another user's `~/.config`
 - Host path comments from the dump KDL
 
-Host extras: copy `modules/mux/local.tmux.example` → `~/.config/tmux/local.conf`.
+Host extras: copy `modules/tmux/local.tmux.example` → `~/.config/tmux/local.conf`.
 
 ## Files
 
 | Repo path | Intended dest |
 |---|---|
-| `modules/mux/home/.config/tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
-| `modules/mux/home/.config/zellij/config.kdl` | `~/.config/zellij/config.kdl` |
+| `modules/tmux/home/.config/tmux/tmux.conf` | `~/.config/tmux/tmux.conf` |
+| `modules/zellij/home/.config/zellij/config.kdl` | `~/.config/zellij/config.kdl` |
 
 ## Dry-run
 
