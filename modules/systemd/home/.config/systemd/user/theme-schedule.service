@@ -1,0 +1,6 @@
+[Unit]
+Description=Apply clock-based dark/light color-scheme (theme-schedule.sh)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/niri/scripts/theme-schedule.sh

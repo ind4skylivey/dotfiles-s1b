@@ -1,0 +1,11 @@
+[Unit]
+Description=Setear defaults de audio PipeWire
+After=wireplumber.service pipewire.service
+Requires=wireplumber.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/audio-defaults.sh
+
+[Install]
+WantedBy=graphical-session.target

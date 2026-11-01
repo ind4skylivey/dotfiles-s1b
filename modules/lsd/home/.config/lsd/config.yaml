@@ -1,0 +1,13 @@
+# LSD Configuration simplificado
+
+color:
+  when: auto
+
+icons:
+  when: auto
+  theme: fancy
+
+sorting:
+  dir-grouping: first
+
+date: relative
