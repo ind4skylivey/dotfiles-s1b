@@ -618,3 +618,4 @@ OLD and NEW are revision ranges such as origin/main..@{u} and origin/main..HEAD.
       :desc "Range-diff (two ranges)" "g x" #'+lv/git-range-diff)
 
 (load! "keyhelp")
+(load! "cheatsheet")
