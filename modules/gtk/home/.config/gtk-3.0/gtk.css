@@ -1,5 +1,2 @@
-/* Portable GTK overlay. Optional; not required for CLI profiles. */
+@import 'colors.css';
 
-window {
-  background-color: #0d1b2a;
-}

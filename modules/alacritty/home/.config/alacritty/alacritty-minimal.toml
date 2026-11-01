@@ -1,0 +1,20 @@
+[general]
+live_config_reload = true
+
+[terminal.shell]
+program = "/bin/bash"
+
+[window]
+opacity = 0.97
+blur = false
+
+[scrolling]
+history = 100000
+
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+blink_interval = 500
+
+[font]
+size = 15.0
+normal.family = "MesloLGS Nerd Font Mono"

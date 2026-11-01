@@ -6,39 +6,10 @@
 local M = {}
 
 M.base46 = {
-	theme = "tokyonight",
-	hl_override = {
-		Normal = { bg = "#0b1021" },
-		NormalFloat = { bg = "#0f162a" },
-		FloatBorder = { fg = "#7aa2f7", bg = "#0f162a" },
-		CursorLine = { bg = "#121a2f" },
-		CursorLineNr = { fg = "#ff9e64", bold = true },
-		LineNr = { fg = "#3b4261" },
-		Visual = { bg = "#1f2a44" },
-		Search = { bg = "#ff9e64", fg = "#0b1021" },
-		IncSearch = { bg = "#ff5c8d", fg = "#0b1021" },
-		MatchParen = { bg = "#1f2a44", fg = "#c792ea", bold = true },
-		Pmenu = { bg = "#0f162a", fg = "#c8d3f5" },
-		PmenuSel = { bg = "#1f2a44", fg = "#ff9e64" },
-		StatusLine = { bg = "#0f162a", fg = "#c8d3f5" },
-		StatusLineNC = { bg = "#0c1222", fg = "#3b4261" },
-		WinSeparator = { fg = "#3b4261" },
-		TelescopeSelection = { bg = "#1f2a44" },
-		TelescopeTitle = { fg = "#ff9e64", bold = true },
-		TelescopeBorder = { fg = "#7aa2f7", bg = "#0f162a" },
-		DiagnosticError = { fg = "#ff5c8d" },
-		DiagnosticWarn = { fg = "#ffb86c" },
-		DiagnosticInfo = { fg = "#7aa2f7" },
-		DiagnosticHint = { fg = "#9ece6a" },
-		LspSignatureActiveParameter = { fg = "#ff9e64", underline = true },
-		-- Dashboard specific highlights
-		NvDashAscii = { fg = "#7aa2f7", bg = "#0b1021" },
-		NvDashButtons = { fg = "#c8d3f5", bg = "#0b1021" },
-	},
+	theme = "s1b-neon-light",
+	-- Espacio t t alterna noche/día. Los colores viven en lua/themes/s1b-neon*.lua
+	theme_toggle = { "s1b-neon", "s1b-neon-light" },
 	transparency = false,
-	hl_add = {
-		NvimTreeOpenedFolderName = { fg = "#ff9e64", bold = true },
-	},
 }
 
 M.nvdash = {
@@ -77,7 +48,7 @@ M.nvdash = {
 			no_gap = true,
 		},
 		{
-			txt = "[ SYSTEM READY ] :: ACCESS GRANTED :: il1v3y@redteam",
+			txt = "[ SYSTEM READY ] :: ACCESS GRANTED :: s1b@redteam",
 			hl = "NvDashFooter",
 			no_gap = true,
 		},

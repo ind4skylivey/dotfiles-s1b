@@ -1,41 +1,20 @@
 return {
+  { "mason-org/mason.nvim", lazy = false },
   {
-    "williamboman/mason.nvim",
-    version = "1.11.0",
+    "mason-org/mason-lspconfig.nvim",
+    lazy = false,
+    dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
     opts = {
-      ensure_installed = {
-        -- PHP/Laravel
-        "phpactor",
-        "php-debug-adapter",
-        
-        -- Python
-        "pyright",
-        "ruff",
-        "debugpy",
-        
-        -- Rust
-        "rust-analyzer",
-        "codelldb",
-        
-        -- Web
-        "html-lsp",
-        "css-lsp",
-        "typescript-language-server",
-        
-        -- Shell
-        "bash-language-server",
-        "shellcheck",
-        "shfmt",
-        
-        -- C/C++ (for exploits)
-        "clangd",
-        "clang-format",
-        
-        -- General
-        "lua-language-server",
-        "stylua",
-      },
+      ensure_installed = { "lua_ls", "bashls", "jsonls", "yamlls" },
     },
+    config = function(_, opts)
+      local mason_opts = {}
+      local ok, nv_mason = pcall(require, "nvchad.configs.mason")
+      if ok then
+        mason_opts = nv_mason
+      end
+      require("mason").setup(mason_opts)
+      require("mason-lspconfig").setup(opts)
+    end,
   },
-  { "williamboman/mason-lspconfig.nvim", version = "1.32.0" },
 }

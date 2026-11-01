@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=PCManFM-Qt Daemon
+Comment=Registers org.freedesktop.FileManager1 for IDE reveal-in-folder (Cursor, VS Code)
+Exec=pcmanfm-qt --daemon-mode
+Terminal=false
+X-GNOME-Autostart-enabled=true
+
+Hidden=true

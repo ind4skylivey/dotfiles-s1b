@@ -1,29 +1,91 @@
-# Colors (Nordic)
+# Nordic Theme - Security Researcher Edition
+# Enhanced with better contrast and cyberpunk accents
 
 [colors.primary]
-background = '#2E3440'
-foreground = '#D8DEE9'
+background = '#242933'  # Darker than original Nord
+foreground = '#ECEFF4'
 
 [colors.normal]
 black = '#191C1D'
-red = '#BD6062'
-green = '#A3D6A9'
-yellow = '#F0DFAF'
-blue = '#8FB4D8'
-magenta = '#C7A9D9'
-cyan = '#B6D7A8'
-white = '#BDC5BD'
+red = '#BF616A'  # More vibrant red for alerts
+green = '#A3BE8C'  # Better green for success
+yellow = '#EBCB8B'  # Warmer yellow
+blue = '#81A1C1'  # Nord blue
+magenta = '#B48EAD'  # Softer magenta
+cyan = '#88C0D0'  # Bright cyan for info
+white = '#E5E9F0'  # Crisp white
 
 [colors.bright]
-black = '#727C7C'
-red = '#D18FAF'
-green = '#B7CEB0'
-yellow = '#BCBCBC'
-blue = '#E0CF9F'
-magenta = '#C7A9D9'
-cyan = '#BBDA97'
-white = '#BDC5BD'
+black = '#4C566A'  # Better contrast gray
+red = '#BF616A'
+green = '#A3BE8C'
+yellow = '#EBCB8B'
+blue = '#81A1C1'
+magenta = '#B48EAD'
+cyan = '#8FBCBB'
+white = '#ECEFF4'
 
 [colors.selection]
-text = '#000000'
-background = '#F0DFAF'
+text = '#ECEFF4'
+background = '#434C5E'  # Better visibility
+
+[colors.cursor]
+text = '#ECEFF4'
+cursor = '#88C0D0'  # Bright cyan cursor
+
+[colors.vi_mode_cursor]
+text = '#ECEFF4'
+cursor = '#BF616A'  # Red cursor in vi mode
+
+[colors.search]
+matches = { foreground = '#ECEFF4', background = '#88C0D0' }
+focused_match = { foreground = '#191C1D', background = '#88C0D0' }
+
+[colors.line_indicator]
+foreground = 'None'
+background = 'None'
+
+[colors.footer_bar]
+foreground = '#ECEFF4'
+background = '#434C5E'
+
+[colors.hints.start]
+foreground = '#191C1D'
+background = '#88C0D0'
+
+[colors.hints.end]
+foreground = '#191C1D'
+background = '#434C5E'
+
+[[colors.indexed_colors]]
+index = 16
+color = '#88C0D0'
+
+[[colors.indexed_colors]]
+index = 17
+color = '#81A1C1'
+
+[[colors.indexed_colors]]
+index = 18
+color = '#A3BE8C'
+
+[[colors.indexed_colors]]
+index = 19
+color = '#B48EAD'
+
+[[colors.indexed_colors]]
+index = 20
+color = '#BF616A'
+
+[[colors.indexed_colors]]
+index = 21
+color = '#EBCB8B'
+
+[[colors.indexed_colors]]
+index = 22
+color = '#ECEFF4'
+
+[[colors.indexed_colors]]
+index = 23
+color = '#D8DEE9'
+
