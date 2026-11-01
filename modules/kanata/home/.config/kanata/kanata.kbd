@@ -1,0 +1,29 @@
+;; kanata — RK R75 (S1BGr0uP)
+;; Caps: tap Esc / hold Ctrl
+;; Espacio: tap espacio / hold capa nav (HJKL flechas, U/O Inicio/Fin, I/P RePag/AvPag)
+;; Alt derecho: tap = prefijo tmux (Ctrl+Space)
+(defcfg
+  linux-dev /dev/input/by-id/usb-BY_Tech_Gaming_Keyboard-event-kbd
+  process-unmapped-keys yes
+)
+
+(defsrc
+  caps spc ralt
+  h j k l u o i p
+)
+
+(defalias
+  cap (tap-hold 180 180 esc lctl)
+  spc (tap-hold 200 200 spc (layer-while-held nav))
+  tmx (tap-hold 180 180 C-spc ralt)
+)
+
+(deflayer base
+  @cap @spc @tmx
+  h j k l u o i p
+)
+
+(deflayer nav
+  _ _ _
+  left down up right home end pgup pgdn
+)
