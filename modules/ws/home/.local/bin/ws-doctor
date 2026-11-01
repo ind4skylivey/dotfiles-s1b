@@ -135,10 +135,10 @@ check_entrypoint "ws-write"
 check_entrypoint "ws-redteam"
 
 # Check PATH
-if echo "$PATH" | grep -q "dotfiles/bin"; then
-    print_check "PASS" "dotfiles/bin is in PATH"
+if [[ ":$PATH:" == *":$SCRIPT_DIR:"* ]]; then
+    print_check "PASS" "ws scripts dir is in PATH"
 else
-    print_check "FAIL" "dotfiles/bin NOT in PATH - scripts not callable by name"
+    print_check "FAIL" "ws scripts dir NOT in PATH - scripts not callable by name"
     verbose "Add to PATH: export PATH=\"\$PATH:$SCRIPT_DIR\""
 fi
 
@@ -358,7 +358,7 @@ if [[ $FAILED -gt 0 ]]; then
     echo -e "${RED}Status: NEEDS ATTENTION${NC}"
     echo ""
     echo "Issues found:"
-    echo "1. dotfiles/bin not in PATH - scripts not callable by name"
+    echo "1. ws scripts dir not in PATH - scripts not callable by name"
     echo "   Fix: Add to ~/.config/fish/config.fish or shell rc:"
     echo "        set -gx PATH \$PATH $SCRIPT_DIR  # (Fish)"
     echo "        export PATH=\"\$PATH:$SCRIPT_DIR\"  # (Bash/Zsh)"

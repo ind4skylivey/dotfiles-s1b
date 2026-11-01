@@ -107,7 +107,7 @@ When importing NiriPURA (this phase):
 
 - Bring in: portable KDL (`config.kdl`, input, animations, decorations, layer-rules, generic Wayland env).
 - Keep in a host overlay: `monitors.kdl`, `open-on-output "DP-1"`, OpenRGB/Solaar, `/home/il1v3y` paths.
-- `security` profile: Burp/ZAP binds and the `sec` workspace live in `modules/zsh/` and `modules/fish/` (security.zsh / security.fish) (opt-in).
+- `security` profile: Burp/ZAP binds and the `sec` workspace live in `modules/zsh/home/.config/zsh/security.zsh` and `modules/fish/home/.config/fish/security.fish` (opt-in).
 
 Do not git-submodule the entire NiriPURA tree (screenshots, plugins, dirty working tree).
 
