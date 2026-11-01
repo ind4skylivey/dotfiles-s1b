@@ -71,11 +71,6 @@ path = "~/.config/tmux"
 icon = "*"
 
 [[session]]
-name = "niri-config"
-path = "~/.config/niri"
-icon = "*"
-
-[[session]]
 name = "pi"
 path = "~/.pi"
 icon = "p"
