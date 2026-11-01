@@ -1,0 +1,9 @@
+[soe][Compressor#0]
+attack=50
+bypass=true
+ratio=1.1
+release=400
+sidechainListen=true
+sidechainMode=1
+sidechainReactivity=20
+threshold=-24
