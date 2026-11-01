@@ -1,0 +1,24 @@
+[Presets]
+lastLoadedOutputPreset=S1B
+
+[StreamInputs]
+blocklist=Chromium input
+inputDevice=alsa_output.pci-0000_0a_00.4.analog-stereo
+listenToMic=false
+showBlocklistedApps=true
+visiblePage=pluginsPage
+
+[StreamOutputs]
+mostUsedPresets=S1B
+outputDevice=alsa_output.pci-0000_0a_00.4.analog-stereo
+plugins=equalizer#0,autogain#0,limiter#0,stereo_tools#0,bass_enhancer#0,exciter#0
+usedPresets=S1B:1
+visiblePage=pluginsPage
+visiblePlugin=stereo_tools#0
+
+[Window]
+autostartOnLogin=false
+height=987
+noWindowAfterStarting=true
+outputAutoloadingUsesFallback=true
+width=1027
