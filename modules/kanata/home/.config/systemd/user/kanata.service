@@ -1,0 +1,10 @@
+[Unit]
+Description=kanata remapeo teclado RK R75
+
+[Service]
+ExecStart=/usr/bin/kanata --cfg %h/.config/kanata/kanata.kbd
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
