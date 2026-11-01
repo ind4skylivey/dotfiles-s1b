@@ -176,56 +176,6 @@ alias codex-run='codex-container run'
 alias codex-shell='codex-container shell'
 alias codex-clean='codex-container clean'
 
-# ═══════════════════════════════════════════════════════════════
-# QWEN MODE SWITCHER (Ollama Local → OpenAI API Compatibility)
-# ═══════════════════════════════════════════════════════════════
-# This function makes Ollama compatible with tools expecting OpenAI API
-# Sets OPENAI_* variables to point to local Ollama server
-# ═══════════════════════════════════════════════════════════════
-
-function qwen-mode() {
-  case $1 in
-    local-coder)
-      echo "🏠 Using LOCAL: qwen2.5-coder:14b (coding-specialized)"
-      export OPENAI_API_KEY="sk-xxxx-xxxx-xxxx-xxxx"  # Placeholder for Ollama compatibility
-      export OPENAI_BASE_URL="http://localhost:11434/v1"
-      export OPENAI_MODEL="qwen2.5-coder:14b"
-      ;;
-    off)
-      echo "🔴 Qwen mode disabled (using default OpenAI settings)"
-      unset OPENAI_API_KEY
-      unset OPENAI_BASE_URL
-      unset OPENAI_MODEL
-      ;;
-    status)
-      echo "📊 Current Qwen/Ollama configuration:"
-      echo "  API Key: ${OPENAI_API_KEY:-[default/cloud]}"
-      echo "  Base URL: ${OPENAI_BASE_URL:-[default/cloud]}"
-      echo "  Model: ${OPENAI_MODEL:-[default/cloud]}"
-      echo ""
-      echo "💡 Ollama server status:"
-      if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
-        echo "  ✅ Ollama is running"
-        ollama list 2>/dev/null | grep -E "NAME|qwen" | sed 's/^/    /'
-      else
-        echo "  ❌ Ollama is not running (start with: ollama serve)"
-      fi
-      ;;
-    *)
-      echo "Usage: qwen-mode [local-coder|off|status]"
-      echo ""
-      echo "Available modes:"
-      echo "  local-coder  - Use qwen2.5-coder:14b via Ollama (OpenAI compatible)"
-      echo "  off          - Disable Qwen mode (use default OpenAI settings)"
-      echo "  status       - Show current configuration and Ollama status"
-      echo ""
-      echo "Example:"
-      echo "  qwen-mode local-coder   # Enable Ollama for OpenAI-compatible tools"
-      echo "  qwen-mode status         # Check configuration"
-      ;;
-  esac
-}
-
 # Dynamic terminal title (shows git branch and path)
 if [ -f "$HOME/.config/alacritty/dynamic_title.sh" ]; then
   source "$HOME/.config/alacritty/dynamic_title.sh"
