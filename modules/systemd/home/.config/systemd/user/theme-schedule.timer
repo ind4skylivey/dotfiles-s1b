@@ -1,0 +1,11 @@
+[Unit]
+Description=Run theme-schedule every 5 minutes (clock-based dark/light)
+
+[Timer]
+OnBootSec=1min
+OnCalendar=*:0/5
+Persistent=true
+Unit=theme-schedule.service
+
+[Install]
+WantedBy=timers.target
