@@ -6,3 +6,5 @@ Exec=solaar -w hide
 Icon=preferences-desktop-peripherals
 Terminal=false
 X-GNOME-Autostart-enabled=true
+
+Hidden=true

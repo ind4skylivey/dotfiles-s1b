@@ -1,45 +1,41 @@
-/* LOCAL ONLY: optional Noctalia zen-userChrome overlay from your local cache.
-   Keep this commented in the repo; enable only on the machine that has Noctalia.
-*/
-
 /* ===================================================================
    Cyberpunk HUD Theme - AUTO SWITCH Light/Dark
-   Detecta automaticamente el modo del sistema
+   Automatically detects the system color scheme
    =================================================================== */
 
-/* ===== VARIABLES PARA LIGHT MODE (CYBERPUNK GLASS) ===== */
+/* ===== LIGHT MODE VARIABLES (CYBERPUNK GLASS) ===== */
 :root {
-  /* Fondos con efecto glass */
-  --bg: rgba(255, 255, 255, 0.95);
-  --bg-dark: rgba(247, 250, 252, 0.90);
-  --bg-darker: rgba(240, 240, 240, 0.85);
+    /* Glass backgrounds */
+  --bg: rgba(248, 243, 255, 0.97);
+  --bg-dark: rgba(243, 237, 252, 0.96);
+  --bg-darker: rgba(238, 231, 250, 0.95);
   
-  /* Colores CYBERPUNK + GLASS */
-  --purple: #9333ea;        /* Púrpura eléctrico */
-  --purple-dim: #d8b4fe;    /* Púrpura claro vibrante */
-  --purple-light: rgba(224, 231, 255, 0.80);  /* Púrpura muy claro + transparencia */
+  /* CYBERPUNK + GLASS colors */
+  --purple: #9333ea;        /* Electric purple */
+  --purple-dim: #d8b4fe;    /* Vibrant light purple */
+  --purple-light: rgba(224, 231, 255, 0.80);  /* Very light purple + transparency */
   
-  --cyan: #00d4d4;         /* Cian neón */
-  --cyan-dim: rgba(167, 243, 208, 0.80);      /* Cian atenuado + transparencia */
+  --cyan: #00d4d4;         /* Neon cyan */
+  --cyan-dim: rgba(167, 243, 208, 0.80);      /* Dimmed cyan + transparency */
   
-  --text: #1e293b;
-  --text-secondary: #64748b;
+  --text: #0f0a1e;
+  --text-secondary: #3f3352;
   --text-light: #94a3b8;
   
-  /* Efectos glow más intensos */
+  /* Stronger glow effects */
   --glow-purple: rgba(147, 51, 234, 0.40);
   --glow-cyan: rgba(0, 212, 212, 0.40);
   
-  /* Bordes con efecto neón */
+  /* Neon-effect borders */
   --border-color: rgba(203, 213, 225, 0.60);
   --border-color-dark: rgba(148, 163, 184, 0.60);
   
-  /* Efecto glass */
+  /* Glass effect */
   --glass-blur: blur(12px);
-  --glass-bg: rgba(255, 255, 255, 0.70);
+  --glass-bg: rgba(246, 240, 255, 0.94);
 }
 
-/* ===== VARIABLES PARA DARK MODE (cyberpunk HUD original) ===== */
+/* ===== DARK MODE VARIABLES (original cyberpunk HUD) ===== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #110022;
@@ -50,7 +46,7 @@
     
     --cyan: #00ffff;
     
-    --text: #e0e0e0;
+    --text: #f5eaff;
     
     --glow-purple: rgba(189, 0, 255, 0.4);
     --glow-cyan: rgba(0, 255, 255, 0.3);
@@ -63,7 +59,7 @@
 }
 
 /* ===================================================================
-   ESTILOS COMUNES (funcionan para ambos modos)
+   COMMON STYLES (work for both modes)
    =================================================================== */
 
 #main-window {
@@ -229,30 +225,30 @@ scrollbar[orient="vertical"] thumb:hover {
   margin: 0 8px !important;
 }
 
-menu,
+/* ===== MENUS: structure only (no colors here) =====
+   menupopup = the card. menu = a ROW (Compact mode, Live Folder).
+   Colors live in the two @media blocks below so light/dark never mix. */
 menupopup {
-  background: var(--glass-bg) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  color: var(--text) !important;
-  border: 2px solid var(--purple-dim) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 16px var(--glow-purple) !important;
-  padding: 4px !important;
+  backdrop-filter: none !important;
+  border-radius: 14px !important;
+  padding: 6px !important;
 }
 
-menuitem,
-menu:hover,
+menupopup > menu,
 menupopup > menuitem {
-  background-color: transparent !important;
-  color: var(--text) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 8px !important;
+  min-height: 30px !important;
 }
 
-menuitem:hover,
-menuitem[selected="true"] {
-  background: linear-gradient(135deg, var(--purple-light), var(--cyan-dim)) !important;
-  color: var(--text) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 8px var(--glow-purple) !important;
+menuseparator {
+  height: 1px !important;
+  min-height: 1px !important;
+  max-height: 1px !important;
+  margin: 4px 8px !important;
+  border: none !important;
 }
 
 findbar {
@@ -298,8 +294,12 @@ findbar {
   box-shadow: 0 2px 8px var(--glow-purple) !important;
 }
 
-browser[type="content"] > html {
-  background: var(--glass-bg) !important;
+/* Page tint: dark keeps the cyberpunk glass tint over pages (scoped to
+   prefer-dark). In prefer-light it produced a white wash, so it is light-off. */
+@media (prefers-color-scheme: dark) {
+  browser[type="content"] > html {
+    background: var(--glass-bg) !important;
+  }
 }
 
 .top-site-outer {
@@ -343,16 +343,16 @@ browser[type="content"] > html {
   background: linear-gradient(90deg, transparent, var(--purple-dim), transparent) !important;
 }
 
-/* ===== COMPATIBILIDAD CON TEMAS DE ZEN ===== */
+/* ===== ZEN THEME COMPATIBILITY ===== */
 :root {
   --zen-primary-color: var(--purple) !important;
   --zen-secondary-color: var(--cyan) !important;
 }
 
 /* ===== COMPACT MODE PACK — 2026-10-26 S1B Sysadmin (v2) =====
-   hide-tabbar + hide-toolbar = chrome fuera en Compact (hover al borde).
-   Labels: solo iconos en rail colapsado; en expandido texto normal (sin aplastar).
-   SuperPins ON + legacy-layout=false; Essentials clip contra overflow:visible. */
+   hide-tabbar + hide-toolbar = chrome hidden in Compact (edge hover).
+   Labels: icons only on collapsed rail; normal text when expanded.
+   SuperPins ON + legacy-layout=false; Essentials clipped vs overflow:visible. */
 
 /* Glass when Compact */
 :is(:root, #main-window, #navigator-toolbox, #browser)[zen-compact-mode="true"] #navigator-toolbox,
@@ -448,4 +448,145 @@ browser[type="content"] > html {
 
 .tabbrowser-tab[zen-essential="true"] .tab-background {
   border-radius: 10px !important;
+}
+
+/* ===== TEXT PRESENCE (2026-10-28) =====
+   Sidebar chrome IDs change across Zen versions; pin native color tokens
+   AND the toolbox (the real left rail) so labels/icons cannot wash out. */
+.tab-label,
+.tab-text {
+  color: var(--text) !important;
+  font-weight: 600 !important;
+}
+
+#navigator-toolbox,
+#TabsToolbar,
+#zen-essentials,
+#zen-workspaces-button {
+  color: var(--text) !important;
+  --toolbar-color: var(--text) !important;
+  --lwt-text-color: var(--text) !important;
+  --toolbarbutton-icon-fill: var(--text) !important;
+}
+
+#navigator-toolbox label,
+#navigator-toolbox .toolbarbutton-text,
+#zen-workspaces-button,
+.zen-current-workspace-indicator,
+.zen-workspace-name {
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+#navigator-toolbox toolbarbutton,
+#zen-workspaces-button toolbarbutton,
+#navigator-toolbox .toolbarbutton-icon,
+#zen-workspaces-button .toolbarbutton-icon {
+  opacity: 1 !important;
+  fill: var(--text) !important;
+  color: var(--text) !important;
+}
+
+/* ===== LIGHT MODE FIX (2026-10-28) =====
+   Chrome prefers-color-scheme tracks gsettings color-scheme: in prefer-light
+   these rules engage and make light fully readable on its own. Dark keeps
+   the original cyberpunk glass menus above. Selectors mirror the originals
+   (menupopup > menuitem outranks bare menuitem, so match or exceed it). */
+@media (prefers-color-scheme: light) {
+  :root {
+    --lwt-text-color: #0f0a1e !important;
+    --toolbar-color: #0f0a1e !important;
+    --toolbox-textcolor: #0f0a1e !important;
+    --toolbarbutton-icon-fill: #0f0a1e !important;
+    --tab-selected-textcolor: #0f0a1e !important;
+  }
+  menupopup {
+    color-scheme: light !important;
+    background: #f6f0ff !important;
+    color: #1a0533 !important;
+    border: 2px solid #9333ea !important;
+    box-shadow: 0 0 0 1px #e9d5ff, 0 10px 28px rgba(147, 51, 234, 0.22) !important;
+  }
+  menupopup > menu,
+  menupopup > menuitem {
+    background: transparent !important;
+    color: #1a0533 !important;
+  }
+  menupopup > menuitem[disabled="true"],
+  menupopup > menu[disabled="true"] {
+    color: #9b87b0 !important;
+  }
+  menupopup > menu:is(:hover, [_moz-menuactive="true"]):not([disabled="true"]),
+  menupopup > menuitem:is(:hover, [_moz-menuactive="true"], [selected="true"]):not([disabled="true"]) {
+    background: linear-gradient(135deg, #e9d5ff 0%, #a5f3fc 100%) !important;
+    color: #1a0533 !important;
+  }
+  menuseparator {
+    background: #d8b4fe !important;
+  }
+  #appMenu-popup,
+  #appMenu-popup panelview,
+  #appMenu-popup .panel-subview-body {
+    color-scheme: light !important;
+    --panel-background: #f6f0ff !important;
+    --panel-color: #1a0533 !important;
+    --arrowpanel-background: #f6f0ff !important;
+    --arrowpanel-color: #1a0533 !important;
+    background: #f6f0ff !important;
+    color: #1a0533 !important;
+  }
+  .tab-label,
+  .tab-text,
+  #navigator-toolbox label,
+  #navigator-toolbox .toolbarbutton-text,
+  #zen-workspaces-button,
+  .zen-current-workspace-indicator,
+  .zen-workspace-name {
+    color: #0f0a1e !important;
+    opacity: 1 !important;
+  }
+  /* No white glass curtain over web pages in light mode */
+  browser[type="content"] > html {
+    background: transparent !important;
+  }
+}
+
+/* ===== DARK MENUS: neon violet cyberpunk ===== */
+@media (prefers-color-scheme: dark) {
+  menupopup {
+    color-scheme: dark !important;
+    background: #1a0533 !important;
+    color: #f5eaff !important;
+    border: 2px solid #bd00ff !important;
+    box-shadow: 0 0 18px rgba(189, 0, 255, 0.45), 0 0 8px rgba(0, 255, 255, 0.18) !important;
+  }
+  menupopup > menu,
+  menupopup > menuitem {
+    background: transparent !important;
+    color: #f5eaff !important;
+  }
+  menupopup > menuitem[disabled="true"],
+  menupopup > menu[disabled="true"] {
+    color: #7a6494 !important;
+  }
+  menupopup > menu:is(:hover, [_moz-menuactive="true"]):not([disabled="true"]),
+  menupopup > menuitem:is(:hover, [_moz-menuactive="true"], [selected="true"]):not([disabled="true"]) {
+    background: linear-gradient(135deg, #7b00b3 0%, #0d7377 100%) !important;
+    color: #ffffff !important;
+  }
+  menuseparator {
+    background: #5c0099 !important;
+  }
+  #appMenu-popup,
+  #appMenu-popup panelview,
+  #appMenu-popup .panel-subview-body {
+    color-scheme: dark !important;
+    --panel-background: #1a0533 !important;
+    --panel-color: #f5eaff !important;
+    --arrowpanel-background: #1a0533 !important;
+    --arrowpanel-color: #f5eaff !important;
+    background: #1a0533 !important;
+    color: #f5eaff !important;
+  }
 }

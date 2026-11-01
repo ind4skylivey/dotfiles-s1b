@@ -1,84 +1,71 @@
--- load defaults i.e lua_lsp
-require("nvchad.configs.lspconfig").defaults()
-
-local nvlsp = require "nvchad.configs.lspconfig"
-
--- Suppress ALL deprecation warnings and Mason deprecated tools
-local notify = vim.notify
-vim.notify = function(msg, level, ...)
-  if type(msg) == "string" then
-    local lower_msg = msg:lower()
-    -- Block all deprecation messages
-    if lower_msg:match("deprecat") or
-       lower_msg:match("lspconfig") or
-       lower_msg:match("typstfmt") or
-       lower_msg:match("rustfmt") or
-       lower_msg:match("rome") or
-       lower_msg:match("biome") or
-       lower_msg:match("framework") or
-       lower_msg:match("feature will be removed") or
-       lower_msg:match("use vim%.lsp%.config") then
-      return
-    end
-  end
-  notify(msg, level, ...)
+local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+if not vim.env.PATH:find(mason_bin, 1, true) then
+  vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
 end
 
--- Get lspconfig module (warning suppressed above)
-local lspconfig = require "lspconfig"
-
--- Restore normal notifications
-vim.notify = notify
-
--- Helper function for LSP setup
-local function setup_lsp(server_name, config)
-  config = config or {}
-  config.on_attach = config.on_attach or nvlsp.on_attach
-  config.on_init = config.on_init or nvlsp.on_init
-  config.capabilities = config.capabilities or nvlsp.capabilities
-  
-  lspconfig[server_name].setup(config)
+local nvlsp_ok, nvlsp = pcall(require, "nvchad.configs.lspconfig")
+local defaults_ok = nvlsp_ok and type(nvlsp.defaults) == "function" and pcall(nvlsp.defaults)
+if not defaults_ok then
+  vim.lsp.config("*", {
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+  })
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+      local opts = { buffer = args.buf, silent = true }
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+      vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    end,
+  })
 end
 
--- Basic servers with default config
-local servers = { "html", "cssls", "bashls" }
-
-for _, lsp in ipairs(servers) do
-  setup_lsp(lsp)
-end
-
--- PHP: PHPActor (refactoring + IntelliSense)
-setup_lsp("phpactor", {
-  init_options = {
-    ["language_server_phpstan.enabled"] = true,
-    ["language_server_psalm.enabled"] = false,
-  },
-})
-
--- Python: Pyright
-setup_lsp("pyright", {
-  settings = {
-    python = {
-      analysis = {
-        typeCheckingMode = "basic",
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
+local servers = {
+  lua_ls = {
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
+    root_markers = {
+      ".luarc.json",
+      ".luarc.jsonc",
+      ".luacheckrc",
+      ".stylua.toml",
+      "stylua.toml",
+      "selene.toml",
+      "selene.yml",
+      ".git",
+    },
+    settings = {
+      Lua = {
+        diagnostics = { globals = { "vim" } },
+        workspace = { library = vim.api.nvim_get_runtime_file("", true) },
       },
     },
   },
-})
-
--- Rust: rust-analyzer (managed by rustaceanvim plugin)
--- Configuration is in lua/plugins/rust.lua
-
--- C: clangd (for exploit development and malware analysis)
-setup_lsp("clangd", {
-  cmd = {
-    "clangd",
-    "--background-index",
-    "--clang-tidy",
-    "--header-insertion=iwyu",
-    "--completion-style=detailed",
-    "--function-arg-placeholders=1",
+  bashls = {
+    cmd = { "bash-language-server", "start" },
+    filetypes = { "bash", "sh" },
+    root_markers = { ".git" },
   },
-})
+  jsonls = {
+    cmd = { "vscode-json-language-server", "--stdio" },
+    filetypes = { "json", "jsonc" },
+    root_markers = { ".git" },
+  },
+  yamlls = {
+    cmd = { "yaml-language-server", "--stdio" },
+    filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab", "yaml.helm-values" },
+    root_markers = { ".git" },
+    settings = {
+      redhat = { telemetry = { enabled = false } },
+      yaml = { format = { enable = true } },
+    },
+  },
+}
+
+for name, cfg in pairs(servers) do
+  vim.lsp.config(name, cfg)
+  vim.lsp.enable(name)
+  if vim.fn.executable(cfg.cmd[1]) == 0 then
+    vim.notify("LSP '" .. name .. "' falta el binario. Mason lo instala al arrancar.", vim.log.levels.WARN)
+  end
+end

@@ -1,121 +1,153 @@
 {
-    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-     "logo": {
-         "source": "~/.config/fastfetch/il1v3y_logo.txt",
-         "type": "auto",
-         "color": {
-             "1": "#FF6B9D",
-             "2": "#00D9FF",
-             "3": "#A855F7",
-             "4": "#FF0055",
-             "5": "#00FF41",
-             "6": "#5DADE2"
-         }
-     },
-    "display": {
-        "separator": " "
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "~/.config/fastfetch/il1v3y_logo.txt",
+    "type": "auto",
+    "color": {
+      "1": "#c926ff",
+      "2": "#00d9ff",
+      "3": "#A855F7",
+      "4": "#FF0055",
+      "5": "#00FF41",
+      "6": "#5DADE2"
+    }
+  },
+  "display": {
+    "separator": " ",
+    "color": {
+      "keys": "#c926ff",
+      "title": "#00d9ff"
     },
-    "modules": [
-        {
-            "type": "host",
-            "key": "╭─󰌢",
-            "keyColor": "green"
-        },
-        {
-            "type": "board",
-            "key": "├─󰚐",
-            "keyColor": "green"
-        },
-        {
-            "type": "cpu",
-            "key": "├─󰻠",
-            "keyColor": "green"
-        },
-        {
-            "type": "gpu",
-            "key": "├─󰍛",
-            "keyColor": "green"
-        },
-        {
-            "type": "memory",
-            "key": "├─󰑭",
-            "keyColor": "green"
-        },
-        {
-            "type": "custom",
-            "key": "├─󰍹",
-            "keyColor": "green"
-        },
-        {
-            "type": "custom",
-            "key": "├─󰍹",
-            "keyColor": "green"
-        },
-        {
-            "type": "custom",
-            "key": "╰─󰍹",
-            "keyColor": "green"
-        },
-        "break",
-        {
-            "type": "title",
-            "key": "╭─",
-            "format": "{1}@{2}",
-            "keyColor": "blue"
-        },
-        {
-            "type": "os",
-            "key": "├─󰣇", 
-            "keyColor": "blue"
-        },
-        {
-            "type": "wm",
-            "key": "├─󰖲",
-            "keyColor": "blue"
-        },
-        {
-            "type": "terminal",
-            "key": "├─󰆍",
-            "keyColor": "blue"
-        },
-        {
-            "type": "kernel",
-            "key": "├─",
-            "keyColor": "blue"
-        },
-        {
-            "type": "packages",
-            "key": "├─󰏖",
-            "keyColor": "blue"
-        },
-        {
-            "type": "uptime",
-            "key": "├─󰅐",
-            "keyColor": "blue"
-        },
-        {
-          "type": "battery",
-          "key": "╰─󰁹",
-          "keyColor": "blue"
-        },
-        "break",
-        {
-            "type": "disk",
-            "key": "╭─󰋢",
-            "keyColor": "yellow"
-        },
-        {
-            "type": "disk",
-            "key": "╰─󰋢",
-            "keyColor": "yellow",
-            "folders": "/home"
-        },
-        "break",
-        {
-            "type": "media",
-            "key": "╰─󰝚",
-            "keyColor": "magenta",
-            "playerName": "auto"
-        }
-    ]
+    "percent": {
+      "color": {
+        "green": "#ff2bd6",
+        "yellow": "#730099",
+        "red": "#ff4d6d"
+      }
+    }
+  },
+  "modules": [
+    {
+      "type": "host",
+      "key": "╭─󰌢",
+      "keyColor": "green"
+    },
+    {
+      "type": "board",
+      "key": "├─󰚐",
+      "keyColor": "green",
+      "format": "ASUS ROG Crosshair X670E Extreme"
+    },
+    {
+      "type": "cpu",
+      "key": "├─󰻠",
+      "keyColor": "green",
+      "format": "AMD Ryzen 9 7950X3D (16) @ 5.7GHz"
+    },
+    {
+      "type": "gpu",
+      "key": "├─󰍛",
+      "keyColor": "green",
+      "format": "RTX 4090 24GB | x2 RX 7900 XTX 24GB"
+    },
+    {
+      "type": "memory",
+      "key": "├─󰑭",
+      "keyColor": "green",
+      "format": "64GiB DDR5-6000 (Used: 8GiB)"
+    },
+    {
+      "type": "custom",
+      "key": "├─󰍹",
+      "keyColor": "green",
+      "format": "1920x1080 @ 180 Hz, 27\" [External]"
+    },
+    {
+      "type": "custom",
+      "key": "├─󰍹",
+      "keyColor": "green",
+      "format": "1920x1080 @ 180 Hz, 24\" [External]"
+    },
+    {
+      "type": "custom",
+      "key": "╰─󰍹",
+      "keyColor": "green",
+      "format": "1920x1080 @ 180 Hz, 32\" [External]"
+    },
+    "break",
+    {
+      "type": "title",
+      "key": "╭─",
+      "format": "{1}@{2}",
+      "keyColor": "blue"
+    },
+    {
+      "type": "os",
+      "key": "├─󰣇",
+      "keyColor": "blue"
+    },
+    {
+      "type": "wm",
+      "key": "├─󰖲",
+      "keyColor": "blue"
+    },
+    {
+      "type": "terminal",
+      "key": "├─󰆍",
+      "keyColor": "blue"
+    },
+    {
+      "type": "kernel",
+      "key": "├─",
+      "format": "{1} {2}",
+      "keyColor": "blue"
+    },
+    {
+      "type": "packages",
+      "key": "├─󰏖",
+      "keyColor": "blue"
+    },
+    {
+      "type": "uptime",
+      "key": "├─󰅐",
+      "keyColor": "blue"
+    },
+    {
+      "type": "battery",
+      "key": "╰─󰁹",
+      "keyColor": "blue"
+    },
+    "break",
+    {
+      "type": "disk",
+      "key": "╰─󰋢",
+      "keyColor": "yellow"
+    },
+    {
+      "type": "custom",
+      "key": "├─󰏥",
+      "keyColor": "cyan",
+      "format": "openssl: 3.6.5 | curl: 8.23.0 | wget: 1.25.0"
+    },
+    {
+      "type": "custom",
+      "key": "├─󰆧",
+      "keyColor": "cyan",
+      "format": "brew: 18 pkgs"
+    },
+    {
+      "type": "colors",
+      "key": "╰─🎨",
+      "keyColor": "cyan",
+      "padding": 2
+    },
+    "break",
+    {
+      "type": "media",
+      "key": "╰─󰝚",
+      "keyColor": "magenta",
+      "format": "{3} - {2}",
+      "playerName": "auto"
+    }
+  ]
 }

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Terax
+Comment=Teraxstartup script
+Exec=/usr/bin/terax 
+StartupNotify=false
+Terminal=false
+Hidden=true

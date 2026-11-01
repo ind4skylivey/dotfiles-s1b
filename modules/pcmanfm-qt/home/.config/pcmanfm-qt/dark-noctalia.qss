@@ -1,0 +1,128 @@
+/* Dark stylesheet for pcmanfm-qt */
+QMainWindow, QToolBar, QMenuBar, QStatusBar {
+    background-color: #291417;
+    color: #f3f2f2;
+    border: none;
+}
+
+QToolButton {
+    background-color: #371b1f;
+    color: #f3f2f2;
+    border: 1px solid #291417;
+    padding: 4px;
+}
+
+QToolButton:hover {
+    background-color: #8d0c1e;
+}
+
+QToolButton:pressed {
+    background-color: #5a0812;
+}
+
+QMenu {
+    background-color: #291417;
+    color: #f3f2f2;
+    border: 1px solid #371b1f;
+}
+
+QMenu::item:selected {
+    background-color: #8d0c1e;
+    color: #f3f2f2;
+}
+
+QMenuBar {
+    background-color: #291417;
+    color: #f3f2f2;
+}
+
+QMenuBar::item:selected {
+    background-color: #371b1f;
+}
+
+QStatusBar {
+    background-color: #291417;
+    color: #f3f2f2;
+}
+
+QToolTip {
+    background-color: #000000;
+    color: #f3f2f2;
+    border: 1px solid #371b1f;
+}
+
+QComboBox {
+    background-color: #371b1f;
+    color: #f3f2f2;
+    border: 1px solid #291417;
+    padding: 2px 4px;
+}
+
+QComboBox::drop-down {
+    border: none;
+    background-color: #371b1f;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #291417;
+    color: #f3f2f2;
+    selection-background-color: #8d0c1e;
+}
+
+QLineEdit, QTextEdit, QPlainTextEdit {
+    background-color: #1a0d0f;
+    color: #f3f2f2;
+    border: 1px solid #371b1f;
+    selection-background-color: #8d0c1e;
+}
+
+QScrollBar:vertical {
+    background: #291417;
+    width: 10px;
+}
+
+QScrollBar::handle:vertical {
+    background: #371b1f;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #8d0c1e;
+}
+
+QScrollBar:horizontal {
+    background: #291417;
+    height: 10px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #371b1f;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #8d0c1e;
+}
+
+QSplitter::handle {
+    background-color: #371b1f;
+}
+
+QHeaderView::section {
+    background-color: #371b1f;
+    color: #f3f2f2;
+    border: none;
+    border-bottom: 1px solid #291417;
+}
+
+QTableView, QTreeView {
+    background-color: #291417;
+    color: #f3f2f2;
+    alternate-background-color: #371b1f;
+    border: none;
+}
+
+QTableView::item:selected, QTreeView::item:selected {
+    background-color: #8d0c1e;
+    color: #f3f2f2;
+}

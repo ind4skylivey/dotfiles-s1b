@@ -1,0 +1,31 @@
+/* Minimal sidebar/toolbar contrast fix for pcmanfm-qt — only targets specific widgets */
+QToolBar {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+QToolBar QToolButton {
+    background-color: #313244;
+    color: #cdd6f4;
+    border: 1px solid #45475a;
+    border-radius: 3px;
+    padding: 3px 6px;
+}
+
+QToolBar QToolButton:hover {
+    background-color: #45475a;
+}
+
+/* Sidebar (places panel) */
+QWidget QAbstractItemView,
+QWidget#places,
+PlacesSidebar {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}
+
+/* Status bar */
+QStatusBar {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+}

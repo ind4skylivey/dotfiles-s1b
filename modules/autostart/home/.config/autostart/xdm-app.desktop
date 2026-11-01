@@ -8,3 +8,4 @@ Name=Xtreme Download Manager
 Comment=Xtreme Download Manager
 Categories=Network;
 Icon=/opt/xdman/xdm-logo.svg
+Hidden=true

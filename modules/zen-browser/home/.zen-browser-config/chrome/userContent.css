@@ -1,0 +1,58 @@
+/* Zen userContent — chrome pages only (new tab, about:*, preferences).
+   Do not style ordinary websites: that paints a wash over every page. */
+
+@-moz-document url-prefix("about:"),
+               url-prefix("chrome://") {
+  :root {
+    --uc-bg: #f6f0ff;
+    --uc-surface: #ece4f7;
+    --uc-text: #1a0533;
+    --uc-muted: #4a4160;
+    --uc-accent: #9333ea;
+    --uc-cyan: #0891b2;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --uc-bg: #110022;
+      --uc-surface: #1a0533;
+      --uc-text: #f5eaff;
+      --uc-muted: #c9b8e8;
+      --uc-accent: #bd00ff;
+      --uc-cyan: #00ffff;
+    }
+  }
+
+  html,
+  body {
+    background: var(--uc-bg) !important;
+    color: var(--uc-text) !important;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    color: var(--uc-text) !important;
+  }
+
+  scrollbar {
+    width: 10px !important;
+  }
+
+  scrollbar thumb {
+    background: var(--uc-accent) !important;
+    border-radius: 6px !important;
+  }
+
+  scrollbar thumb:hover {
+    background: var(--uc-cyan) !important;
+  }
+}
+
+@-moz-document url("about:newtab"),
+               url("about:home") {
+  body {
+    background: var(--uc-bg) !important;
+  }
+}
