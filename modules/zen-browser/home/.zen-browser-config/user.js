@@ -19,7 +19,6 @@ user_pref("browser.ml.linkPreview.enabled", false);
 user_pref("browser.tabs.groups.smart.enabled", false);
 user_pref("extensions.ml.enabled", false);
 user_pref("network.trr.mode", 2); // DoH + system DNS fallback
-user_pref("network.trr.uri", "https://cloudflare-dns.com/dns-query");
 
 // --- chrome / userChrome ---
 user_pref("devtools.chrome.enabled", true);
