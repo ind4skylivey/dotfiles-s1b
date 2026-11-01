@@ -91,8 +91,8 @@ Mutually exclusive backends:
 | Flag | Session | Bar / shell | Source |
 |---|---|---|---|
 | `--desktop niri` | Wayland **(graphical default)** | Noctalia + Fuzzel | sibling repo [NiriPURA](https://github.com/ind4skylivey/NiriPURA.git) (`~/.config/niri`) |
-| `--desktop dwm` | X11 | slstatus, picom, rofi | `.config/dwm/` in this repo |
-| `--desktop plasma` | KDE Wayland | Waybar | `.config/waybar/` |
+| `--desktop dwm` | X11 | slstatus, picom, rofi | `modules/dwm/home/.config/dwm/` in this repo |
+| `--desktop plasma` | KDE Wayland | Waybar | `modules/waybar/home/.config/waybar/` |
 
 ```text
 ./install.sh --profile desktop
@@ -107,7 +107,7 @@ When importing NiriPURA (this phase):
 
 - Bring in: portable KDL (`config.kdl`, input, animations, decorations, layer-rules, generic Wayland env).
 - Keep in a host overlay: `monitors.kdl`, `open-on-output "DP-1"`, OpenRGB/Solaar, `/home/il1v3y` paths.
-- `security` profile: Burp/ZAP binds and the `sec` workspace live in `modules/security/` (opt-in).
+- `security` profile: Burp/ZAP binds and the `sec` workspace live in `modules/zsh/` and `modules/fish/` (security.zsh / security.fish) (opt-in).
 
 Do not git-submodule the entire NiriPURA tree (screenshots, plugins, dirty working tree).
 
@@ -159,4 +159,4 @@ Module logic calls `install_package` / `install_optional_package` / `install_aur
 | `./install.sh --dry-run --profile full` | CLI + gaming + themes + userChrome; security still skipped |
 | `./install.sh --doctor` | non-destructive checks |
 | `./install.sh --link SRC DEST` | idempotent per-path symlink (see [linker.md](linker.md)) |
-| `bin/ws-*` | path unchanged in this phase |
+| `modules/ws/home/.local/bin/ws-*` | moved in the per-program consolidation |

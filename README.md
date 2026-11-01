@@ -21,7 +21,7 @@
 
 ## What is this?
 
-A plain archive of my Unix/Linux config copies, with Arch/CachyOS as Tier 1. Nothing here is linked or installed automatically: files under `.config/`, `bin/`, `workflow/` and `modules/*/home/` are copied by hand where needed.
+A plain archive of my Unix/Linux config copies, with Arch/CachyOS as Tier 1. Nothing here is linked or installed automatically: files under `modules/<program>/home/`, `workflow/` and `.doom.d/` are copied by hand where needed.
 
 Cyberpunk / Catppuccin aesthetics are optional. CLI configs work without a window manager.
 
@@ -74,9 +74,9 @@ Three monitors with independent wallpaper management and a cyberpunk status bar.
 
 ## Still in the dump (not the default plan)
 
-`.config/`, `bin/ws-*`, `workflow/`, `.doom.d/`, NvChad, Eco-Workflow guides, and Warp aliases stay in git until they migrate.
+`workflow/`, `.doom.d/`, NvChad, Eco-Workflow guides, and Warp aliases stay in git until they migrate.
 
-Legacy workflow docs: [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md), [workflow/README.md](workflow/README.md). Dump DWM/Waybar/nvim notes remain under `.config/`.
+Legacy workflow docs: [ECO_WORKFLOW_GUIDE.md](ECO_WORKFLOW_GUIDE.md), [workflow/README.md](workflow/README.md). Dump DWM/Waybar/nvim notes remain under `modules/{dwm,waybar,nvim}/home/.config/`.
 
 ---
 
