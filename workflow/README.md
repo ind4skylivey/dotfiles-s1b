@@ -348,7 +348,7 @@ This layer respects your existing setup:
 
 - **Tmux**: `.config/tmux/README.md` (your existing config)
 - **Zellij**: `.config/zellij/README.md` (your existing config)
-- **Neovim**: `.config/nvim/README.md` + `KEYBINDINGS.md`
+- **Neovim**: `modules/nvim/home/.config/nvim/README.md` + `KEYBINDINGS.md`
 - **Doom Emacs**: `~/.doom.d/config.el` (your existing config)
 
 ---

@@ -6,7 +6,7 @@ Optional **theme + prefs template** for `--profile full`. It does **not** auto-o
 
 | Browser | Role | Config in this repo |
 |---|---|---|
-| **Zen** | daily | Canonical **`user.js`** + **`userChrome.css`** live only under `modules/browser/home/.zen-browser-config/` (repo-root `.zen-browser-config/` is a staging placeholder — see its README). Copy into `~/.zen/<profile>/` when you want them live. |
+| **Zen** | daily | Canonical **`user.js`** + **`userChrome.css`** live only under `modules/zen-browser/home/.zen-browser-config/` (repo-root `.zen-browser-config/` is a staging placeholder — see its README). Copy into `~/.zen/<profile>/` when you want them live. |
 | **Helium** | separate | On-system only. Not migrated. |
 | **Qutebrowser** | separate | On-system only. Not migrated. |
 

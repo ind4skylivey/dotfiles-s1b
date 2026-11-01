@@ -1,6 +1,6 @@
 # Terminal module
 
-Portable **kitty** and **alacritty** for `workstation` / `developer` / `full`. New files, not the dump under `.config/kitty` or `.config/alacritty`.
+Portable **kitty** and **alacritty** for `workstation` / `developer` / `full`. New files, not the dump under `modules/kitty/` or `modules/alacritty/`.
 
 ## Not included (on purpose)
 
@@ -8,14 +8,14 @@ Portable **kitty** and **alacritty** for `workstation` / `developer` / `full`. N
 - Meslo / Nerd Font pins (host overlay)
 - Dump cheatsheets
 
-Copy `modules/terminal/local.kitty.example` → `~/.config/kitty/local.conf` and uncomment `include local.conf` if you want a host font.
+Copy `modules/kitty/local.kitty.example` → `~/.config/kitty/local.conf` and uncomment `include local.conf` if you want a host font.
 
 ## Files
 
 | Repo path | Intended dest |
 |---|---|
-| `modules/terminal/home/.config/kitty/kitty.conf` | `~/.config/kitty/kitty.conf` |
-| `modules/terminal/home/.config/alacritty/alacritty.toml` | `~/.config/alacritty/alacritty.toml` |
+| `modules/kitty/home/.config/kitty/kitty.conf` | `~/.config/kitty/kitty.conf` |
+| `modules/alacritty/home/.config/alacritty/alacritty.toml` | `~/.config/alacritty/alacritty.toml` |
 
 ## Dry-run
 

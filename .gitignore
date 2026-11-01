@@ -42,8 +42,8 @@ Thumbs.db
 **/.config/tmux/plugins/
 **/.config/nvim/undodir/
 **/dwm/release/
-.config/yazi/.state/
-.config/alacritty/.config/
+modules/yazi/home/.config/yazi/.state/
+modules/alacritty/home/.config/alacritty/.config/
 
 # ==========================================
 # 📝 DOCS & CONFIGS (Exclusions)
@@ -53,7 +53,7 @@ DEPLOYMENT_COMPLETE.md
 FIXES.md
 !README.md
 !CYBERPUNK_SETUP.md
-!.config/kitty/kitty.conf
+!modules/kitty/home/.config/kitty/kitty.conf
 !config/hosts/*.example.toml
 
 # ==========================================

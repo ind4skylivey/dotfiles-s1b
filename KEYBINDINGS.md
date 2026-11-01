@@ -211,8 +211,8 @@ Available in both Fish and Zsh.
 
 If you want to customize things:
 
-- **DWM:** `.config/dwm/config.h` (recompile after editing)
-- **Tmux:** `.config/tmux/tmux.conf`
-- **Fish:** `.config/fish/config.fish`
-- **Zsh:** `.config/zsh/.zshrc`
-- **Starship:** `starship.toml`
+- **DWM:** `modules/dwm/home/.config/dwm/config.h` (recompile after editing)
+- **Tmux:** `modules/tmux/home/.config/tmux/tmux.conf`
+- **Fish:** `modules/fish/home/.config/fish/config.fish`
+- **Zsh:** `modules/zsh/home/.config/zsh/.zshrc`
+- **Starship:** `modules/starship/home/.config/starship.toml`

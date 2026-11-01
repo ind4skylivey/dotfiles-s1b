@@ -2,7 +2,7 @@
 
 Canonical Zen templates live in:
 
-`modules/browser/home/.zen-browser-config/`
+`modules/zen-browser/home/.zen-browser-config/`
 
 `install.sh` / `links.tsv` stages them to `~/.zen-browser-config/`.
 Do not keep a second full copy of `user.js` / `userChrome.css` here — it drifts.

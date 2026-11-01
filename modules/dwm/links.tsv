@@ -1,2 +1,0 @@
-# src (repo-relative)	dest (relative to $HOME)
-modules/dwm/home/.config/dwm/xinitrc	.config/dwm/xinitrc

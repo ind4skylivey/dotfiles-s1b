@@ -265,7 +265,7 @@ Ctrl+A then x
 ## Next Steps
 
 1. **Try it:** `ws-remote user@your-dev-server.com`
-2. **Customize:** Edit `bin/ws-remote` to add your favorite hosts
+2. **Customize:** Edit `modules/ws/home/.local/bin/ws-remote` to add your favorite hosts
 3. **Save workflows:** Document your frequent patterns
 
 See [README.md](../README.md) for the full orchestration system.
