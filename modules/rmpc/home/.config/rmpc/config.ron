@@ -1,0 +1,375 @@
+#![enable(implicit_some)]
+#![enable(unwrap_newtypes)]
+#![enable(unwrap_variant_newtypes)]
+// ============================================================
+// rmpc Configuration — MPD Client
+// ============================================================
+// Security: Ensure proper permissions on this directory:
+//   chmod 700 ~/.config/rmpc
+//   chmod 600 ~/.config/rmpc/config.ron
+//   chmod 600 ~/.config/rmpc/themes/*.ron
+// ============================================================
+(
+    // Connection to MPD daemon (socket required for YouTube playback)
+    address: "/tmp/mpd_socket",
+    // SECURITY: Set a password if MPD is exposed beyond localhost.
+    // Also configure in mpd.conf: password "your_secret@read,add,control"
+    password: None,
+    // tema cyberpunk (dwm.ron queda intacto)
+    theme: Some("cyberpunk"),
+    cache_dir: Some("~/.cache/rmpc"),
+    // aviso al cambiar de canción + letras
+    on_song_change: ["~/.config/rmpc/notify.sh"],
+    lyrics_dir: Some("~/.config/rmpc/lyrics"),
+
+    // Playback behavior
+    volume_step: 5,           // Volume change per keypress (%)
+    max_fps: 30,              // UI render cap (30fps is enough for TUI)
+    scrolloff: 5,             // Lines of context when cursor near edge
+    wrap_navigation: true,    // Wrap from bottom to top and vice versa
+    enable_mouse: true,
+    scroll_amount: 3,         // Lines scrolled per mouse wheel tick
+    // Hot reload — SECURITY: If an attacker can write to ~/.config/rmpc/,
+    // they can inject malicious config that applies automatically.
+    // Keep directory permissions locked down (chmod 700).
+    enable_config_hot_reload: true,
+    enable_lyrics_hot_reload: true,
+    status_update_interval_ms: 1000,  // Poll MPD status every 1s
+    rewind_to_start_sec: Some(3),     // Seconds to rewind when pressing previous
+    keep_state_on_song_change: true,
+    reflect_changes_to_playlist: false,
+    select_current_song_on_change: true,
+    center_current_song_on_change: true,
+    ignore_leading_the: true,         // Ignore "The " prefix when sorting
+    browser_song_sort: [Disc, Track, Artist, Title],
+    directories_sort: SortFormat(group_by_type: true, reverse: false),
+    auto_open_downloads: true,
+    quit_closes_modal: false,
+    // Album art configuration
+    album_art: (
+        method: Kitty,        // kitty protocol for crisp image rendering
+        max_size_px: (width: 900, height: 900),  // 900px is enough for TUI display
+        // SECURITY: HTTP/HTTPS protocols disabled to prevent external requests.
+        // This blocks album art downloads from remote services (MusicBrainz, etc.)
+        // but prevents SSRF and data exfiltration via crafted album art URLs.
+        // Enable "https://" only if you trust your music metadata sources.
+        disabled_protocols: ["http://", "https://"],
+        vertical_align: Center,
+        horizontal_align: Center,
+    ),
+    // Cava audio visualizer configuration
+    cava: (
+        input: (
+            method: Fifo,
+            source: "/tmp/mpd.fifo",
+            sample_rate: 44100,
+            channels: 2,
+            sample_bits: 16,
+        ),
+        smoothing: (
+            noise_reduction: 77,
+        ),
+    ),
+    keybinds: (
+        global: {
+            "q":          Quit,
+            "~":          ShowHelp,
+            "?":          ShowHelp,
+            ":":          CommandMode,
+            "oI":         ShowCurrentSongInfo,
+            "oo":         ShowOutputs,
+            "op":         ShowDecoders,
+            "od":         ShowDownloads,
+            "oP":         Partition(),
+            "z":          ToggleRepeat,
+            "x":          ToggleRandom,
+            "c":          ToggleConsume,
+            "v":          ToggleSingle,
+            "p":          TogglePause,
+            " ":          TogglePause,
+            "s":          Stop,
+            ">":          NextTrack,
+            "<":          PreviousTrack,
+            "f":          SeekForward,
+            "b":          SeekBack,
+            ".":          VolumeUp,
+            ",":          VolumeDown,
+            "+":          VolumeUp,
+            "-":          VolumeDown,
+            "=":          VolumeUp,
+            "<Tab>":      NextTab,
+            "gt":         NextTab,
+            "<S-Tab>":    PreviousTab,
+            "gT":         PreviousTab,
+            "1":          SwitchToTab("󰐑 QUEUE"),
+            "2":          SwitchToTab("󰉋 DIRS"),
+            "3":          SwitchToTab("󰠃 ARTISTS"),
+            "4":          SwitchToTab("󰀬 ALBUM ARTISTS"),
+            "5":          SwitchToTab("󰀥 ALBUMS"),
+            "6":          SwitchToTab("󰲸 PLAYLISTS"),
+            "7":          SwitchToTab("󰍉 SEARCH"),
+            "0":          SwitchToTab("󰐊 NOW//PLAYING"),
+            "<C-u>":      Update,
+            "<C-U>":      Rescan,
+            "R":          AddRandom,
+            "Y":          ExternalCommand(command: ["rmpc", "addyt", "{}"], description: "Add YouTube video to queue"),
+        },
+        navigation: {
+            "<C-c>":      Close,
+            "<Esc>":      Close,
+            "<CR>":       Confirm,
+            "k":          Up,
+            "<Up>":       Up,
+            "j":          Down,
+            "<Down>":     Down,
+            "h":          Left,
+            "<Left>":     Left,
+            "l":          Right,
+            "<Right>":    Right,
+            "<C-k>":      PaneUp,
+            "<C-Up>":     PaneUp,
+            "<C-j>":      PaneDown,
+            "<C-Down>":   PaneDown,
+            "<C-h>":      PaneLeft,
+            "<C-Left>":   PaneLeft,
+            "<C-l>":      PaneRight,
+            "<C-Right>":  PaneRight,
+            "K":          MoveUp,
+            "J":          MoveDown,
+            "<C-d>":      DownHalf,
+            "<C-b>":      PageUp,
+            "<PageUp>":   PageUp,
+            "<C-f>":      PageDown,
+            "<PageDown>": PageDown,
+            "gg":         Top,
+            "G":          Bottom,
+            "<Space>":    Select,
+            "<C-Space>":  InvertSelection,
+            "/":          EnterSearch,
+            "n":          NextResult,
+            "N":          PreviousResult,
+            "a":          Add,
+            "A":          AddAll,
+            "D":          Delete,
+            "<C-r>":      Rename,
+            "i":          FocusInput,
+            "oi":         ShowInfo,
+            "<C-z>":      ContextMenu(),
+            "<C-s>s":     Save(kind: Modal(all: false, duplicates_strategy: Ask)),
+            "<C-s>a":     Save(kind: Modal(all: true, duplicates_strategy: Ask)),
+            "r":          Rate(),
+        },
+        queue: {
+            "d":          Delete,
+            "D":          DeleteAll,
+            "<CR>":       Play,
+            "C":          JumpToCurrent,
+            "X":          Shuffle,
+            "a":          AddToPlaylist,
+            "i":          ShowInfo,
+        },
+    ),
+    search: (
+        case_sensitive: false,
+        ignore_diacritics: false,
+        search_button: false,
+        mode: Contains,
+        tags: [
+            (value: "any",         label: "Any Tag"),
+            (value: "artist",      label: "Artist"),
+            (value: "album",       label: "Album"),
+            (value: "albumartist", label: "Album Artist"),
+            (value: "title",       label: "Title"),
+            (value: "filename",    label: "Filename"),
+            (value: "genre",       label: "Genre"),
+        ],
+    ),
+    artists: (
+        album_display_mode: SplitByDate,
+        album_sort_by: Date,
+        album_date_tags: [Date],
+    ),
+    // ============================================================
+    // Tab Layouts
+    // ============================================================
+    tabs: [
+        // Now Playing — portada ancha (menos hueco vertical) + letras + cava a todo el ancho
+        (
+            name: "󰐊 NOW//PLAYING",
+            pane: Split(
+                direction: Vertical,
+                panes: [
+                    (
+                        size: "100%",
+                        pane: Split(
+                            direction: Horizontal,
+                            panes: [
+                                (
+                                    size: "68%",
+                                    borders: "LEFT | TOP | BOTTOM",
+                                    border_symbols: Double,
+                                    border_title: [(kind: Text(" ▓▒░ NOW//PLAYING ░▒▓ "))],
+                                    border_title_alignment: Left,
+                                    pane: Pane(AlbumArt),
+                                ),
+                                (
+                                    size: "32%",
+                                    borders: "ALL",
+                                    border_symbols: Inherited(parent: Double, top_left: "╦", bottom_left: "╩"),
+                                    border_title: [(kind: Text(" ⟦ LYRICS.SYS ⟧ "))],
+                                    border_title_alignment: Right,
+                                    pane: Pane(Lyrics),
+                                ),
+                            ],
+                        ),
+                    ),
+                    (
+                        size: "10",
+                        borders: "LEFT | RIGHT | BOTTOM",
+                        border_symbols: Inherited(parent: Double, top_left: "╠", top_right: "╣"),
+                        border_title: [(kind: Text(" > signal_ "))],
+                        border_title_alignment: Left,
+                        pane: Pane(Cava),
+                    ),
+                ],
+            ),
+        ),
+        // Queue tab: AlbumArt + Cava (35%) | Queue (65%)
+        (
+            name: "󰐑 QUEUE",
+            pane: Split(
+                direction: Horizontal,
+                panes: [
+                    // Left panel: 35% width — AlbumArt + Lyrics
+                    (
+                        size: "35%",
+                        pane: Split(
+                            direction: Vertical,
+                            panes: [
+                                (
+                                    size: "100%",
+                                    borders: "LEFT | RIGHT | TOP",
+                                    border_symbols: Rounded,
+                                    pane: Pane(AlbumArt)
+                                ),
+                                (
+                                    size: "7",              // 7 rows for Cava visualizer
+                                    borders: "ALL",
+                                    border_symbols: Inherited(parent: Rounded, top_left: "├", top_right: "┤",),
+                                    border_title: [(kind: Text(" VIZ "))],
+                                    border_title_alignment: Right,
+                                    pane: Pane(Cava)
+                                ),
+                            ],
+                        ),
+                    ),
+                    // Right panel: 65% width — Queue header + queue list
+                    (
+                        size: "65%",
+                        pane: Split(
+                            direction: Vertical,
+                            panes: [
+                                (
+                                    size: "3",              // 3 rows for queue header
+                                    borders: "ALL",
+                                    border_symbols: Inherited(parent: Rounded, bottom_left: "├", bottom_right: "┤",),
+                                    pane: Split(
+                                        direction: Horizontal,
+                                        panes: [
+                                            (
+                                                size: "1",  // 1 column spacer
+                                                pane: Pane(Empty())
+                                            ),
+                                            (
+                                                size: "100%",
+                                                pane: Pane(QueueHeader())
+                                            ),
+                                        ]
+                                    )
+                                ),
+                                (
+                                    size: "100%",
+                                    borders: "LEFT | RIGHT | BOTTOM",
+                                    border_symbols: Rounded,
+                                    pane: Split(
+                                        direction: Horizontal,
+                                        panes: [
+                                            (
+                                                size: "1",  // 1 column spacer
+                                                pane: Pane(Empty())
+                                            ),
+                                            (
+                                                size: "100%",
+                                                pane: Pane(Queue)
+                                            ),
+                                        ]
+                                    )
+                                ),
+                            ],
+                        )
+                    ),
+                ],
+            ),
+        ),
+        (
+            name: "󰉋 DIRS",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Directories), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+        (
+            name: "󰠃 ARTISTS",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Artists), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+        (
+            name: "󰀬 ALBUM ARTISTS",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(AlbumArtists), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+        (
+            name: "󰀥 ALBUMS",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Albums), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+        (
+            name: "󰲸 PLAYLISTS",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Playlists), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+        (
+            name: "󰍉 SEARCH",
+            borders: "ALL",
+            border_symbols: Rounded,
+            pane: Split(
+                size: "100%",
+                direction: Vertical,
+                panes: [(pane: Pane(Search), size: "100%", borders: "ALL", border_symbols: Rounded)],
+            )
+        ),
+    ],
+)

@@ -50,13 +50,23 @@ Advisory PR labels: `.github/workflows/jev-pr-label.yml` (see [docs/jev-pr-label
 
 ---
 
-## Screenshots
+## Showcase
+
+### rmpc (Vaporwave + Matrix)
+
+![rmpc Vaporwave + Matrix](.github/screenshots/showcase-rmpc-vaporwave-matrix.png)
+
+Now Playing with synced lyrics and the cava visualizer, on the Vaporwave + Matrix (cyberpunk) theme.
 
 ### Doom Emacs
 
 ![Doom Emacs S1B neon dashboard](.github/screenshots/emacs-s1b-neon-dashboard.png)
 
 The S1B neon layer on top of `doom-outrun-electric`: a custom S1B GR0UP dashboard banner, quick links to the SEC lab, a red-team accented modeline and VictorMono with cursive italics.
+
+![Doom Emacs split session](.github/screenshots/emacs.png)
+
+A split session: `config.h` on the left, file tree on the right.
 
 ### Tmux + Zellij
 
@@ -69,6 +79,18 @@ The S1B neon layer on top of `doom-outrun-electric`: a custom S1B GR0UP dashboar
 ![Waybar multi-monitor](.github/screenshots/waybar.png)
 
 Three monitors with independent wallpaper management and a cyberpunk status bar. Tracks CPU, memory, temp, network, VPN and more.
+
+### Rofi
+
+![Rofi launcher](.github/screenshots/rofi.png)
+
+The app launcher (drun) over the desktop wallpaper.
+
+### Desktop (March 2026)
+
+![Desktop showcase, March 2026](assets/showcase-2026-03-17.webp)
+
+A short tour of the desktop: Waybar, Fish, and Fastfetch.
 
 ---
 
